@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+backend/node_modules/
+
+# Production Build
+dist/
+build/
+dist-ssr/
+
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor directories and files
+.vscode/
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Data files (ukuran besar, tidak disarankan commit)
+*.xlsx
+14072026_Lampiran Profil Kesehatan 2025 FIX.xlsx
+
+# Database lokal
+database/*.db
+database/*.sqlite
+database/*.sqlite3
+database/*-journal
+
+# Jika file csv adalah hasil generate dan berubah terus, uncomment ini:
+# *.csv
+
+# Hanya menggunakan pnpm (package-lock.json diabaikan)
+package-lock.json

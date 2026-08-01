@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --color-primary: #0FB0AA;
+  --color-primary-hover: #0d9b96;
+  --color-accent1: #CBD92C;
+  --color-accent2: #06B5D0;
+  --color-surface: #FFFFFF;
+  --font-sans: 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  
+  --color-bg: #f4f7f6;
+  --color-text-main: #1f2937;
+  --color-text-muted: #6b7280;
+  --color-border: #e5e7eb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--color-bg, #f4f7f6);
+  color: var(--color-text-main, #1f2937);
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(15, 176, 170, 0.3);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(15, 176, 170, 0.6);
+}
+
+.recharts-tooltip-wrapper {
+  z-index: 100;
+}
+
+.chart-container .recharts-surface {
+  overflow: visible;
+}

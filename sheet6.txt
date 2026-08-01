@@ -1,0 +1,5 @@
+[nan, nan, nan, nan, nan, nan, nan, nan, nan, nan, nan, nan, nan, nan, nan, nan, nan]
+['NO', 'KABUPATEN/KOTA', 'JUMLAH PASIEN KELUAR                (HIDUP + MATI)', nan, nan, 'JUMLAH PASIEN KELUAR MATI', nan, nan, 'JUMLAH PASIEN KELUAR MATI                 ≥ 48 JAM DIRAWAT', nan, nan, 'Gross Death Rate', nan, nan, 'Net Death Rate', nan, nan]
+[nan, nan, 'L', 'P', 'L + P', 'L', 'P', 'L + P', 'L', 'P', 'L + P', 'L', 'P', 'L + P', 'L', 'P', 'L + P']
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+[1, 'KAB. PACITAN', 10298, 14905, 25203, 387, 373, 760, 173, 182, 355, 37.58011264, 25.02515934, 30.15514026, 16.79937852, 12.21066756, 14.08562473]

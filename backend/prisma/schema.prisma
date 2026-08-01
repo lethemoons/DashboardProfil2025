@@ -1,0 +1,30 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:../database/dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique
+  passwordHash String
+  role         String   @default("guest")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model DashboardData {
+  id         Int      @id @default(autoincrement())
+  tableNo    Int
+  no         String
+  kabupaten  String
+  metric     String
+  value      String
+
+  @@index([tableNo])
+  @@index([kabupaten])
+  @@index([metric])
+}
