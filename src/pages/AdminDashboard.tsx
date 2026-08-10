@@ -1,8 +1,10 @@
 import { useState, useRef } from 'react'
 import { useAdminData } from '../hooks/useDashboardData'
 import api from '../services/api'
+import { useFilter } from '../contexts/FilterContext'
 
 export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
+  const { year } = useFilter()
   const [page, setPage] = useState(1)
   const limit = 50
   const [search, setSearch] = useState('')
@@ -36,6 +38,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     setIsUploading(true)
     const formData = new FormData()
     formData.append('file', file)
+    formData.append('year', year.toString())
     
     try {
       await api.post('/admin/import', formData, {
@@ -52,32 +55,29 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   }
 
   return (
-    <div className="flex flex-col h-full bg-gray-50 overflow-hidden">
-      <header className="bg-white px-6 py-4 border-b flex justify-between items-center shadow-sm">
-        <h1 className="text-xl font-bold text-gray-800">Admin Dashboard - Data Management</h1>
-        <div className="flex gap-3">
-          <button onClick={handleExport} className="px-4 py-2 border rounded-lg hover:bg-gray-50 text-sm font-medium">
-            Export CSV
-          </button>
-          <div>
-            <input type="file" accept=".csv" ref={fileInput} className="hidden" onChange={handleImport} />
-            <button 
-              onClick={() => fileInput.current?.click()} 
-              disabled={isUploading}
-              className="px-4 py-2 bg-[#0FB0AA] hover:bg-[#0da09a] text-white rounded-lg text-sm font-medium disabled:opacity-50"
-            >
-              {isUploading ? 'Importing...' : 'Import CSV'}
-            </button>
-          </div>
-          <button onClick={onLogout} className="px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg text-sm font-medium">
-            Logout
+    <div className="flex flex-col h-full overflow-hidden">
+      <div className="flex justify-end gap-3 mb-4 shrink-0">
+        <button onClick={handleExport} className="px-4 py-2 border rounded-lg hover:bg-gray-50 text-sm font-medium bg-white">
+          Export CSV
+        </button>
+        <div>
+          <input type="file" accept=".csv" ref={fileInput} className="hidden" onChange={handleImport} />
+          <button 
+            onClick={() => fileInput.current?.click()} 
+            disabled={isUploading}
+            className="px-4 py-2 bg-[#0FB0AA] hover:bg-[#0da09a] text-white rounded-lg text-sm font-medium disabled:opacity-50"
+            title={`Akan meng-overwrite data tahun ${year}`}
+          >
+            {isUploading ? 'Importing...' : `Import CSV (${year})`}
           </button>
         </div>
-      </header>
+        <button onClick={onLogout} className="px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg text-sm font-medium border border-red-100">
+          Logout
+        </button>
+      </div>
 
-      <main className="flex-1 p-6 overflow-hidden flex flex-col">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 flex-1 flex flex-col overflow-hidden">
-          <div className="p-4 border-b">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 flex-1 flex flex-col overflow-hidden">
+        <div className="p-4 border-b shrink-0">
             <input
               type="text"
               placeholder="Search kabupaten or metric..."
@@ -151,7 +151,6 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             </div>
           </div>
         </div>
-      </main>
-    </div>
+      </div>
   )
 }

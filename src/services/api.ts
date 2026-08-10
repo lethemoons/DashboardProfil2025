@@ -17,4 +17,16 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 )
 
+// Response interceptor to handle global errors (like token expiration)
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      // Trigger a custom event that AuthContext will listen to
+      window.dispatchEvent(new Event('unauthorized'))
+    }
+    return Promise.reject(error)
+  }
+)
+
 export default api

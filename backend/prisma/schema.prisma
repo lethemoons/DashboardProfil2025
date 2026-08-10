@@ -18,12 +18,14 @@ model User {
 
 model DashboardData {
   id         Int      @id @default(autoincrement())
+  year       Int      @default(2025)
   tableNo    Int
   no         String
   kabupaten  String
   metric     String
   value      String
 
+  @@index([year])
   @@index([tableNo])
   @@index([kabupaten])
   @@index([metric])

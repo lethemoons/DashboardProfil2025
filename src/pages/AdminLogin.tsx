@@ -1,17 +1,18 @@
 import { useState } from 'react'
 import api from '../services/api'
+import { useAuth } from '../contexts/AuthContext'
 
-export default function AdminLogin({ onLogin }: { onLogin: () => void }) {
+export default function AdminLogin({ onLogin, onBack }: { onLogin: () => void, onBack: () => void }) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const { login } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
       const res = await api.post('/auth/login', { username, password })
-      localStorage.setItem('token', res.data.token)
-      localStorage.setItem('role', res.data.role)
+      login(res.data.token, res.data.role)
       onLogin()
     } catch (err: any) {
       setError(err.response?.data?.error || 'Login failed')
@@ -49,6 +50,13 @@ export default function AdminLogin({ onLogin }: { onLogin: () => void }) {
             className="w-full bg-[#0FB0AA] hover:bg-[#0da09a] text-white font-medium py-2 px-4 rounded-lg transition-colors"
           >
             Login
+          </button>
+          <button
+            type="button"
+            onClick={onBack}
+            className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg transition-colors"
+          >
+            Kembali ke Dashboard
           </button>
         </form>
       </div>

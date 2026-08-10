@@ -1,0 +1,25 @@
+table_no,no,kabupaten,metric,value
+1,1.0,KAB. PACITAN,luas_wilayah_km2,2000.00
+1,1.0,KAB. PACITAN,jumlah_desa,200.0
+1,1.0,KAB. PACITAN,jumlah_kelurahan,10.0
+1,1.0,KAB. PACITAN,jumlah_desa_+_kelurahan,210
+1,1.0,KAB. PACITAN,jumlah_penduduk_desa_+_kelurahan,750000.0
+1,1.0,KAB. PACITAN,jumlah_rumah_tangga_desa_+_kelurahan,250000.0
+1,1.0,KAB. PACITAN,ratarata_jiwa_rumah_tangga_desa_+_kelurahan,3.0
+1,1.0,KAB. PACITAN,kepadatan_penduduk_per_km2_desa_+_kelurahan,375.0
+1,2.0,KAB. PONOROGO,luas_wilayah_km2,2500.00
+1,2.0,KAB. PONOROGO,jumlah_desa,350.0
+1,2.0,KAB. PONOROGO,jumlah_kelurahan,50.0
+1,2.0,KAB. PONOROGO,jumlah_desa_+_kelurahan,400
+1,2.0,KAB. PONOROGO,jumlah_penduduk_desa_+_kelurahan,1200000.0
+1,2.0,KAB. PONOROGO,jumlah_rumah_tangga_desa_+_kelurahan,400000.0
+1,2.0,KAB. PONOROGO,ratarata_jiwa_rumah_tangga_desa_+_kelurahan,3.0
+1,2.0,KAB. PONOROGO,kepadatan_penduduk_per_km2_desa_+_kelurahan,480.0
+54,1.0,KAB. PACITAN,lakilaki,350000.0
+54,1.0,KAB. PACITAN,perempuan,360000.0
+54,2.0,KAB. PONOROGO,lakilaki,600000.0
+54,2.0,KAB. PONOROGO,perempuan,600000.0
+87,1.0,KAB. PACITAN,60,85.5
+87,2.0,KAB. PONOROGO,60,92.0
+88,1.0,KAB. PACITAN,9,95.0
+88,2.0,KAB. PONOROGO,9,98.0

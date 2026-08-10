@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import api from '../services/api'
 import { KABUPATEN_LIST } from '../data/kabupaten'
+import { useFilter } from '../contexts/FilterContext'
 
 // Shape of the transformed data
 export type KabRow = { kabupaten: string; [key: string]: string | number }
@@ -175,31 +176,33 @@ const TABLE_METRIC_ALIASES: Record<string, string> = {
   '88_9':                            'kualitas_udara_ms_pct',
 }
 
-let dbCache: KabRow[] | null = null
-let dbPromise: Promise<KabRow[]> | null = null
+let dbCache: Record<number, KabRow[]> = {}
+let dbPromise: Record<number, Promise<KabRow[]>> = {}
 
 export function clearCache() {
-  dbCache = null
-  dbPromise = null
+  dbCache = {}
+  dbPromise = {}
 }
 
 export function useDashboardData() {
-  const [data, setData] = useState<KabRow[]>(dbCache || [])
-  const [loading, setLoading] = useState(!dbCache)
+  const { year } = useFilter()
+  const [data, setData] = useState<KabRow[]>(dbCache[year] || [])
+  const [loading, setLoading] = useState(!dbCache[year])
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (dbCache) {
-      setData(dbCache)
+    if (dbCache[year]) {
+      setData(dbCache[year])
       setLoading(false)
       return
     }
 
+    setLoading(true)
     let isMounted = true
     const fetchData = async () => {
       try {
-        if (!dbPromise) {
-          dbPromise = api.get('/data').then(res => {
+        if (!dbPromise[year]) {
+          dbPromise[year] = api.get('/data', { params: { year } }).then(res => {
             const rawData: RawDataRow[] = res.data
             const grouped: Record<string, KabRow> = {}
             
@@ -265,8 +268,8 @@ export function useDashboardData() {
           })
         }
 
-        const result = await dbPromise
-        dbCache = result
+        const result = await dbPromise[year]
+        dbCache[year] = result
 
         if (isMounted) {
           setData(result)
@@ -282,12 +285,13 @@ export function useDashboardData() {
 
     fetchData()
     return () => { isMounted = false }
-  }, [])
+  }, [year])
 
   return { data, loading, error }
 }
 
 export function useAdminData(page = 1, limit = 50, search = '') {
+  const { year } = useFilter()
   const [data, setData] = useState<RawDataRow[]>([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -296,7 +300,7 @@ export function useAdminData(page = 1, limit = 50, search = '') {
   const fetchData = async () => {
     setLoading(true)
     try {
-      const response = await api.get(`/admin/data`, { params: { page, limit, search } })
+      const response = await api.get(`/admin/data`, { params: { page, limit, search, year } })
       setData(response.data.data)
       setTotal(response.data.total)
       setError(null)
@@ -309,7 +313,7 @@ export function useAdminData(page = 1, limit = 50, search = '') {
 
   useEffect(() => {
     fetchData()
-  }, [page, limit, search])
+  }, [page, limit, search, year])
 
   return { data, total, loading, error, refetch: fetchData }
 }

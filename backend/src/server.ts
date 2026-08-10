@@ -49,7 +49,8 @@ app.post('/api/auth/login', async (req, res) => {
 // --- Guest Data Routes ---
 app.get('/api/data', async (req, res) => {
   try {
-    const data = await prisma.dashboardData.findMany()
+    const year = parseInt(req.query.year as string) || 2025
+    const data = await prisma.dashboardData.findMany({ where: { year } })
     res.json(data)
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch data' })
@@ -58,27 +59,34 @@ app.get('/api/data', async (req, res) => {
 
 // --- Admin CRUD Routes ---
 app.get('/api/admin/data', authenticateAdmin, async (req, res) => {
-  const { page = 1, limit = 50, search = '' } = req.query
-  const skip = (Number(page) - 1) * Number(limit)
-  
-  const where = search ? {
-    OR: [
-      { kabupaten: { contains: String(search) } },
-      { metric: { contains: String(search) } }
-    ]
-  } : {}
+  try {
+    const page = parseInt(req.query.page as string) || 1
+    const limit = parseInt(req.query.limit as string) || 50
+    const search = (req.query.search as string) || ''
+    const year = parseInt(req.query.year as string) || 2025
 
-  const [data, total] = await Promise.all([
-    prisma.dashboardData.findMany({
-      where,
-      skip,
-      take: Number(limit),
-      orderBy: { id: 'desc' }
-    }),
-    prisma.dashboardData.count({ where })
-  ])
-  
-  res.json({ data, total, page: Number(page), limit: Number(limit) })
+    const where = {
+      year,
+      OR: [
+        { kabupaten: { contains: search } },
+        { metric: { contains: search } }
+      ]
+    }
+
+    const [total, data] = await Promise.all([
+      prisma.dashboardData.count({ where }),
+      prisma.dashboardData.findMany({
+        where,
+        skip: (page - 1) * limit,
+        take: limit,
+        orderBy: { id: 'desc' }
+      })
+    ])
+    
+    res.json({ data, total, page, limit })
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch data' })
+  }
 })
 
 app.post('/api/admin/data', authenticateAdmin, async (req, res) => {
@@ -121,12 +129,14 @@ app.delete('/api/admin/data/:id', authenticateAdmin, async (req, res) => {
 app.post('/api/admin/import', authenticateAdmin, upload.single('file'), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' })
   
+  const year = parseInt(req.body.year) || 2025
   const results: any[] = []
   fs.createReadStream(req.file.path)
     .pipe(csv())
     .on('data', (data) => {
       if (data.table_no && data.kabupaten && data.metric) {
         results.push({
+          year,
           tableNo: parseInt(data.table_no),
           no: data.no || '',
           kabupaten: data.kabupaten,
@@ -137,6 +147,7 @@ app.post('/api/admin/import', authenticateAdmin, upload.single('file'), async (r
     })
     .on('end', async () => {
       try {
+        await prisma.dashboardData.deleteMany({ where: { year } })
         await prisma.dashboardData.createMany({ data: results })
         fs.unlinkSync(req.file!.path)
         res.json({ success: true, count: results.length })

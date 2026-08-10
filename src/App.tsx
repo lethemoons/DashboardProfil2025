@@ -15,6 +15,8 @@ import TularVektor from './pages/TularVektor'
 import KesehatanLingkungan from './pages/KesehatanLingkungan'
 import AdminLogin from './pages/AdminLogin'
 import AdminDashboard from './pages/AdminDashboard'
+import { AuthProvider, useAuth } from './contexts/AuthContext'
+import { FilterProvider, useFilter } from './contexts/FilterContext'
 import { Home, LayoutDashboard, Building2, Users, Receipt, Baby, Stethoscope, Droplets, ChevronDown, ChevronRight, ChevronLeft, Settings } from 'lucide-react'
 
 type PageId =
@@ -110,7 +112,7 @@ const PAGE_TO_NAV_GROUP: Record<PageId, PageId> = {
   admin: 'admin'
 }
 
-export default function App() {
+function MainApp() {
   const [page, setPage] = useState<PageId>('beranda')
   const [expanded, setExpanded] = useState<Set<PageId>>(new Set(['sarana', 'ibu', 'penyakit_menular']))
   const [sidebarOpen, setSidebarOpen] = useState(true)
@@ -132,21 +134,12 @@ export default function App() {
   }
 
   const activeGroup = PAGE_TO_NAV_GROUP[page]
+  const { isAuthenticated, isAdmin, logout } = useAuth()
+  const { year, setYear } = useFilter()
 
   // --- Admin Routing Logic ---
-  if (page === 'admin') {
-    const token = localStorage.getItem('token')
-    const role = localStorage.getItem('role')
-
-    if (token && role === 'admin') {
-      return <AdminDashboard onLogout={() => {
-        localStorage.removeItem('token')
-        localStorage.removeItem('role')
-        setPage('gambaran')
-      }} />
-    } else {
-      return <AdminLogin onLogin={() => setPage('admin')} />
-    }
+  if (page === 'admin' && !(isAuthenticated && isAdmin)) {
+    return <AdminLogin onLogin={() => setPage('admin')} onBack={() => setPage('beranda')} />
   }
 
   return (
@@ -259,14 +252,24 @@ export default function App() {
             {PARENT_SECTION[page] && (
               <div className="text-[13px] font-medium mb-1" style={{ color: 'var(--color-text-muted)' }}>{PARENT_SECTION[page]}</div>
             )}
-            <h1 className="text-xl font-bold" style={{ color: 'var(--color-text-main)' }}>
+            <h1 className="text-xl font-bold flex items-center gap-3" style={{ color: 'var(--color-text-main)' }}>
               {SECTION_LABELS[page]}
             </h1>
           </div>
           <div className="flex items-center gap-3">
+            <select
+              value={year}
+              onChange={(e) => setYear(Number(e.target.value))}
+              className="px-3 py-1.5 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[#0FB0AA] text-sm font-medium text-gray-700 bg-white"
+            >
+              <option value={2024}>Tahun 2024</option>
+              <option value={2025}>Tahun 2025</option>
+              <option value={2026}>Tahun 2026</option>
+              <option value={2027}>Tahun 2027</option>
+            </select>
             <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: '#F0FAF9', color: '#0FB0AA' }}>
               <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#0FB0AA' }} />
-              38 Kabupaten/Kota · Profil Kesehatan 2025
+              38 Kabupaten/Kota
             </div>
             <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ background: '#0FB0AA' }}>G</div>
           </div>
@@ -288,15 +291,31 @@ export default function App() {
           {page === 'pd3i' && <PD3I />}
           {page === 'tular_vektor' && <TularVektor />}
           {page === 'lingkungan' && <KesehatanLingkungan />}
+          {page === 'admin' && isAuthenticated && isAdmin && (
+            <AdminDashboard onLogout={() => {
+              logout()
+              setPage('beranda')
+            }} />
+          )}
         </main>
 
         {page !== 'beranda' && (
           <footer className="bg-white border-t border-gray-100 px-6 py-2 flex items-center justify-between text-xs text-gray-400 shrink-0">
-            <span>Dinas Kesehatan Provinsi Jawa Timur · Data Profil Kesehatan 2025</span>
+            <span>Dinas Kesehatan Provinsi Jawa Timur · Data Profil Kesehatan {year}</span>
             <span>47.913 baris data · 76 tabel</span>
           </footer>
         )}
       </div>
     </div>
+  )
+}
+
+export default function App() {
+  return (
+    <FilterProvider>
+      <AuthProvider>
+        <MainApp />
+      </AuthProvider>
+    </FilterProvider>
   )
 }
