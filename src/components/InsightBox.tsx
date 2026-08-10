@@ -5,6 +5,24 @@ interface Props {
   children?: ReactNode
 }
 
+function renderFormattedText(text: string): ReactNode {
+  if (!text.includes('**')) {
+    return text
+  }
+
+  const parts = text.split(/(\*\*.*?\*\*)/g)
+  return parts.map((part, index) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return (
+        <strong key={index} className="font-semibold text-gray-900">
+          {part.slice(2, -2)}
+        </strong>
+      )
+    }
+    return part
+  })
+}
+
 export default function InsightBox({ insights, children }: Props) {
   if ((!insights || insights.length === 0) && !children) return null
   
@@ -23,7 +41,7 @@ export default function InsightBox({ insights, children }: Props) {
               {insights.map((ins, i) => (
                 <li key={i} className="text-gray-700 flex gap-2">
                   <span className="text-[#0FB0AA] mt-0.5 shrink-0">•</span>
-                  <span>{ins}</span>
+                  <span>{renderFormattedText(ins)}</span>
                 </li>
               ))}
             </ul>

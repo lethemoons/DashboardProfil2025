@@ -10,6 +10,7 @@ import KPICard from '../components/KPICard'
 import InsightBox from '../components/InsightBox'
 import StatPanel from '../components/StatPanel'
 import DataTable from '../components/DataTable'
+import CrosstabSection from '../components/CrosstabSection'
 
 const OPTIONS = [
   { key: 'tbc_kasus', label: 'TBC — Jumlah Kasus' },
@@ -157,6 +158,14 @@ export default function PenyakitMenular() {
 
       <StatPanel stats={stats} label={indicLabel} />
       {statInsights.length > 0 && <InsightBox insights={statInsights} />}
+
+      <CrosstabSection
+        data={data}
+        variables={OPTIONS}
+        defaultRowVar="tbc_kasus"
+        defaultColVar="diare_semua_umur"
+      />
+
       <DataTable data={data} columns={[
         { key: 'kabupaten', label: 'Kabupaten/Kota' },
         { key: 'tbc_kasus', label: 'TBC Kasus', format: v => v?.toLocaleString('id-ID') },

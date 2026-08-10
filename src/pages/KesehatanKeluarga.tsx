@@ -10,6 +10,7 @@ import KPICard from '../components/KPICard'
 import InsightBox from '../components/InsightBox'
 import StatPanel from '../components/StatPanel'
 import DataTable from '../components/DataTable'
+import CrosstabSection from '../components/CrosstabSection'
 
 const IBU_OPTIONS = [
   { key: 'k1_pct', label: 'Cakupan K1 (%)' },
@@ -119,6 +120,13 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
           {ibuChartInsights.length > 0 && <InsightBox insights={ibuChartInsights} />}
           <StatPanel stats={ibuStats} label={ibuLabel} format={v => v.toFixed(1) + '%'} />
           <InsightBox insights={ibuStatInsights} />
+          <CrosstabSection
+            data={ibuData}
+            variables={IBU_OPTIONS}
+            defaultRowVar="k1_pct"
+            defaultColVar="persalinan_fasyankes_pct"
+            title="Analisis Crosstab Kesehatan Ibu"
+          />
           <DataTable data={ibuData} columns={[
             { key: 'kabupaten', label: 'Kabupaten/Kota' },
             { key: 'k1_pct', label: 'K1 (%)', format: v => v?.toFixed(1) },
@@ -162,6 +170,13 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
             `Rata-rata stunting: ${avgStunting.toFixed(1)}%.`,
             `Total kematian neonatal + bayi: ${totKematianAnak} kasus di wilayah yang dipilih.`,
           ]} />
+          <CrosstabSection
+            data={anakData}
+            variables={ANAK_OPTIONS}
+            defaultRowVar="stunting_pct"
+            defaultColVar="gizi_kurang_pct"
+            title="Analisis Crosstab Kesehatan Anak"
+          />
           <DataTable data={anakData} columns={[
             { key: 'kabupaten', label: 'Kabupaten/Kota' },
             { key: 'stunting_pct', label: 'Stunting (%)', format: v => v?.toFixed(1) },
@@ -198,6 +213,10 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
             `Total lansia dilayani: ${lansiaData.reduce((s, d) => s + (d.lansia_dilayani as number), 0).toLocaleString('id-ID')} jiwa.`,
             `Total posyandu lansia: ${lansiaData.reduce((s, d) => s + (d.posyandu_lansia as number), 0).toLocaleString('id-ID')} unit.`,
           ]} />
+          <CrosstabSection
+            data={lansiaData}
+            title="Analisis Crosstab Usia Produktif & Lansia"
+          />
           <DataTable data={lansiaData} columns={[
             { key: 'kabupaten', label: 'Kabupaten/Kota' },
             { key: 'produktif_laki', label: 'Produktif L', format: v => v?.toLocaleString('id-ID') },

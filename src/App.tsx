@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Beranda from './pages/Beranda'
 import GambaranUmum from './pages/GambaranUmum'
 import SaranaKesehatan from './pages/SaranaKesehatan'
 import AksesMutu from './pages/AksesMutu'
@@ -14,9 +15,10 @@ import TularVektor from './pages/TularVektor'
 import KesehatanLingkungan from './pages/KesehatanLingkungan'
 import AdminLogin from './pages/AdminLogin'
 import AdminDashboard from './pages/AdminDashboard'
-import { LayoutDashboard, Building2, Users, Receipt, Baby, Stethoscope, Droplets, ChevronDown, ChevronRight, ChevronLeft, Settings } from 'lucide-react'
+import { Home, LayoutDashboard, Building2, Users, Receipt, Baby, Stethoscope, Droplets, ChevronDown, ChevronRight, ChevronLeft, Settings } from 'lucide-react'
 
 type PageId =
+  | 'beranda'
   | 'gambaran'
   | 'sarana' | 'akses_mutu' | 'ukbm'
   | 'sdm'
@@ -34,6 +36,7 @@ interface NavItem {
 }
 
 const NAV: NavItem[] = [
+  { id: 'beranda', label: 'Beranda', icon: Home },
   { id: 'gambaran', label: 'Gambaran Umum', icon: LayoutDashboard },
   {
     id: 'sarana', label: 'Sarana Kesehatan', icon: Building2,
@@ -66,6 +69,7 @@ const NAV: NavItem[] = [
 ]
 
 const SECTION_LABELS: Partial<Record<PageId, string>> = {
+  beranda: 'Beranda',
   gambaran: 'Gambaran Umum',
   sarana: 'Sarana Kesehatan',
   akses_mutu: 'Akses & Mutu Pelayanan Kesehatan',
@@ -95,6 +99,7 @@ const PARENT_SECTION: Partial<Record<PageId, string>> = {
 
 // Which nav group is active for a given page
 const PAGE_TO_NAV_GROUP: Record<PageId, PageId> = {
+  beranda: 'beranda',
   gambaran: 'gambaran',
   sarana: 'sarana', akses_mutu: 'sarana', ukbm: 'sarana',
   sdm: 'sdm',
@@ -106,7 +111,7 @@ const PAGE_TO_NAV_GROUP: Record<PageId, PageId> = {
 }
 
 export default function App() {
-  const [page, setPage] = useState<PageId>('gambaran')
+  const [page, setPage] = useState<PageId>('beranda')
   const [expanded, setExpanded] = useState<Set<PageId>>(new Set(['sarana', 'ibu', 'penyakit_menular']))
   const [sidebarOpen, setSidebarOpen] = useState(true)
 
@@ -132,7 +137,7 @@ export default function App() {
   if (page === 'admin') {
     const token = localStorage.getItem('token')
     const role = localStorage.getItem('role')
-    
+
     if (token && role === 'admin') {
       return <AdminDashboard onLogout={() => {
         localStorage.removeItem('token')
@@ -269,25 +274,28 @@ export default function App() {
 
         {/* Page */}
         <main className="flex-1 overflow-y-auto p-5">
-          {page === 'gambaran'       && <GambaranUmum />}
-          {page === 'sarana'         && <SaranaKesehatan />}
-          {page === 'akses_mutu'     && <AksesMutu />}
-          {page === 'ukbm'           && <UKBM />}
-          {page === 'sdm'            && <SDMKesehatan />}
-          {page === 'pembiayaan'     && <PembiayaanKesehatan />}
-          {page === 'ibu'            && <KesehatanIbu />}
-          {page === 'anak'           && <KesehatanAnak />}
+          {page === 'beranda' && <Beranda onNavigate={navigate} />}
+          {page === 'gambaran' && <GambaranUmum />}
+          {page === 'sarana' && <SaranaKesehatan />}
+          {page === 'akses_mutu' && <AksesMutu />}
+          {page === 'ukbm' && <UKBM />}
+          {page === 'sdm' && <SDMKesehatan />}
+          {page === 'pembiayaan' && <PembiayaanKesehatan />}
+          {page === 'ibu' && <KesehatanIbu />}
+          {page === 'anak' && <KesehatanAnak />}
           {page === 'usia_produktif' && <UsiaProduktifLansia />}
           {page === 'penyakit_menular' && <PenyakitMenular />}
-          {page === 'pd3i'           && <PD3I />}
-          {page === 'tular_vektor'   && <TularVektor />}
-          {page === 'lingkungan'     && <KesehatanLingkungan />}
+          {page === 'pd3i' && <PD3I />}
+          {page === 'tular_vektor' && <TularVektor />}
+          {page === 'lingkungan' && <KesehatanLingkungan />}
         </main>
 
-        <footer className="bg-white border-t border-gray-100 px-6 py-2 flex items-center justify-between text-xs text-gray-400 shrink-0">
-          <span>Dinas Kesehatan Provinsi Jawa Timur · Data Profil Kesehatan 2025</span>
-          <span>47.913 baris data · 76 tabel</span>
-        </footer>
+        {page !== 'beranda' && (
+          <footer className="bg-white border-t border-gray-100 px-6 py-2 flex items-center justify-between text-xs text-gray-400 shrink-0">
+            <span>Dinas Kesehatan Provinsi Jawa Timur · Data Profil Kesehatan 2025</span>
+            <span>47.913 baris data · 76 tabel</span>
+          </footer>
+        )}
       </div>
     </div>
   )

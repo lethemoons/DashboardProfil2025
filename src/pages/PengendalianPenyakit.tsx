@@ -10,6 +10,7 @@ import KPICard from '../components/KPICard'
 import InsightBox from '../components/InsightBox'
 import StatPanel from '../components/StatPanel'
 import DataTable from '../components/DataTable'
+import CrosstabSection from '../components/CrosstabSection'
 
 const MENULAR_OPTIONS = [
   { key: 'tbc_kasus', label: 'TBC - Kasus' },
@@ -123,6 +124,13 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
           {menularChartInsights.length > 0 && <InsightBox insights={menularChartInsights} />}
           <StatPanel stats={stats} label={menularLabel} />
           {menularStatInsights.length > 0 && <InsightBox insights={menularStatInsights} />}
+          <CrosstabSection
+            data={menularData}
+            variables={MENULAR_OPTIONS}
+            defaultRowVar="tbc_kasus"
+            defaultColVar="diare_semua_umur"
+            title="Analisis Crosstab Penyakit Menular"
+          />
           <DataTable data={menularData} columns={[
             { key: 'kabupaten', label: 'Kabupaten/Kota' },
             { key: 'tbc_kasus', label: 'TBC Kasus', format: v => v?.toLocaleString('id-ID') },
@@ -158,6 +166,10 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
             `Total kasus DBD: ${totDBD.toLocaleString('id-ID')}.`,
             `Kasus malaria positif: ${pd3iData.reduce((s, d) => s + (d.malaria_positif as number), 0).toLocaleString('id-ID')}.`,
           ]} />
+          <CrosstabSection
+            data={pd3iData}
+            title="Analisis Crosstab DBD & Imunisasi"
+          />
           <DataTable data={pd3iData} columns={[
             { key: 'kabupaten', label: 'Kabupaten/Kota' },
             { key: 'difteri_kasus', label: 'Difteri' },
@@ -196,6 +208,13 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
             </ResponsiveContainer>
           </div>
           <InsightBox insights={[`Total DBD: ${totDBD.toLocaleString('id-ID')} | Filariasis: ${pd3iData.reduce((s, d) => s + (d.filariasis_kronis as number), 0)} kasus.`]} />
+          <CrosstabSection
+            data={pd3iData}
+            variables={VEKTOR_OPTIONS}
+            defaultRowVar="dbd_kasus"
+            defaultColVar="dbd_cfr"
+            title="Analisis Crosstab Penyakit Tular Vektor"
+          />
         </>
       )}
 
@@ -230,6 +249,13 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
             `Total kasus hipertensi (L+P): ${totHipertensi.toLocaleString('id-ID')}.`,
             `Total DM terdiagnosis: ${ptmData.reduce((s, d) => s + (d.dm_terdiagnosis as number), 0).toLocaleString('id-ID')}.`,
           ]} />
+          <CrosstabSection
+            data={ptmData}
+            variables={PTM_OPTIONS}
+            defaultRowVar="hipertensi_laki"
+            defaultColVar="dm_terdiagnosis"
+            title="Analisis Crosstab Penyakit Tidak Menular"
+          />
           <DataTable data={ptmData} columns={[
             { key: 'kabupaten', label: 'Kabupaten/Kota' },
             { key: 'hipertensi_laki', label: 'Hipertensi L', format: v => v?.toLocaleString('id-ID') },

@@ -10,6 +10,7 @@ import KPICard from '../components/KPICard'
 import InsightBox from '../components/InsightBox'
 import StatPanel from '../components/StatPanel'
 import DataTable from '../components/DataTable'
+import CrosstabSection from '../components/CrosstabSection'
 
 const IBU_OPTIONS = [
   { key: 'k1_pct', label: 'Cakupan K1 (%)' },
@@ -171,6 +172,14 @@ export default function KesehatanIbu() {
 
       <StatPanel stats={stats} label={indicLabel} format={v => v.toFixed(1) + '%'} />
       {statInsights.length > 0 && <InsightBox insights={statInsights} />}
+
+      <CrosstabSection
+        data={data}
+        variables={IBU_OPTIONS}
+        defaultRowVar="k1_pct"
+        defaultColVar="persalinan_fasyankes_pct"
+      />
+
       <DataTable data={data} columns={[
         { key: 'kabupaten', label: 'Kabupaten/Kota' },
         { key: 'k1_pct', label: 'K1 (%)', format: v => v?.toFixed(1) },

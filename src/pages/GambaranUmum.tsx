@@ -12,6 +12,7 @@ import InsightBox from '../components/InsightBox'
 import StatPanel from '../components/StatPanel'
 import DataTable from '../components/DataTable'
 import RankChart from '../components/RankChart'
+import CrosstabSection from '../components/CrosstabSection'
 
 const COLORS = ['#0FB0AA', '#CBD92C', '#06B5D0', '#f97316', '#8b5cf6']
 const fmt = (v: number) => v >= 1e6 ? (v / 1e6).toFixed(2) + ' jt' : v.toLocaleString('id-ID')
@@ -126,6 +127,13 @@ export default function GambaranUmum() {
       <StatPanel stats={stats} label={indLabel} />
       
       {statInsights.length > 0 && <InsightBox insights={statInsights} />}
+
+      <CrosstabSection
+        data={data}
+        variables={INDICATOR_OPTIONS}
+        defaultRowVar="jumlah_penduduk_desa_+_kelurahan"
+        defaultColVar="kepadatan_penduduk_per_km2_desa_+_kelurahan"
+      />
 
       <DataTable
         data={data}

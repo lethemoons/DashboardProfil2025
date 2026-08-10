@@ -8,6 +8,7 @@ import ChoroplethMap from '../components/ChoroplethMap'
 import RankChart from '../components/RankChart'
 import DynamicAnalysis from '../components/DynamicAnalysis'
 import InsightBox from '../components/InsightBox'
+import CrosstabSection from '../components/CrosstabSection'
 
 export default function SDMKesehatan() {
   const { data: rawData, indicators, loading, error } = useSdmData()
@@ -144,6 +145,13 @@ export default function SDMKesehatan() {
       </div>
 
       <DynamicAnalysis data={rawData} indicators={indicators} />
+
+      <CrosstabSection
+        data={provData}
+        variables={indicators.map(ind => ({ key: ind, label: ind.replace(/_/g, ' ').toUpperCase() }))}
+        defaultRowVar={indicators[0] || ''}
+        defaultColVar={indicators[1] || indicators[0] || ''}
+      />
 
       <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
         <h3 className="font-semibold text-gray-800 mb-4" style={{ fontFamily: 'Plus Jakarta Sans' }}>Data Table SDM Kesehatan</h3>

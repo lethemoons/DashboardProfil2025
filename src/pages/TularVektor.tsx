@@ -10,6 +10,7 @@ import KPICard from '../components/KPICard'
 import InsightBox from '../components/InsightBox'
 import StatPanel from '../components/StatPanel'
 import DataTable from '../components/DataTable'
+import CrosstabSection from '../components/CrosstabSection'
 
 const OPTIONS = [
   { key: 'dbd_kasus', label: 'DBD — Jumlah Kasus' },
@@ -140,6 +141,14 @@ export default function TularVektor() {
 
       <StatPanel stats={stats} label={indicLabel} />
       {statInsights.length > 0 && <InsightBox insights={statInsights} />}
+
+      <CrosstabSection
+        data={data}
+        variables={OPTIONS}
+        defaultRowVar="dbd_kasus"
+        defaultColVar="dbd_cfr"
+      />
+
       <DataTable data={data} columns={[
         { key: 'kabupaten', label: 'Kabupaten/Kota' },
         { key: 'dbd_kasus', label: 'Kasus DBD', format: v => v?.toLocaleString('id-ID') },

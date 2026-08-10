@@ -10,6 +10,7 @@ import KPICard from '../components/KPICard'
 import InsightBox from '../components/InsightBox'
 import StatPanel from '../components/StatPanel'
 import DataTable from '../components/DataTable'
+import CrosstabSection from '../components/CrosstabSection'
 
 const ANAK_OPTIONS = [
   { key: 'stunting_pct', label: 'Prevalensi Stunting (%)' },
@@ -164,6 +165,14 @@ export default function KesehatanAnak() {
 
       <StatPanel stats={stats} label={indicLabel} format={v => v.toFixed(1) + '%'} />
       {statInsights.length > 0 && <InsightBox insights={statInsights} />}
+
+      <CrosstabSection
+        data={data}
+        variables={ANAK_OPTIONS}
+        defaultRowVar="stunting_pct"
+        defaultColVar="gizi_kurang_pct"
+      />
+
       <DataTable data={data} columns={[
         { key: 'kabupaten', label: 'Kabupaten/Kota' },
         { key: 'stunting_pct', label: 'Stunting (%)', format: v => v?.toFixed(1) },

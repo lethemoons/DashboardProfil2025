@@ -10,6 +10,7 @@ import KPICard from '../components/KPICard'
 import InsightBox from '../components/InsightBox'
 import StatPanel from '../components/StatPanel'
 import DataTable from '../components/DataTable'
+import CrosstabSection from '../components/CrosstabSection'
 
 const OPTIONS = [
   { key: 'produktif_laki', label: 'Usia Produktif Laki-laki' },
@@ -111,6 +112,14 @@ export default function UsiaProduktifLansia() {
 
       <StatPanel stats={stats} label={indicLabel} />
       {statInsights.length > 0 && <InsightBox insights={statInsights} />}
+
+      <CrosstabSection
+        data={data}
+        variables={OPTIONS}
+        defaultRowVar="lansia_dilayani"
+        defaultColVar="posyandu_lansia"
+      />
+
       <DataTable data={data} columns={[
         { key: 'kabupaten', label: 'Kabupaten/Kota' },
         { key: 'produktif_laki', label: 'Produktif L', format: v => v?.toLocaleString('id-ID') },

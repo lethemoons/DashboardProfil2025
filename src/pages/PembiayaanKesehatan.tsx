@@ -12,6 +12,7 @@ import InsightBox from '../components/InsightBox'
 import StatPanel from '../components/StatPanel'
 import DataTable from '../components/DataTable'
 import ChoroplethMap from '../components/ChoroplethMap'
+import CrosstabSection from '../components/CrosstabSection'
 
 const fmtRp = (v: number) => 'Rp ' + (v >= 1e12 ? (v / 1e12).toFixed(2) + ' T' : v >= 1e9 ? (v / 1e9).toFixed(1) + ' M' : v >= 1e6 ? (v / 1e6).toFixed(0) + ' jt' : v.toLocaleString('id-ID'))
 
@@ -171,6 +172,17 @@ export default function PembiayaanKesehatan() {
           </div>
         </div>
       </div>
+
+      <CrosstabSection
+        data={data.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR')}
+        variables={[
+          { key: '2023', label: 'Anggaran Kesehatan 2023' },
+          { key: '2024', label: 'Anggaran Kesehatan 2024' },
+          { key: '2025', label: 'Anggaran Kesehatan 2025' }
+        ]}
+        defaultRowVar="2024"
+        defaultColVar="2025"
+      />
 
       <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
         <h3 className="font-semibold text-gray-800 mb-4" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>

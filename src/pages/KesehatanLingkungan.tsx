@@ -10,6 +10,7 @@ import KPICard from '../components/KPICard'
 import InsightBox from '../components/InsightBox'
 import StatPanel from '../components/StatPanel'
 import DataTable from '../components/DataTable'
+import CrosstabSection from '../components/CrosstabSection'
 
 const KESLING_OPTIONS = [
   { key: 'air_minum_memenuhi_syarat_pct', label: 'Air Minum Memenuhi Syarat (%)' },
@@ -141,6 +142,13 @@ export default function KesehatanLingkungan() {
 
       <StatPanel stats={stats} label={indicLabel} format={v => v.toFixed(1) + '%'} />
       {statInsights.length > 0 && <InsightBox insights={statInsights} />}
+
+      <CrosstabSection
+        data={data}
+        variables={KESLING_OPTIONS}
+        defaultRowVar="air_minum_memenuhi_syarat_pct"
+        defaultColVar="sanitasi_aman_pct"
+      />
 
       <DataTable data={data} columns={[
         { key: 'kabupaten', label: 'Kabupaten/Kota' },

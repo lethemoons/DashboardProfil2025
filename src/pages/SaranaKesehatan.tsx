@@ -8,6 +8,7 @@ import FilterBar from '../components/FilterBar'
 import KPICard from '../components/KPICard'
 import InsightBox from '../components/InsightBox'
 import DataTable from '../components/DataTable'
+import CrosstabSection from '../components/CrosstabSection'
 
 const KATEGORI_OPTIONS = [
   'Semua',
@@ -194,6 +195,13 @@ export default function SaranaKesehatan() {
       </div>
 
       {insights.length > 0 && <InsightBox insights={insights} />}
+
+      <CrosstabSection
+        data={saranaKesehatan.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR')}
+        variables={ALL_FASILITAS.map(f => ({ key: f.key, label: f.label }))}
+        defaultRowVar="rs_umum"
+        defaultColVar="puskesmas_rawat_inap"
+      />
 
       <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm mt-2">
         <h3 className="font-semibold text-gray-800 mb-4" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Daftar Lengkap Fasilitas Kesehatan</h3>

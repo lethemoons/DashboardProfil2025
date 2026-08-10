@@ -11,6 +11,7 @@ import InsightBox from '../components/InsightBox'
 import StatPanel from '../components/StatPanel'
 import DataTable from '../components/DataTable'
 import RankChart from '../components/RankChart'
+import CrosstabSection from '../components/CrosstabSection'
 
 const RS_OPTIONS = [
   { key: 'bor', label: 'BOR — Bed Occupancy Rate (%)' },
@@ -152,6 +153,14 @@ export default function AksesMutu() {
         }
       />
       {statInsights.length > 0 && <InsightBox insights={statInsights} />}
+
+      <CrosstabSection
+        data={data}
+        variables={RS_OPTIONS}
+        defaultRowVar="bor"
+        defaultColVar="alos"
+      />
+
       <DataTable data={data} columns={[
         { key: 'kabupaten', label: 'Kabupaten/Kota' },
         { key: 'bor', label: 'BOR (%)', format: v => v?.toFixed(1) },

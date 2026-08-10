@@ -12,6 +12,7 @@ import StatPanel from '../components/StatPanel'
 import ChoroplethMap from '../components/ChoroplethMap'
 import RankChart from '../components/RankChart'
 import DataTable from '../components/DataTable'
+import CrosstabSection from '../components/CrosstabSection'
 
 export default function UKBM() {
   const { data: saranaKesehatan, loading, error } = useDashboardData()
@@ -102,6 +103,13 @@ export default function UKBM() {
       </div>
 
       <StatPanel stats={stats} label="Posyandu Aktif" />
+
+      <CrosstabSection
+        data={dataWithPct}
+        variables={rankIndicators}
+        defaultRowVar="jumlah_posyandu_siklus_hidup_aktif"
+        defaultColVar="pct_aktif"
+      />
 
       <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
         <h3 className="font-semibold text-gray-800 mb-4" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>

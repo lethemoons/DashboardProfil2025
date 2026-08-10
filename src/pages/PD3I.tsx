@@ -10,6 +10,7 @@ import KPICard from '../components/KPICard'
 import InsightBox from '../components/InsightBox'
 import StatPanel from '../components/StatPanel'
 import DataTable from '../components/DataTable'
+import CrosstabSection from '../components/CrosstabSection'
 
 const PD3I_OPTIONS = [
   { key: 'difteri_kasus', label: 'Difteri — Jumlah Kasus' },
@@ -129,6 +130,13 @@ export default function PD3I() {
           </div>
           <StatPanel stats={pd3iStats} label={pd3iLabel} />
           <InsightBox insights={pd3iInsights} />
+          <CrosstabSection
+            data={pd3iData}
+            variables={PD3I_OPTIONS}
+            defaultRowVar="difteri_kasus"
+            defaultColVar="campak_kasus"
+            title="Analisis Crosstab PD3I"
+          />
           <DataTable data={pd3iData} columns={[
             { key: 'kabupaten', label: 'Kabupaten/Kota' },
             { key: 'difteri_kasus', label: 'Difteri' },
@@ -185,6 +193,13 @@ export default function PD3I() {
           </div>
           <StatPanel stats={ptmStats} label={ptmLabel} />
           <InsightBox insights={ptmInsights} />
+          <CrosstabSection
+            data={ptmData}
+            variables={PTM_OPTIONS}
+            defaultRowVar="hipertensi_laki"
+            defaultColVar="dm_terdiagnosis"
+            title="Analisis Crosstab PTM"
+          />
           <DataTable data={ptmData} columns={[
             { key: 'kabupaten', label: 'Kabupaten/Kota' },
             { key: 'hipertensi_laki', label: 'Hipertensi L', format: v => v?.toLocaleString('id-ID') },
