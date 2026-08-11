@@ -76,10 +76,10 @@ export default function GambaranUmum() {
       </div>
 
       {/* Charts */}
-      <RankChart 
-        data={data} 
-        indicators={INDICATOR_OPTIONS} 
-        defaultIndicator="jumlah_penduduk_desa_+_kelurahan" 
+      <RankChart
+        data={data}
+        indicators={INDICATOR_OPTIONS}
+        defaultIndicator="jumlah_penduduk_desa_+_kelurahan"
         title="Ranking Kabupaten/Kota"
       />
 
@@ -121,9 +121,9 @@ export default function GambaranUmum() {
 
       <InsightBox insights={scatterInsights} />
 
-      <StatPanel 
-        stats={stats} 
-        label={indLabel} 
+      <StatPanel
+        stats={stats}
+        label={indLabel}
         rightElement={
           <select value={indicator} onChange={e => setIndicator(e.target.value)}
             className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[250px]">
@@ -131,7 +131,7 @@ export default function GambaranUmum() {
           </select>
         }
       />
-      
+
       {statInsights.length > 0 && <InsightBox insights={statInsights} />}
 
       <CrosstabSection

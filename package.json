@@ -16,6 +16,7 @@
     "d3-scale": "^4.0.2",
     "lucide-react": "^1.27.0",
     "prop-types": "^15.8.1",
+    "puppeteer": "^25.5.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-is": "^19.2.8",
@@ -32,6 +33,7 @@
     "@vitejs/plugin-react": "^6.0.0",
     "oxfmt": "^0.2.0",
     "tailwindcss": "^4.0.0",
+    "ts-morph": "^28.0.0",
     "typescript": "^5.7.0",
     "vite": "^8.0.0"
   }

@@ -96,7 +96,7 @@ export default function PenyakitMenular() {
             <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} domain={[0, 100]} unit="%" />
             <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
             <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-            <Bar yAxisId="left" dataKey="kasus" name="Kasus TBC" fill="#ef4444" radius={[3, 3, 0, 0]} />
+            <Bar yAxisId="left" dataKey="kasus" name="Kasus TBC" fill="#0FB0AA" radius={[3, 3, 0, 0]} />
             <Bar yAxisId="right" dataKey="sukses_pct" name="Sukses (%)" fill="#0FB0AA" radius={[3, 3, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
@@ -148,7 +148,7 @@ export default function PenyakitMenular() {
               const p = payload[0].payload
               return <div className="bg-white border border-gray-100 rounded-xl shadow p-3 text-xs"><div className="font-semibold mb-1">{p.name}</div><div>X: {p.x?.toLocaleString('id-ID')}</div><div>Y: {p.y?.toLocaleString('id-ID')}</div></div>
             }} />
-            <Scatter data={scatterData} fill="#ef4444" fillOpacity={0.75} />
+            <Scatter data={scatterData} fill="#0FB0AA" fillOpacity={0.75} />
           </ScatterChart>
         </ResponsiveContainer>
       </div>
@@ -164,7 +164,7 @@ export default function PenyakitMenular() {
           </select>
         }
       />
-      {statInsights.length > 0 && <InsightBox insights={statInsights} />}
+
 
       <CrosstabSection
         data={data}

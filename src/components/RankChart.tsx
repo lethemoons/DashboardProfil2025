@@ -178,7 +178,7 @@ export default function RankChart({ data, indicators, defaultIndicator, title = 
                 radius={[0, 6, 6, 0]} 
                 label={{ 
                   position: 'right', 
-                  formatter: (v: number) => formatValue(v),
+                  formatter: (v: any) => formatValue(v),
                   fill: '#6B7280',
                   fontSize: 11,
                   fontWeight: 600
@@ -189,9 +189,6 @@ export default function RankChart({ data, indicators, defaultIndicator, title = 
                   let fillColor = '#0FB0AA';
                   if (hoveredIndex === index) {
                     fillColor = '#06B5D0'; // Hover color
-                  } else if (limit === 'all') {
-                    if (entry.rank === 1) fillColor = '#0EA5E9'; // Highlight Highest
-                    else if (entry.rank === processedData.length) fillColor = '#F43F5E'; // Highlight Lowest
                   }
                   
                   return (
@@ -219,7 +216,7 @@ export default function RankChart({ data, indicators, defaultIndicator, title = 
         <div className="flex items-start gap-2 ml-1">
           <div className="w-1.5 h-1.5 rounded-full bg-[#0FB0AA] mt-1.5 flex-shrink-0" />
           <div className="leading-relaxed">
-            Kabupaten dengan nilai tertinggi adalah <strong>{maxKab}</strong> ({formatValue(maxVal)}), 
+            Kabupaten/kota dengan nilai tertinggi adalah <strong>{maxKab}</strong> ({formatValue(maxVal)}), 
             sedangkan terendah adalah <strong>{minKab}</strong> ({formatValue(minVal)}). 
             Rata-rata provinsi berada di <strong>{formatValue(avg)}</strong>, dengan selisih puncak dan dasar sebesar <strong>{formatValue(maxVal - minVal)}</strong>. 
             Secara total, terdapat <strong>{aboveAvg} kabupaten/kota</strong> di atas rata-rata dan <strong>{belowAvg}</strong> di bawahnya.

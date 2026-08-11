@@ -118,7 +118,7 @@ export default function UsiaProduktifLansia() {
           </select>
         }
       />
-      {statInsights.length > 0 && <InsightBox insights={statInsights} />}
+      
 
       <CrosstabSection
         data={data}

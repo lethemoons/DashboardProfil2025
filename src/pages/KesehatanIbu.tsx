@@ -103,9 +103,9 @@ export default function KesehatanIbu() {
             <YAxis tick={{ fontSize: 11 }} />
             <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
             <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-            <Bar dataKey="hamil" name="Saat Hamil" stackId="a" fill="#ef4444" />
-            <Bar dataKey="bersalin" name="Saat Bersalin" stackId="a" fill="#f97316" />
-            <Bar dataKey="nifas" name="Saat Nifas" stackId="a" fill="#fbbf24" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="hamil" name="Saat Hamil" stackId="a" fill="#0FB0AA" />
+            <Bar dataKey="bersalin" name="Saat Bersalin" stackId="a" fill="#0FB0AA" />
+            <Bar dataKey="nifas" name="Saat Nifas" stackId="a" fill="#0FB0AA" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -179,7 +179,7 @@ export default function KesehatanIbu() {
           </select>
         }
       />
-      {statInsights.length > 0 && <InsightBox insights={statInsights} />}
+
 
       <CrosstabSection
         data={data}

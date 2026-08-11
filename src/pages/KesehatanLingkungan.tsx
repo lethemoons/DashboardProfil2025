@@ -133,7 +133,7 @@ export default function KesehatanLingkungan() {
             <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
             <Bar dataKey="air" name="Air Minum (%)" fill="#06B5D0" radius={[3, 3, 0, 0]} />
             <Bar dataKey="sanitasi" name="Sanitasi Aman (%)" fill="#0FB0AA" radius={[3, 3, 0, 0]} />
-            <Bar dataKey="babs" name="BABS (%)" fill="#f97316" radius={[3, 3, 0, 0]} />
+            <Bar dataKey="babs" name="BABS (%)" fill="#0FB0AA" radius={[3, 3, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -149,7 +149,7 @@ export default function KesehatanLingkungan() {
           </select>
         }
       />
-      {statInsights.length > 0 && <InsightBox insights={statInsights} />}
+      
 
       <CrosstabSection
         data={data}

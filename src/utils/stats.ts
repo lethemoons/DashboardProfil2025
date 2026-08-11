@@ -304,21 +304,21 @@ export function categorizeVariable(
   const categories: BinnedCategory[] = []
   const cutoffs: number[] = []
 
-  const standardLabels = k === 2 
+  const standardLabels = k === 2
     ? ['Rendah', 'Tinggi']
-    : k === 3 
-    ? ['Rendah', 'Sedang', 'Tinggi']
-    : k === 4 
-    ? ['Sangat Rendah (Q1)', 'Rendah (Q2)', 'Tinggi (Q3)', 'Sangat Tinggi (Q4)']
-    : Array.from({ length: k }, (_, i) => `Grup ${i + 1}`)
+    : k === 3
+      ? ['Rendah', 'Sedang', 'Tinggi']
+      : k === 4
+        ? ['Sangat Rendah (Q1)', 'Rendah (Q2)', 'Tinggi (Q3)', 'Sangat Tinggi (Q4)']
+        : Array.from({ length: k }, (_, i) => `Grup ${i + 1}`)
 
-  const shortLabels = k === 2 
+  const shortLabels = k === 2
     ? ['Rendah', 'Tinggi']
-    : k === 3 
-    ? ['Rendah', 'Sedang', 'Tinggi']
-    : k === 4 
-    ? ['Q1', 'Q2', 'Q3', 'Q4']
-    : Array.from({ length: k }, (_, i) => `Grup ${i + 1}`)
+    : k === 3
+      ? ['Rendah', 'Sedang', 'Tinggi']
+      : k === 4
+        ? ['Q1', 'Q2', 'Q3', 'Q4']
+        : Array.from({ length: k }, (_, i) => `Grup ${i + 1}`)
 
   if (method === 'quantile') {
     for (let i = 1; i < k; i++) {

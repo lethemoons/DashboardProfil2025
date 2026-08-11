@@ -87,7 +87,7 @@ export default function TularVektor() {
             <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} />
             <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
             <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-            <Bar yAxisId="left" dataKey="kasus" name="Kasus DBD" fill="#ef4444" radius={[3, 3, 0, 0]} />
+            <Bar yAxisId="left" dataKey="kasus" name="Kasus DBD" fill="#0FB0AA" radius={[3, 3, 0, 0]} />
             <Line yAxisId="right" type="monotone" dataKey="cfr" name="CFR (%)" stroke="#CBD92C" strokeWidth={2} dot={{ r: 3 }} />
           </ComposedChart>
         </ResponsiveContainer>
@@ -131,7 +131,7 @@ export default function TularVektor() {
               const p = payload[0].payload
               return <div className="bg-white border border-gray-100 rounded-xl shadow p-3 text-xs"><div className="font-semibold mb-1">{p.name}</div><div>Kasus: {p.x?.toLocaleString('id-ID')}</div><div>CFR: {p.y?.toFixed(2)}%</div></div>
             }} />
-            <Scatter data={scatterData} fill="#ef4444" fillOpacity={0.75} />
+            <Scatter data={scatterData} fill="#0FB0AA" fillOpacity={0.75} />
           </ScatterChart>
         </ResponsiveContainer>
       </div>
@@ -147,7 +147,7 @@ export default function TularVektor() {
           </select>
         }
       />
-      {statInsights.length > 0 && <InsightBox insights={statInsights} />}
+
 
       <CrosstabSection
         data={data}

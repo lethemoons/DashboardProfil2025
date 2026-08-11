@@ -100,10 +100,10 @@ export default function AksesMutu() {
       </div>
 
       <div className="flex flex-col gap-4">
-        <RankChart 
-          data={data} 
-          indicators={RS_OPTIONS.map(o => ({ key: o.key, label: o.label }))} 
-          defaultIndicator="bor" 
+        <RankChart
+          data={data}
+          indicators={RS_OPTIONS.map(o => ({ key: o.key, label: o.label }))}
+          defaultIndicator="bor"
           title="Ranking Indikator Pelayanan Rumah Sakit per Kabupaten/Kota"
         />
       </div>
@@ -139,9 +139,9 @@ export default function AksesMutu() {
       </div>
       <InsightBox insights={scatterInsights} />
 
-      <StatPanel 
-        stats={stats} 
-        label={statIndicLabel} 
+      <StatPanel
+        stats={stats}
+        label={statIndicLabel}
         format={v => v.toFixed(2)}
         rightElement={
           <select value={statIndic} onChange={e => setStatIndic(e.target.value)}
@@ -150,7 +150,7 @@ export default function AksesMutu() {
           </select>
         }
       />
-      {statInsights.length > 0 && <InsightBox insights={statInsights} />}
+
 
       <CrosstabSection
         data={data}

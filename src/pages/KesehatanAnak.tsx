@@ -98,9 +98,9 @@ export default function KesehatanAnak() {
             <YAxis tick={{ fontSize: 11 }} allowDecimals={false} />
             <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
             <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-            <Bar dataKey="neonatal" name="Neonatal" stackId="a" fill="#ef4444" />
-            <Bar dataKey="bayi" name="Bayi" stackId="a" fill="#f97316" />
-            <Bar dataKey="balita" name="Balita" stackId="a" fill="#fbbf24" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="neonatal" name="Neonatal" stackId="a" fill="#0FB0AA" />
+            <Bar dataKey="bayi" name="Bayi" stackId="a" fill="#0FB0AA" />
+            <Bar dataKey="balita" name="Balita" stackId="a" fill="#0FB0AA" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -172,7 +172,7 @@ export default function KesehatanAnak() {
           </select>
         }
       />
-      {statInsights.length > 0 && <InsightBox insights={statInsights} />}
+
 
       <CrosstabSection
         data={data}
