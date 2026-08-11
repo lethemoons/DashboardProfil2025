@@ -56,9 +56,9 @@ const TABLE_METRIC_ALIASES: Record<string, string> = {
   '32_kurang_energi_kronis_kek':    'bumil_kek_pct',
 
   // === TABLE 35: Kematian Neonatal / Bayi / Balita ===
-  '35_3':                           'kematian_neonatal',
-  '35_4':                           'kematian_bayi',
-  '35_anak_balita_60':              'kematian_balita',
+  '35_jumlah_total_150':            'kematian_neonatal',
+  '35_bayi_170':                    'kematian_bayi',
+  '35_jumlah_total_210':            'kematian_balita',
 
   // === TABLE 38: Bayi Lahir Ditimbang & BBLR ===
   // l_+_p_1 = total lahir L+P, l_+_p_2 = ditimbang %, l_+_p_3 = BBLR %
@@ -242,7 +242,9 @@ export function useDashboardData() {
               const num = Number(row.value)
               const storeVal = isNaN(num) ? (row.value ? row.value.trim() : '') : num
 
-              grouped[normalizedKab][storeKey] = storeVal
+              if (grouped[normalizedKab][storeKey] === undefined) {
+                grouped[normalizedKab][storeKey] = storeVal
+              }
               // Also store with count suffix for raw access (e.g. 'l_+_p_2')
               if (!alias) {
                 grouped[normalizedKab][`${rawKey}_${count}`] = storeVal
@@ -256,7 +258,7 @@ export function useDashboardData() {
                     if (prop in target) return target[prop]
                     
                     // Fuzzy match: if UI asks for 'jumlah_penduduk', find 'jumlah_penduduk_desa_+_kelurahan'
-                    const matchedKey = Object.keys(target).find(k => k.includes(prop) || prop.includes(k))
+                    const matchedKey = Object.keys(target).find(k => k.includes(prop))
                     if (matchedKey) return target[matchedKey]
                   }
                   

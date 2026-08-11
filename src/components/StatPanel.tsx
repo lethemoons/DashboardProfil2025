@@ -1,3 +1,5 @@
+import { KABUPATEN_LIST } from '../data/kabupaten'
+
 interface Stats {
   n: number; mean: number; median: number; min: number; max: number
   q1: number; q3: number; sd: number
@@ -26,7 +28,9 @@ export default function StatPanel({ stats, label = 'Nilai', format = v => v.toLo
     <div className="rounded-2xl border border-gray-100 bg-white p-4">
       <div className="flex items-center justify-between mb-3">
         <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Statistik Deskriptif — {label}</h4>
-        {rightElement}
+        <div className="flex items-center gap-2">
+          {rightElement}
+        </div>
       </div>
       <div className="grid grid-cols-4 gap-2">
         {items.map(item => (

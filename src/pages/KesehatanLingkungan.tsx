@@ -27,10 +27,9 @@ const KESLING_OPTIONS = [
 export default function KesehatanLingkungan() {
   const { data: kesling, loading, error } = useDashboardData()
 
-  const [kab, setKab] = useState('all')
-    const [indic, setIndic] = useState('air_minum_memenuhi_syarat_pct')
+  const [indic, setIndic] = useState('air_minum_memenuhi_syarat_pct')
 
-  const data = useMemo(() => kab === 'all' ? kesling.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR') : kesling.filter(d => d.kabupaten === kab), [kab, kesling])
+  const data = useMemo(() => kesling.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [kesling])
 
   const avgAir = data.length ? data.reduce((s, d) => s + (d.air_minum_memenuhi_syarat_pct as number), 0) / data.length : 0
   const avgSanitasi = data.length ? data.reduce((s, d) => s + (d.sanitasi_aman_pct as number), 0) / data.length : 0
@@ -69,7 +68,7 @@ export default function KesehatanLingkungan() {
 
   return (
     <div className="flex flex-col gap-5">
-      <FilterBar kab={kab} onKab={setKab} kabupaten={''} />
+
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <KPICard title="Air Minum Layak" value={avgAir.toFixed(1) + '%'} sub="Rata-rata" icon="💧" color="#06B5D0" />
@@ -122,16 +121,16 @@ export default function KesehatanLingkungan() {
         <h3 className="font-semibold text-gray-800 mb-4" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Air Minum vs Sanitasi vs BABS (Top 10)</h3>
         <ResponsiveContainer width="100%" height={260}>
           <BarChart data={data.slice(0, 10).map(d => ({
-            kabupaten: d.kabupaten.replace('Kota ',''),
+            kabupaten: d.kabupaten.replace('Kota ', ''),
             air: d.air_minum_memenuhi_syarat_pct,
             sanitasi: d.sanitasi_aman_pct,
             babs: d.babs_pct,
           }))} margin={{ bottom: 40 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-            <XAxis dataKey="kabupaten" tick={{ fontSize: 10 }} angle={-35} textAnchor="end" />
-            <YAxis tick={{ fontSize: 11 }} domain={[0, 100]} />
-            <Tooltip formatter={(v: any) => v?.toFixed(1) + '%'} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
-            <Legend iconSize={10} wrapperStyle={{ fontSize: 11 }} />
+            <XAxis dataKey="kabupaten" tick={{ fontSize: 10 }} angle={-35} textAnchor="end" height={60} />
+            <YAxis tick={{ fontSize: 11 }} unit="%" domain={[0, 100]} />
+            <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
+            <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
             <Bar dataKey="air" name="Air Minum (%)" fill="#06B5D0" radius={[3, 3, 0, 0]} />
             <Bar dataKey="sanitasi" name="Sanitasi Aman (%)" fill="#0FB0AA" radius={[3, 3, 0, 0]} />
             <Bar dataKey="babs" name="BABS (%)" fill="#f97316" radius={[3, 3, 0, 0]} />
@@ -139,7 +138,17 @@ export default function KesehatanLingkungan() {
         </ResponsiveContainer>
       </div>
 
-      <StatPanel stats={stats} label={indicLabel} format={v => v.toFixed(1) + '%'} />
+      <StatPanel
+        stats={stats}
+        label={indicLabel}
+        format={v => v.toFixed(1) + '%'}
+        rightElement={
+          <select value={indic} onChange={e => setIndic(e.target.value)}
+            className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[250px]">
+            {KESLING_OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
+          </select>
+        }
+      />
       {statInsights.length > 0 && <InsightBox insights={statInsights} />}
 
       <CrosstabSection

@@ -34,13 +34,12 @@ const IDEAL: Record<string, { min: number; max: number; label: string }> = {
 export default function AksesMutu() {
   const { data: saranaKesehatan, loading, error } = useDashboardData()
 
-  const [kab, setKab] = useState('all')
-    const [indic, setIndic] = useState('bor')
+  const [indic, setIndic] = useState('bor')
   const [statIndic, setStatIndic] = useState('bor')
   const [corrX, setCorrX] = useState('bor')
   const [corrY, setCorrY] = useState('alos')
 
-  const data = useMemo(() => kab === 'all' ? saranaKesehatan.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR') : saranaKesehatan.filter(d => d.kabupaten === kab), [kab, saranaKesehatan])
+  const data = useMemo(() => saranaKesehatan.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [saranaKesehatan])
 
   const avgBOR = data.length ? data.reduce((s, d) => s + (d.bor as number), 0) / data.length : 0
   const avgALOS = data.length ? data.reduce((s, d) => s + (d.alos as number), 0) / data.length : 0
@@ -67,7 +66,7 @@ export default function AksesMutu() {
   const sumPuskesmasObat = data.reduce((s, d) => s + Number(d.tahun_2025_ketersediaan_obat_esensial_dan_vaksin_irl || 0), 0)
   const pctPuskesmas = sumPuskesmas > 0 ? (sumPuskesmasObat / sumPuskesmas) * 100 : 0
 
-  const stats = descStats(data.map(d => d[statIndic] as number))
+  const stats = descStats(data.map(d => Number(d[statIndic] || 0)))
   const statIndicLabel = RS_OPTIONS.find(o => o.key === statIndic)?.label ?? statIndic
 
   const scatterData = data.map(d => ({ x: d[corrX] as number, y: d[corrY] as number, name: d.kabupaten }))
@@ -89,7 +88,7 @@ export default function AksesMutu() {
 
   return (
     <div className="flex flex-col gap-5">
-      <FilterBar kab={kab} onKab={setKab} />
+
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         <KPICard title="Total Kunjungan Rawat Jalan" value={totRawatJalan.toLocaleString('id-ID')} icon="🚶" color="#0FB0AA" />
@@ -143,7 +142,7 @@ export default function AksesMutu() {
       <StatPanel 
         stats={stats} 
         label={statIndicLabel} 
-        format={v => v.toFixed(2)} 
+        format={v => v.toFixed(2)}
         rightElement={
           <select value={statIndic} onChange={e => setStatIndic(e.target.value)}
             className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[250px]">

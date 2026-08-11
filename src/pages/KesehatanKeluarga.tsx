@@ -32,14 +32,13 @@ const ANAK_OPTIONS = [
 ]
 
 export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
-  const [kab, setKab] = useState('all')
-    const [ibuIndic, setIbuIndic] = useState('k1_pct')
+  const [ibuIndic, setIbuIndic] = useState('k1_pct')
   const [anakIndic, setAnakIndic] = useState('stunting_pct')
   const [tab, setTab] = useState<'ibu' | 'anak' | 'lansia'>('ibu')
 
-  const ibuData = useMemo(() => kab === 'all' ? kesehatanIbu.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR') : kesehatanIbu.filter(d => d.kabupaten === kab), [kab, kesehatanIbu])
-  const anakData = useMemo(() => kab === 'all' ? kesehatanAnak.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR') : kesehatanAnak.filter(d => d.kabupaten === kab), [kab, kesehatanAnak])
-  const lansiaData = useMemo(() => kab === 'all' ? usiaProduktif.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR') : usiaProduktif.filter(d => d.kabupaten === kab), [kab, usiaProduktif])
+  const ibuData = useMemo(() => kesehatanIbu.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [kesehatanIbu])
+  const anakData = useMemo(() => kesehatanAnak.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [kesehatanAnak])
+  const lansiaData = useMemo(() => usiaProduktif.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [usiaProduktif])
 
   const totKematianIbu = ibuData.reduce((s, d) => s + (d.kematian_ibu_hamil as number) + (d.kematian_ibu_bersalin as number) + (d.kematian_ibu_nifas as number), 0)
   const avgK1 = ibuData.length ? ibuData.reduce((s, d) => s + (d.k1_pct as number), 0) / ibuData.length : 0
@@ -77,7 +76,7 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
 
   return (
     <div className="flex flex-col gap-5">
-      <FilterBar kab={kab} onKab={setKab} kabupaten={''} />
+
 
       {/* Sub-tabs */}
       <div className="flex gap-2 border-b border-gray-100 pb-0">
@@ -117,7 +116,17 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
             </ResponsiveContainer>
           </div>
           {ibuChartInsights.length > 0 && <InsightBox insights={ibuChartInsights} />}
-          <StatPanel stats={ibuStats} label={ibuLabel} format={v => v.toFixed(1) + '%'} />
+          <StatPanel
+            stats={ibuStats}
+            label={ibuLabel}
+            format={v => v.toFixed(1) + '%'}
+            rightElement={
+              <select value={ibuIndic} onChange={e => setIbuIndic(e.target.value)}
+                className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[250px]">
+                {IBU_OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
+              </select>
+            }
+          />
           <InsightBox insights={ibuStatInsights} />
           <CrosstabSection
             data={ibuData}
@@ -164,7 +173,17 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
               </BarChart>
             </ResponsiveContainer>
           </div>
-          <StatPanel stats={anakStats} label={anakLabel} format={v => v.toFixed(1) + '%'} />
+          <StatPanel
+            stats={anakStats}
+            label={anakLabel}
+            format={v => v.toFixed(1) + '%'}
+            rightElement={
+              <select value={anakIndic} onChange={e => setAnakIndic(e.target.value)}
+                className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[250px]">
+                {ANAK_OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
+              </select>
+            }
+          />
           <InsightBox insights={[
             `Rata-rata stunting: ${avgStunting.toFixed(1)}%.`,
             `Total kematian neonatal + bayi: ${totKematianAnak} kasus di wilayah yang dipilih.`,
@@ -197,12 +216,12 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
           <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
             <h3 className="font-semibold text-gray-800 mb-4" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Pelayanan Usia Produktif & Lansia</h3>
             <ResponsiveContainer width="100%" height={260}>
-              <BarChart data={lansiaData.slice(0, 12).map(d => ({ kabupaten: d.kabupaten.replace('Kota ',''), lansia: d.lansia_dilayani, posyandu: d.posyandu_lansia }))} margin={{ bottom: 40 }}>
+              <BarChart data={lansiaData.slice(0, 12).map(d => ({ kabupaten: d.kabupaten.replace('Kota ', ''), lansia: d.lansia_dilayani, posyandu: d.posyandu_lansia }))} margin={{ bottom: 40 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-                <XAxis dataKey="kabupaten" tick={{ fontSize: 10 }} angle={-35} textAnchor="end" />
-                <YAxis tick={{ fontSize: 11 }} />
-                <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
-                <Legend wrapperStyle={{ fontSize: 11 }} />
+                <XAxis dataKey="kabupaten" tick={{ fontSize: 10 }} angle={-35} textAnchor="end" height={60} />
+                <YAxis tick={{ fontSize: 11 }} tickFormatter={v => (v / 1e3).toFixed(0) + 'rb'} />
+                <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID')} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
+                <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
                 <Bar dataKey="lansia" name="Lansia Dilayani" fill="#0FB0AA" radius={[3, 3, 0, 0]} />
                 <Bar dataKey="posyandu" name="Posyandu Lansia" fill="#CBD92C" radius={[3, 3, 0, 0]} />
               </BarChart>

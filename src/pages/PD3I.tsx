@@ -33,13 +33,12 @@ export default function PD3I() {
   const { data: penyakitPD3I, loading, error } = useDashboardData()
   const ptm = penyakitPD3I
 
-  const [kab, setKab] = useState('all')
-    const [pd3iIndic, setPd3iIndic] = useState('difteri_kasus')
+  const [pd3iIndic, setPd3iIndic] = useState('difteri_kasus')
   const [ptmIndic, setPtmIndic] = useState('hipertensi_laki')
   const [activeSection, setActiveSection] = useState<'pd3i' | 'ptm'>('pd3i')
 
-  const pd3iData = useMemo(() => kab === 'all' ? penyakitPD3I.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR') : penyakitPD3I.filter(d => d.kabupaten === kab), [kab, penyakitPD3I])
-  const ptmData = useMemo(() => kab === 'all' ? ptm.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR') : ptm.filter(d => d.kabupaten === kab), [kab, ptm])
+  const pd3iData = useMemo(() => penyakitPD3I.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [penyakitPD3I])
+  const ptmData = useMemo(() => ptm.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [ptm])
 
   // PD3I stats
   const totDifteri = pd3iData.reduce((s, d) => s + (d.difteri_kasus as number), 0)
@@ -86,7 +85,7 @@ export default function PD3I() {
 
   return (
     <div className="flex flex-col gap-5">
-      <FilterBar kab={kab} onKab={setKab} />
+
 
       {/* Section toggle */}
       <div className="flex gap-2">
@@ -127,7 +126,16 @@ export default function PD3I() {
               </BarChart>
             </ResponsiveContainer>
           </div>
-          <StatPanel stats={pd3iStats} label={pd3iLabel} />
+          <StatPanel
+            stats={pd3iStats}
+            label={pd3iLabel}
+            rightElement={
+              <select value={pd3iIndic} onChange={e => setPd3iIndic(e.target.value)}
+                className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[250px]">
+                {PD3I_OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
+              </select>
+            }
+          />
           <InsightBox insights={pd3iInsights} />
           <CrosstabSection
             data={pd3iData}
@@ -161,10 +169,10 @@ export default function PD3I() {
             <ResponsiveContainer width="100%" height={240}>
               <BarChart data={hipertensiGender} margin={{ bottom: 40 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-                <XAxis dataKey="kabupaten" tick={{ fontSize: 10 }} angle={-35} textAnchor="end" />
-                <YAxis tick={{ fontSize: 11 }} tickFormatter={v => (v/1e3).toFixed(0)+'rb'} />
+                <XAxis dataKey="kabupaten" tick={{ fontSize: 10 }} angle={-35} textAnchor="end" height={60} />
+                <YAxis tick={{ fontSize: 11 }} tickFormatter={v => (v / 1e3).toFixed(0) + 'rb'} />
                 <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID')} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
-                <Legend iconSize={10} wrapperStyle={{ fontSize: 11 }} />
+                <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
                 <Bar dataKey="laki" name="Hipertensi L" fill="#0FB0AA" radius={[3, 3, 0, 0]} />
                 <Bar dataKey="perempuan" name="Hipertensi P" fill="#CBD92C" radius={[3, 3, 0, 0]} />
               </BarChart>
@@ -190,7 +198,16 @@ export default function PD3I() {
               </BarChart>
             </ResponsiveContainer>
           </div>
-          <StatPanel stats={ptmStats} label={ptmLabel} />
+          <StatPanel
+            stats={ptmStats}
+            label={ptmLabel}
+            rightElement={
+              <select value={ptmIndic} onChange={e => setPtmIndic(e.target.value)}
+                className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[250px]">
+                {PTM_OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
+              </select>
+            }
+          />
           <InsightBox insights={ptmInsights} />
           <CrosstabSection
             data={ptmData}

@@ -1,7 +1,8 @@
 import { useState, useMemo } from 'react'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import { useSdmData } from '../hooks/useSdmData'
-import FilterBar from '../components/FilterBar'
+import { descStats } from '../utils/stats'
+import StatPanel from '../components/StatPanel'
 import KPICard from '../components/KPICard'
 import DataTable from '../components/DataTable'
 import ChoroplethMap from '../components/ChoroplethMap'
@@ -12,16 +13,19 @@ import CrosstabSection from '../components/CrosstabSection'
 
 export default function SDMKesehatan() {
   const { data: rawData, indicators, loading, error } = useSdmData()
-  const [kab, setKab] = useState('all')
-    
   const [selectedInd, setSelectedInd] = useState('')
+  const [statIndic, setStatIndic] = useState('')
 
   if (!selectedInd && indicators.length > 0) {
     setSelectedInd(indicators[0])
+    setStatIndic(indicators[0])
   }
 
-  const data = useMemo(() => kab === 'all' ? rawData.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR') : rawData.filter(d => d.kabupaten === kab), [kab, rawData])
-  const provData = rawData.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR')
+  const data = useMemo(() => rawData.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [rawData])
+  const provData = data
+
+  const statsVals = data.map(d => Number(d[statIndic || selectedInd] || 0))
+  const stats = descStats(statsVals)
 
   const totalSDM = useMemo(() => {
     let sum = 0
@@ -69,12 +73,12 @@ export default function SDMKesehatan() {
 
   const initialVisibleKeys = selectedInd ? ['kabupaten', selectedInd] : ['kabupaten']
 
-  const maxIndKab = provData.length && selectedInd ? provData.reduce((a, b) => Number(a[selectedInd]||0) > Number(b[selectedInd]||0) ? a : b) : null
-  const minIndKab = provData.length && selectedInd ? provData.reduce((a, b) => Number(a[selectedInd]||0) < Number(b[selectedInd]||0) ? a : b) : null
-  const avgInd = provData.length && selectedInd ? provData.reduce((s, d) => s + Number(d[selectedInd]||0), 0) / provData.length : 0
+  const maxIndKab = provData.length && selectedInd ? provData.reduce((a, b) => Number(a[selectedInd] || 0) > Number(b[selectedInd] || 0) ? a : b) : null
+  const minIndKab = provData.length && selectedInd ? provData.reduce((a, b) => Number(a[selectedInd] || 0) < Number(b[selectedInd] || 0) ? a : b) : null
+  const avgInd = provData.length && selectedInd ? provData.reduce((s, d) => s + Number(d[selectedInd] || 0), 0) / provData.length : 0
 
   const [limit, setLimit] = useState<number | 'all'>(10)
-  
+
   const rankData = useMemo(() => {
     if (!selectedInd) return []
     const sorted = [...provData].sort((a, b) => Number(b[selectedInd] || 0) - Number(a[selectedInd] || 0))
@@ -90,7 +94,7 @@ export default function SDMKesehatan() {
 
   return (
     <div className="flex flex-col gap-6">
-      <FilterBar kab={kab} onKab={setKab} />
+
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <KPICard title="Total SDM Kesehatan" value={totalSDM.toLocaleString('id-ID')} icon="👥" color="#0FB0AA" />
@@ -100,7 +104,7 @@ export default function SDMKesehatan() {
 
       <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-4">
-          <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans' }}>Distribusi SDM Kesehatan</h3>
+          <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Distribusi SDM Kesehatan</h3>
           <div className="flex items-center gap-4 flex-wrap">
             <div className="flex items-center gap-2">
               <span className="text-xs font-semibold text-gray-500">Pilih Indikator:</span>
@@ -126,10 +130,10 @@ export default function SDMKesehatan() {
               <BarChart data={rankData} layout="vertical" margin={{ left: 100, right: 20 }}>
                 <XAxis type="number" tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={98} interval={0} />
-                <Tooltip 
+                <Tooltip
                   formatter={(v: any) => v.toLocaleString('id-ID')}
                   labelFormatter={(l) => `Kabupaten ${l}`}
-                  contentStyle={{ borderRadius: 12, fontSize: 12 }} 
+                  contentStyle={{ borderRadius: 12, fontSize: 12 }}
                 />
                 <Bar dataKey="value" name={selectedInd.replace(/_/g, ' ').toUpperCase()} radius={[0, 6, 6, 0]} fill="#0FB0AA" />
               </BarChart>
@@ -138,8 +142,21 @@ export default function SDMKesehatan() {
         )}
       </div>
 
+      <StatPanel
+        stats={stats}
+        label={statIndic ? statIndic.replace(/_/g, ' ').toUpperCase() : ''}
+        rightElement={
+          <select value={statIndic} onChange={e => setStatIndic(e.target.value)}
+            className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[250px]">
+            {indicators.map(ind => (
+              <option key={ind} value={ind}>{ind.replace(/_/g, ' ').toUpperCase()}</option>
+            ))}
+          </select>
+        }
+      />
+
       <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
-        <h3 className="font-semibold text-gray-800 mb-4" style={{ fontFamily: 'Plus Jakarta Sans' }}>Peta Persebaran: {selectedInd.replace(/_/g, ' ').toUpperCase()}</h3>
+        <h3 className="font-semibold text-gray-800 mb-4" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Peta Persebaran: {selectedInd.replace(/_/g, ' ').toUpperCase()}</h3>
         {selectedInd && <ChoroplethMap data={provData} indicatorKey={selectedInd} indicatorLabel={selectedInd.replace(/_/g, ' ').toUpperCase()} />}
       </div>
 
@@ -153,14 +170,14 @@ export default function SDMKesehatan() {
       />
 
       <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
-        <h3 className="font-semibold text-gray-800 mb-4" style={{ fontFamily: 'Plus Jakarta Sans' }}>Data Table SDM Kesehatan</h3>
+        <h3 className="font-semibold text-gray-800 mb-4" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Data Table SDM Kesehatan</h3>
         <DataTable data={data} columns={tableCols} initialVisibleKeys={initialVisibleKeys} pageSize={10} />
       </div>
 
       {selectedInd && (
         <InsightBox>
-          Berdasarkan filter yang aktif, indikator <strong>{selectedInd.replace(/_/g, ' ')}</strong> memiliki rata-rata provinsi sebesar <strong>{Math.round(avgInd).toLocaleString('id-ID')}</strong>. 
-          Ketersediaan tertinggi berada di <strong>{maxIndKab?.kabupaten}</strong> ({Number(maxIndKab?.[selectedInd]||0).toLocaleString('id-ID')}), sedangkan ketersediaan terendah berada di <strong>{minIndKab?.kabupaten}</strong> ({Number(minIndKab?.[selectedInd]||0).toLocaleString('id-ID')}).
+          Berdasarkan filter yang aktif, indikator <strong>{selectedInd.replace(/_/g, ' ')}</strong> memiliki rata-rata provinsi sebesar <strong>{Math.round(avgInd).toLocaleString('id-ID')}</strong>.
+          Ketersediaan tertinggi berada di <strong>{maxIndKab?.kabupaten}</strong> ({Number(maxIndKab?.[selectedInd] || 0).toLocaleString('id-ID')}), sedangkan ketersediaan terendah berada di <strong>{minIndKab?.kabupaten}</strong> ({Number(minIndKab?.[selectedInd] || 0).toLocaleString('id-ID')}).
         </InsightBox>
       )}
     </div>

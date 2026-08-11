@@ -26,12 +26,11 @@ const IBU_OPTIONS = [
 export default function KesehatanIbu() {
   const { data: kesehatanIbu, loading, error } = useDashboardData()
 
-  const [kab, setKab] = useState('all')
-    const [indic, setIndic] = useState('k1_pct')
+  const [indic, setIndic] = useState('k1_pct')
   const [corrX, setCorrX] = useState('k1_pct')
   const [corrY, setCorrY] = useState('persalinan_fasyankes_pct')
 
-  const data = useMemo(() => kab === 'all' ? kesehatanIbu.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR') : kesehatanIbu.filter(d => d.kabupaten === kab), [kab, kesehatanIbu])
+  const data = useMemo(() => kesehatanIbu.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [kesehatanIbu])
 
   const totKematianIbu = data.reduce((s, d) =>
     s + (d.kematian_ibu_hamil as number) + (d.kematian_ibu_bersalin as number) + (d.kematian_ibu_nifas as number), 0)
@@ -76,7 +75,7 @@ export default function KesehatanIbu() {
 
   return (
     <div className="flex flex-col gap-5">
-      <FilterBar kab={kab} onKab={setKab} />
+
 
       {/* Kematian ibu cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -100,10 +99,10 @@ export default function KesehatanIbu() {
             nifas: d.kematian_ibu_nifas,
           }))} margin={{ bottom: 40 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-            <XAxis dataKey="kabupaten" tick={{ fontSize: 10 }} angle={-35} textAnchor="end" />
-            <YAxis tick={{ fontSize: 11 }} allowDecimals={false} />
+            <XAxis dataKey="kabupaten" tick={{ fontSize: 10 }} angle={-35} textAnchor="end" height={60} />
+            <YAxis tick={{ fontSize: 11 }} />
             <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
-            <Legend iconSize={10} wrapperStyle={{ fontSize: 11 }} />
+            <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
             <Bar dataKey="hamil" name="Saat Hamil" stackId="a" fill="#ef4444" />
             <Bar dataKey="bersalin" name="Saat Bersalin" stackId="a" fill="#f97316" />
             <Bar dataKey="nifas" name="Saat Nifas" stackId="a" fill="#fbbf24" radius={[4, 4, 0, 0]} />
@@ -169,7 +168,17 @@ export default function KesehatanIbu() {
       </div>
       <InsightBox insights={scatterInsights} />
 
-      <StatPanel stats={stats} label={indicLabel} format={v => v.toFixed(1) + '%'} />
+      <StatPanel
+        stats={stats}
+        label={indicLabel}
+        format={v => v.toFixed(1) + '%'}
+        rightElement={
+          <select value={indic} onChange={e => setIndic(e.target.value)}
+            className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[250px]">
+            {IBU_OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
+          </select>
+        }
+      />
       {statInsights.length > 0 && <InsightBox insights={statInsights} />}
 
       <CrosstabSection

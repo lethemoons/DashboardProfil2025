@@ -4,9 +4,10 @@ import {
   Cell, LabelList
 } from 'recharts'
 import { useDashboardData } from '../hooks/useDashboardData'
-import FilterBar from '../components/FilterBar'
+import { descStats } from '../utils/stats'
 import KPICard from '../components/KPICard'
 import InsightBox from '../components/InsightBox'
+import StatPanel from '../components/StatPanel'
 import DataTable from '../components/DataTable'
 import CrosstabSection from '../components/CrosstabSection'
 
@@ -58,7 +59,7 @@ const CustomTooltip = ({ active, payload, totalFaskes }: any) => {
 
     return (
       <div className="bg-white p-3 rounded-xl border border-gray-100 shadow-lg">
-        <p className="font-semibold text-gray-800 mb-1" style={{ fontFamily: 'Plus Jakarta Sans' }}>{data.name}</p>
+        <p className="font-semibold text-gray-800 mb-1" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{data.name}</p>
         <p className="text-sm text-gray-600">Jumlah: <span className="font-bold text-[#0FB0AA]">{data.value.toLocaleString('id-ID')}</span></p>
         {percentage && (
           <p className="text-sm text-gray-500 mt-1">{percentage}% dari total faskes pada kategori ini</p>
@@ -84,10 +85,16 @@ const CustomYAxisTick = ({ x, y, payload }: any) => {
 export default function SaranaKesehatan() {
   const { data: saranaKesehatan, loading, error } = useDashboardData()
 
-    const [kategori, setKategori] = useState('Semua')
+  const [kategori, setKategori] = useState('Semua')
   const [tampilan, setTampilan] = useState('Top 10')
+  const [statIndic, setStatIndic] = useState('rs_umum')
 
   const jatim = useMemo(() => saranaKesehatan.find(d => d.kabupaten === 'PROV. JAWA TIMUR') || {}, [saranaKesehatan])
+
+  const data = useMemo(() => saranaKesehatan.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [saranaKesehatan])
+
+  const stats = useMemo(() => descStats(data.map(d => Number(d[statIndic] || 0))), [data, statIndic])
+  const statIndicLabel = ALL_FASILITAS.find(f => f.key === statIndic)?.label || statIndic
 
   const chartDataRaw = useMemo(() => {
     return ALL_FASILITAS
@@ -150,7 +157,6 @@ export default function SaranaKesehatan() {
 
   return (
     <div className="flex flex-col gap-5">
-      <FilterBar kab="PROV. JAWA TIMUR" hideKabFilter onKab={() => { }} />
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         <KPICard title="Rumah Sakit" value={totRS.toLocaleString('id-ID')} sub="Umum + Khusus" icon="🏨" color="#06B5D0" />
@@ -194,6 +200,17 @@ export default function SaranaKesehatan() {
       </div>
 
       {insights.length > 0 && <InsightBox insights={insights} />}
+
+      <StatPanel
+        stats={stats}
+        label={statIndicLabel}
+        rightElement={
+          <select value={statIndic} onChange={e => setStatIndic(e.target.value)}
+            className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[250px]">
+            {ALL_FASILITAS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
+          </select>
+        }
+      />
 
       <CrosstabSection
         data={saranaKesehatan.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR')}

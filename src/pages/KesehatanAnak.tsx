@@ -29,12 +29,11 @@ const ANAK_OPTIONS = [
 export default function KesehatanAnak() {
   const { data: kesehatanAnak, loading, error } = useDashboardData()
 
-  const [kab, setKab] = useState('all')
-    const [indic, setIndic] = useState('stunting_pct')
+  const [indic, setIndic] = useState('stunting_pct')
   const [corrX, setCorrX] = useState('stunting_pct')
   const [corrY, setCorrY] = useState('gizi_kurang_pct')
 
-  const data = useMemo(() => kab === 'all' ? kesehatanAnak.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR') : kesehatanAnak.filter(d => d.kabupaten === kab), [kab, kesehatanAnak])
+  const data = useMemo(() => kesehatanAnak.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [kesehatanAnak])
 
   const totKematianNeonatal = data.reduce((s, d) => s + (d.kematian_neonatal as number), 0)
   const totKematianBayi = data.reduce((s, d) => s + (d.kematian_bayi as number), 0)
@@ -72,7 +71,7 @@ export default function KesehatanAnak() {
 
   return (
     <div className="flex flex-col gap-5">
-      <FilterBar kab={kab} onKab={setKab} />
+
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <KPICard title="Kematian Neonatal" value={totKematianNeonatal.toLocaleString('id-ID')} sub="Kasus" icon="💔" color="#ef4444" />
@@ -95,10 +94,10 @@ export default function KesehatanAnak() {
             balita: d.kematian_balita,
           }))} margin={{ bottom: 40 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-            <XAxis dataKey="kabupaten" tick={{ fontSize: 10 }} angle={-35} textAnchor="end" />
+            <XAxis dataKey="kabupaten" tick={{ fontSize: 10 }} angle={-35} textAnchor="end" height={60} />
             <YAxis tick={{ fontSize: 11 }} allowDecimals={false} />
             <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
-            <Legend iconSize={10} wrapperStyle={{ fontSize: 11 }} />
+            <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
             <Bar dataKey="neonatal" name="Neonatal" stackId="a" fill="#ef4444" />
             <Bar dataKey="bayi" name="Bayi" stackId="a" fill="#f97316" />
             <Bar dataKey="balita" name="Balita" stackId="a" fill="#fbbf24" radius={[4, 4, 0, 0]} />
@@ -162,7 +161,17 @@ export default function KesehatanAnak() {
       </div>
       <InsightBox insights={scatterInsights} />
 
-      <StatPanel stats={stats} label={indicLabel} format={v => v.toFixed(1) + '%'} />
+      <StatPanel
+        stats={stats}
+        label={indicLabel}
+        format={v => v.toFixed(1) + '%'}
+        rightElement={
+          <select value={indic} onChange={e => setIndic(e.target.value)}
+            className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[250px]">
+            {ANAK_OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
+          </select>
+        }
+      />
       {statInsights.length > 0 && <InsightBox insights={statInsights} />}
 
       <CrosstabSection

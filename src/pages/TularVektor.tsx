@@ -22,10 +22,9 @@ const OPTIONS = [
 export default function TularVektor() {
   const { data: penyakitPD3I, loading, error } = useDashboardData()
 
-  const [kab, setKab] = useState('all')
-    const [indic, setIndic] = useState('dbd_kasus')
+  const [indic, setIndic] = useState('dbd_kasus')
 
-  const data = useMemo(() => kab === 'all' ? penyakitPD3I.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR') : penyakitPD3I.filter(d => d.kabupaten === kab), [kab, penyakitPD3I])
+  const data = useMemo(() => penyakitPD3I.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [penyakitPD3I])
 
   const totDBD = data.reduce((s, d) => s + (d.dbd_kasus as number), 0)
   const avgCFR = data.length ? data.reduce((s, d) => s + (d.dbd_cfr as number), 0) / data.length : 0
@@ -68,7 +67,7 @@ export default function TularVektor() {
 
   return (
     <div className="flex flex-col gap-5">
-      <FilterBar kab={kab} onKab={setKab} />
+
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <KPICard title="Kasus DBD" value={totDBD.toLocaleString('id-ID')} sub="Demam Berdarah Dengue" icon="🦟" color="#ef4444" />
@@ -83,11 +82,11 @@ export default function TularVektor() {
         <ResponsiveContainer width="100%" height={260}>
           <ComposedChart data={dbdDual} margin={{ bottom: 40 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-            <XAxis dataKey="kabupaten" tick={{ fontSize: 10 }} angle={-35} textAnchor="end" />
+            <XAxis dataKey="kabupaten" tick={{ fontSize: 10 }} angle={-35} textAnchor="end" height={60} />
             <YAxis yAxisId="left" tick={{ fontSize: 11 }} />
-            <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} unit="%" domain={[0, 5]} />
+            <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} />
             <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
-            <Legend iconSize={10} wrapperStyle={{ fontSize: 11 }} />
+            <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
             <Bar yAxisId="left" dataKey="kasus" name="Kasus DBD" fill="#ef4444" radius={[3, 3, 0, 0]} />
             <Line yAxisId="right" type="monotone" dataKey="cfr" name="CFR (%)" stroke="#CBD92C" strokeWidth={2} dot={{ r: 3 }} />
           </ComposedChart>
@@ -138,7 +137,16 @@ export default function TularVektor() {
       </div>
       <InsightBox insights={scatterInsights} />
 
-      <StatPanel stats={stats} label={indicLabel} />
+      <StatPanel
+        stats={stats}
+        label={indicLabel}
+        rightElement={
+          <select value={indic} onChange={e => setIndic(e.target.value)}
+            className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[250px]">
+            {OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
+          </select>
+        }
+      />
       {statInsights.length > 0 && <InsightBox insights={statInsights} />}
 
       <CrosstabSection

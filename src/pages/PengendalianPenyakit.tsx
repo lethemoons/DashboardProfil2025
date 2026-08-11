@@ -37,15 +37,16 @@ const PTM_OPTIONS = [
 ]
 
 export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) {
-  const [kab, setKab] = useState('all')
-    const [tab, setTab] = useState<'menular' | 'pd3i' | 'vektor' | 'ptm'>('menular')
+  const [tab, setTab] = useState<'menular' | 'pd3i' | 'vektor' | 'ptm'>('menular')
   const [menularIndic, setMenularIndic] = useState('tbc_kasus')
   const [vektorIndic, setVektorIndic] = useState('dbd_kasus')
   const [ptmIndic, setPtmIndic] = useState('hipertensi_laki')
 
-  const menularData = useMemo(() => kab === 'all' ? penyakitMenular.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR') : penyakitMenular.filter(d => d.kabupaten === kab), [kab, penyakitMenular])
-  const pd3iData = useMemo(() => kab === 'all' ? penyakitPD3I.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR') : penyakitPD3I.filter(d => d.kabupaten === kab), [kab, penyakitPD3I])
-  const ptmData = useMemo(() => kab === 'all' ? ptm.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR') : ptm.filter(d => d.kabupaten === kab), [kab, ptm])
+  const menularData = useMemo(() => penyakitMenular.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [penyakitMenular])
+  const pd3iData = useMemo(() => penyakitPD3I.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [penyakitPD3I])
+  const ptmData = useMemo(() => ptm.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [ptm])
+
+
 
   const totTBC = menularData.reduce((s, d) => s + (d.tbc_kasus as number), 0)
   const avgTBCSukses = menularData.length ? menularData.reduce((s, d) => s + (d.tbc_sukses_pct as number), 0) / menularData.length : 0
@@ -82,7 +83,7 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
 
   return (
     <div className="flex flex-col gap-5">
-      <FilterBar kab={kab} onKab={setKab} kabupaten={''} />
+
 
       <div className="flex gap-2 pb-0">
         {TABS.map(t => (
@@ -121,7 +122,16 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
             </ResponsiveContainer>
           </div>
           {menularChartInsights.length > 0 && <InsightBox insights={menularChartInsights} />}
-          <StatPanel stats={stats} label={menularLabel} />
+          <StatPanel
+            stats={stats}
+            label={menularLabel}
+            rightElement={
+              <select value={menularIndic} onChange={e => setMenularIndic(e.target.value)}
+                className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[250px]">
+                {MENULAR_OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
+              </select>
+            }
+          />
           {menularStatInsights.length > 0 && <InsightBox insights={menularStatInsights} />}
           <CrosstabSection
             data={menularData}

@@ -17,10 +17,10 @@ import CrosstabSection from '../components/CrosstabSection'
 export default function UKBM() {
   const { data: saranaKesehatan, loading, error } = useDashboardData()
 
-  const [kab, setKab] = useState('all')
-    const [mapIndicator, setMapIndicator] = useState('jumlah_posyandu_siklus_hidup_aktif')
+  const [statIndic, setStatIndic] = useState('jumlah_posyandu_siklus_hidup_aktif')
+  const [mapIndicator, setMapIndicator] = useState('jumlah_posyandu_siklus_hidup_aktif')
 
-  const data = useMemo(() => kab === 'all' ? saranaKesehatan.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR') : saranaKesehatan.filter(d => d.kabupaten === kab), [kab, saranaKesehatan])
+  const data = useMemo(() => saranaKesehatan.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [saranaKesehatan])
 
   const totAktif = data.reduce((s, d) => s + Number(d.jumlah_posyandu_siklus_hidup_aktif || 0), 0)
   const totTidakAktif = data.reduce((s, d) => s + Number(d.jumlah_posyandu_siklus_hidup_tidak_aktif || 0), 0)
@@ -37,13 +37,14 @@ export default function UKBM() {
 
 
 
-  const stats = descStats(data.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR').map(d => Number(d.jumlah_posyandu_siklus_hidup_aktif || 0)))
+  const stats = descStats(data.map(d => Number(d[statIndic] || 0)))
 
   const indicatorOptions = [
     { key: 'jumlah_posyandu_siklus_hidup', label: 'Total Posyandu' },
     { key: 'jumlah_posyandu_siklus_hidup_aktif', label: 'Jumlah Posyandu Aktif' },
     { key: 'jumlah_posyandu_siklus_hidup_tidak_aktif', label: 'Jumlah Posyandu Tidak Aktif' }
   ]
+  const statIndicLabel = indicatorOptions.find(o => o.key === statIndic)?.label ?? statIndic
 
   const rankIndicators = [
     { key: 'jumlah_posyandu_siklus_hidup', label: 'Total Posyandu' },
@@ -58,7 +59,7 @@ export default function UKBM() {
 
   return (
     <div className="flex flex-col gap-6">
-      <FilterBar kab={kab} onKab={setKab} hideKabFilter />
+
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <KPICard title="Total Posyandu" value="46.414" sub="Unit" icon="🌿" color="#0FB0AA" />
@@ -101,7 +102,16 @@ export default function UKBM() {
         />
       </div>
 
-      <StatPanel stats={stats} label="Posyandu Aktif" />
+      <StatPanel 
+        stats={stats} 
+        label={statIndicLabel} 
+        rightElement={
+          <select value={statIndic} onChange={e => setStatIndic(e.target.value)}
+            className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[250px]">
+            {indicatorOptions.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
+          </select>
+        }
+      />
 
       <CrosstabSection
         data={dataWithPct}

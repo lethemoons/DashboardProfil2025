@@ -19,12 +19,12 @@ const fmtRp = (v: number) => 'Rp ' + (v >= 1e12 ? (v / 1e12).toFixed(2) + ' T' :
 export default function PembiayaanKesehatan() {
   const { data: pembiayaan, loading, error } = useDashboardData()
 
-  const [kab, setKab] = useState('all')
-    const [trendKab, setTrendKab] = useState('all')
+  const [statIndic, setStatIndic] = useState('2025')
+  const [trendKab, setTrendKab] = useState('all')
   const [mapYear, setMapYear] = useState('2025')
 
-  const data = useMemo(() => kab === 'all' ? pembiayaan.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR') : pembiayaan.filter(d => d.kabupaten === kab), [kab, pembiayaan])
-  const kpiData = pembiayaan.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR')
+  const data = useMemo(() => pembiayaan.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [pembiayaan])
+  const kpiData = data
 
   const totalAngg25 = kpiData.reduce((s, d) => s + Number(d["2025"] || 0), 0)
   const avgAngg = kpiData.length ? totalAngg25 / kpiData.length : 0
@@ -50,7 +50,7 @@ export default function PembiayaanKesehatan() {
     .sort((a, b) => Number(b["2025"] || 0) - Number(a["2025"] || 0))
     .slice(0, 15)
 
-  const statsVals = data.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR').map(d => Number(d["2025"] || 0))
+  const statsVals = data.map(d => Number(d[statIndic] || 0))
   const stats = descStats(statsVals)
 
   if (loading) return <div className="p-8 text-center text-gray-500">Loading data...</div>
@@ -58,7 +58,6 @@ export default function PembiayaanKesehatan() {
 
   return (
     <div className="flex flex-col gap-6">
-      <FilterBar kab={kab} onKab={setKab} hideKabFilter />
 
       {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -158,7 +157,19 @@ export default function PembiayaanKesehatan() {
         </div>
       </div>
 
-      <StatPanel stats={stats} label="Anggaran 2025" format={v => fmtRp(Math.round(v))} />
+      <StatPanel 
+        stats={stats} 
+        label={`Anggaran ${statIndic}`} 
+        format={v => fmtRp(Math.round(v))} 
+        rightElement={
+          <select value={statIndic} onChange={e => setStatIndic(e.target.value)}
+            className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[250px]">
+            <option value="2023">Anggaran 2023</option>
+            <option value="2024">Anggaran 2024</option>
+            <option value="2025">Anggaran 2025</option>
+          </select>
+        }
+      />
       <div className="bg-[#F5FBFB] rounded-xl p-5 border border-[#CCEEED] text-sm text-gray-700">
         <div className="flex items-center gap-2 mb-3">
           <div className="w-6 h-6 rounded-full bg-[#0FB0AA] text-white flex items-center justify-center font-serif text-[13px] font-bold">i</div>

@@ -27,12 +27,11 @@ const INDICATOR_OPTIONS = [
 
 export default function GambaranUmum() {
   const { data: demografi, loading, error } = useDashboardData()
-  const [kab, setKab] = useState('all')
-    const [indicator, setIndicator] = useState('jumlah_penduduk_desa_+_kelurahan')
+  const [indicator, setIndicator] = useState('jumlah_penduduk_desa_+_kelurahan')
   const [corrX, setCorrX] = useState('jumlah_penduduk_desa_+_kelurahan')
   const [corrY, setCorrY] = useState('kepadatan_penduduk_per_km2_desa_+_kelurahan')
 
-  const data = useMemo(() => kab === 'all' ? demografi.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR') : demografi.filter(d => d.kabupaten === kab), [kab, demografi])
+  const data = useMemo(() => demografi.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [demografi])
 
   const totalPenduduk = data.reduce((s, d) => s + ((d['jumlah_penduduk_desa_+_kelurahan'] as number) || 0), 0)
   const totalLuas = data.reduce((s, d) => s + ((d['luas_wilayah_km2'] as number) || 0), 0)
@@ -67,7 +66,6 @@ export default function GambaranUmum() {
 
   return (
     <div className="flex flex-col gap-5">
-      <FilterBar kab={kab} onKab={setKab} kabupaten={''} hideKabFilter={true} />
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
         <KPICard title="Jumlah Kab/Kota" value={data.length.toString()} sub="Wilayah" color="#8b5cf6" />
@@ -123,7 +121,16 @@ export default function GambaranUmum() {
 
       <InsightBox insights={scatterInsights} />
 
-      <StatPanel stats={stats} label={indLabel} />
+      <StatPanel 
+        stats={stats} 
+        label={indLabel} 
+        rightElement={
+          <select value={indicator} onChange={e => setIndicator(e.target.value)}
+            className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[250px]">
+            {INDICATOR_OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
+          </select>
+        }
+      />
       
       {statInsights.length > 0 && <InsightBox insights={statInsights} />}
 
