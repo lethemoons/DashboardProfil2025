@@ -27,8 +27,7 @@ export default function KesehatanIbu() {
   const { data: kesehatanIbu, loading, error } = useDashboardData()
 
   const [kab, setKab] = useState('all')
-  const [tahun, setTahun] = useState('2025')
-  const [indic, setIndic] = useState('k1_pct')
+    const [indic, setIndic] = useState('k1_pct')
   const [corrX, setCorrX] = useState('k1_pct')
   const [corrY, setCorrY] = useState('persalinan_fasyankes_pct')
 
@@ -77,7 +76,7 @@ export default function KesehatanIbu() {
 
   return (
     <div className="flex flex-col gap-5">
-      <FilterBar kab={kab} tahun={tahun} onKab={setKab} onTahun={setTahun} />
+      <FilterBar kab={kab} onKab={setKab} />
 
       {/* Kematian ibu cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

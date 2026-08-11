@@ -29,8 +29,7 @@ export default function PenyakitMenular() {
   const { data: penyakitMenular, loading, error } = useDashboardData()
 
   const [kab, setKab] = useState('all')
-  const [tahun, setTahun] = useState('2025')
-  const [indic, setIndic] = useState('tbc_kasus')
+    const [indic, setIndic] = useState('tbc_kasus')
   const [corrX, setCorrX] = useState('tbc_kasus')
   const [corrY, setCorrY] = useState('diare_semua_umur')
 
@@ -78,7 +77,7 @@ export default function PenyakitMenular() {
 
   return (
     <div className="flex flex-col gap-5">
-      <FilterBar kab={kab} tahun={tahun} onKab={setKab} onTahun={setTahun} />
+      <FilterBar kab={kab} onKab={setKab} />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <KPICard title="Kasus TBC" value={totTBC.toLocaleString('id-ID')} sub="Semua Tipe" icon="🫁" color="#ef4444" />

@@ -47,6 +47,7 @@ import {
   Sparkles,
   HeartPulse,
 } from 'lucide-react'
+import api from '../services/api'
 
 interface BerandaProps {
   onNavigate: (pageId: any, groupId?: any) => void
@@ -126,6 +127,22 @@ export default function Beranda({ onNavigate }: BerandaProps) {
   const [selectedGalleryItem, setSelectedGalleryItem] = useState<typeof GALLERY_ITEMS[0] | null>(null)
   // State for Documentation Modal
   const [showDocModal, setShowDocModal] = useState<boolean>(false)
+  // State for available years
+  const [availableYears, setAvailableYears] = useState<number[]>([])
+
+  useEffect(() => {
+    const fetchYears = async () => {
+      try {
+        const res = await api.get('/years')
+        if (res.data && res.data.length > 0) {
+          setAvailableYears(res.data)
+        }
+      } catch (err) {
+        console.error('Failed to fetch years', err)
+      }
+    }
+    fetchYears()
+  }, [])
 
   // Animated counters on mount
   useEffect(() => {
@@ -238,7 +255,7 @@ export default function Beranda({ onNavigate }: BerandaProps) {
               </div>
               <div className="flex items-center gap-1.5">
                 <CheckCircle2 size={16} className="text-teal-600" />
-                <span className="font-medium text-gray-700">Tahun Data 2023–2025</span>
+                <span className="font-medium text-gray-700">Tahun Data Diperbarui Secara Berkala</span>
               </div>
             </div>
           </div>
@@ -342,9 +359,9 @@ export default function Beranda({ onNavigate }: BerandaProps) {
             <div className="w-10 h-10 mx-auto mb-3 rounded-xl flex items-center justify-center text-orange-600 bg-orange-50">
               <Database size={20} />
             </div>
-            <div className="text-2xl lg:text-3xl font-extrabold text-gray-900 mb-1">2023–2025</div>
-            <div className="text-xs font-semibold text-gray-700">Tahun Data</div>
-            <div className="text-[11px] text-gray-400 mt-0.5">Berkala & Terkini</div>
+            <div className="text-xl lg:text-2xl font-extrabold text-gray-900 mb-1 leading-tight flex items-center justify-center h-[36px]">Berkala</div>
+            <div className="text-xs font-semibold text-gray-700">Pembaruan Data</div>
+            <div className="text-[11px] text-gray-400 mt-0.5">Disinkronisasi Rutin</div>
           </div>
 
           <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm text-center transition-all duration-200 hover:-translate-y-1 hover:shadow-md">
@@ -1243,7 +1260,11 @@ export default function Beranda({ onNavigate }: BerandaProps) {
               </div>
               <div className="flex justify-between py-1 border-b border-gray-50">
                 <span>Periode Data</span>
-                <span className="font-semibold text-gray-800">2023 – 2025</span>
+                <span className="font-semibold text-gray-800">
+                  {availableYears.length > 0 
+                    ? (availableYears.length === 1 ? availableYears[0] : `${availableYears[0]} – ${availableYears[availableYears.length - 1]}`)
+                    : 'Berkala'}
+                </span>
               </div>
               <div className="flex justify-between py-1">
                 <span>Akses Pengguna</span>
@@ -1256,7 +1277,7 @@ export default function Beranda({ onNavigate }: BerandaProps) {
         {/* Bottom copyright */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-500">
           <div>
-            Hak Cipta &copy; 2025–2026 Dinas Kesehatan Provinsi Jawa Timur. Seluruh Hak Cipta Dilindungi.
+            Hak Cipta &copy; 2026 Dinas Kesehatan Provinsi Jawa Timur. Seluruh Hak Cipta Dilindungi.
           </div>
           <div className="flex items-center gap-4">
             <button onClick={() => setShowDocModal(true)} className="hover:text-teal-600 cursor-pointer">

@@ -30,8 +30,7 @@ export default function KesehatanAnak() {
   const { data: kesehatanAnak, loading, error } = useDashboardData()
 
   const [kab, setKab] = useState('all')
-  const [tahun, setTahun] = useState('2025')
-  const [indic, setIndic] = useState('stunting_pct')
+    const [indic, setIndic] = useState('stunting_pct')
   const [corrX, setCorrX] = useState('stunting_pct')
   const [corrY, setCorrY] = useState('gizi_kurang_pct')
 
@@ -73,7 +72,7 @@ export default function KesehatanAnak() {
 
   return (
     <div className="flex flex-col gap-5">
-      <FilterBar kab={kab} tahun={tahun} onKab={setKab} onTahun={setTahun} />
+      <FilterBar kab={kab} onKab={setKab} />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <KPICard title="Kematian Neonatal" value={totKematianNeonatal.toLocaleString('id-ID')} sub="Kasus" icon="💔" color="#ef4444" />

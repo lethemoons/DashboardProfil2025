@@ -25,8 +25,7 @@ export default function UsiaProduktifLansia() {
   const { data: usiaProduktif, loading, error } = useDashboardData()
 
   const [kab, setKab] = useState('all')
-  const [tahun, setTahun] = useState('2025')
-  const [indic, setIndic] = useState('lansia_dilayani')
+    const [indic, setIndic] = useState('lansia_dilayani')
 
   const data = useMemo(() => kab === 'all' ? usiaProduktif.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR') : usiaProduktif.filter(d => d.kabupaten === kab), [kab, usiaProduktif])
 
@@ -64,7 +63,7 @@ export default function UsiaProduktifLansia() {
 
   return (
     <div className="flex flex-col gap-5">
-      <FilterBar kab={kab} tahun={tahun} onKab={setKab} onTahun={setTahun} />
+      <FilterBar kab={kab} onKab={setKab} />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <KPICard title="Usia Produktif L" value={(totLaki / 1e6).toFixed(2) + ' jt'} sub="Jiwa" icon="👨" color="#0FB0AA" />

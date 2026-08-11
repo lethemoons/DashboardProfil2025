@@ -23,8 +23,7 @@ export default function TularVektor() {
   const { data: penyakitPD3I, loading, error } = useDashboardData()
 
   const [kab, setKab] = useState('all')
-  const [tahun, setTahun] = useState('2025')
-  const [indic, setIndic] = useState('dbd_kasus')
+    const [indic, setIndic] = useState('dbd_kasus')
 
   const data = useMemo(() => kab === 'all' ? penyakitPD3I.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR') : penyakitPD3I.filter(d => d.kabupaten === kab), [kab, penyakitPD3I])
 
@@ -69,7 +68,7 @@ export default function TularVektor() {
 
   return (
     <div className="flex flex-col gap-5">
-      <FilterBar kab={kab} tahun={tahun} onKab={setKab} onTahun={setTahun} />
+      <FilterBar kab={kab} onKab={setKab} />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <KPICard title="Kasus DBD" value={totDBD.toLocaleString('id-ID')} sub="Demam Berdarah Dengue" icon="🦟" color="#ef4444" />

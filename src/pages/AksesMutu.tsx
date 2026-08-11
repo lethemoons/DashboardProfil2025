@@ -35,8 +35,7 @@ export default function AksesMutu() {
   const { data: saranaKesehatan, loading, error } = useDashboardData()
 
   const [kab, setKab] = useState('all')
-  const [tahun, setTahun] = useState('2025')
-  const [indic, setIndic] = useState('bor')
+    const [indic, setIndic] = useState('bor')
   const [statIndic, setStatIndic] = useState('bor')
   const [corrX, setCorrX] = useState('bor')
   const [corrY, setCorrY] = useState('alos')
@@ -90,7 +89,7 @@ export default function AksesMutu() {
 
   return (
     <div className="flex flex-col gap-5">
-      <FilterBar kab={kab} tahun={tahun} onKab={setKab} onTahun={setTahun} />
+      <FilterBar kab={kab} onKab={setKab} />
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         <KPICard title="Total Kunjungan Rawat Jalan" value={totRawatJalan.toLocaleString('id-ID')} icon="🚶" color="#0FB0AA" />

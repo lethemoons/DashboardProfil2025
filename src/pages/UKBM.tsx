@@ -18,8 +18,7 @@ export default function UKBM() {
   const { data: saranaKesehatan, loading, error } = useDashboardData()
 
   const [kab, setKab] = useState('all')
-  const [tahun, setTahun] = useState('2025')
-  const [mapIndicator, setMapIndicator] = useState('jumlah_posyandu_siklus_hidup_aktif')
+    const [mapIndicator, setMapIndicator] = useState('jumlah_posyandu_siklus_hidup_aktif')
 
   const data = useMemo(() => kab === 'all' ? saranaKesehatan.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR') : saranaKesehatan.filter(d => d.kabupaten === kab), [kab, saranaKesehatan])
 
@@ -59,7 +58,7 @@ export default function UKBM() {
 
   return (
     <div className="flex flex-col gap-6">
-      <FilterBar kab={kab} tahun={tahun} onKab={setKab} onTahun={setTahun} hideKabFilter />
+      <FilterBar kab={kab} onKab={setKab} hideKabFilter />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <KPICard title="Total Posyandu" value="46.414" sub="Unit" icon="🌿" color="#0FB0AA" />

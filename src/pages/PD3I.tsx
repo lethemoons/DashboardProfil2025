@@ -34,8 +34,7 @@ export default function PD3I() {
   const ptm = penyakitPD3I
 
   const [kab, setKab] = useState('all')
-  const [tahun, setTahun] = useState('2025')
-  const [pd3iIndic, setPd3iIndic] = useState('difteri_kasus')
+    const [pd3iIndic, setPd3iIndic] = useState('difteri_kasus')
   const [ptmIndic, setPtmIndic] = useState('hipertensi_laki')
   const [activeSection, setActiveSection] = useState<'pd3i' | 'ptm'>('pd3i')
 
@@ -87,7 +86,7 @@ export default function PD3I() {
 
   return (
     <div className="flex flex-col gap-5">
-      <FilterBar kab={kab} tahun={tahun} onKab={setKab} onTahun={setTahun} />
+      <FilterBar kab={kab} onKab={setKab} />
 
       {/* Section toggle */}
       <div className="flex gap-2">

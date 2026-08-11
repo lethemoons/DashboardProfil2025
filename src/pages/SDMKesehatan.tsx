@@ -13,8 +13,7 @@ import CrosstabSection from '../components/CrosstabSection'
 export default function SDMKesehatan() {
   const { data: rawData, indicators, loading, error } = useSdmData()
   const [kab, setKab] = useState('all')
-  const [tahun, setTahun] = useState('2025')
-  
+    
   const [selectedInd, setSelectedInd] = useState('')
 
   if (!selectedInd && indicators.length > 0) {
@@ -91,7 +90,7 @@ export default function SDMKesehatan() {
 
   return (
     <div className="flex flex-col gap-6">
-      <FilterBar kab={kab} tahun={tahun} onKab={setKab} onTahun={setTahun} />
+      <FilterBar kab={kab} onKab={setKab} />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <KPICard title="Total SDM Kesehatan" value={totalSDM.toLocaleString('id-ID')} icon="👥" color="#0FB0AA" />

@@ -20,8 +20,7 @@ export default function PembiayaanKesehatan() {
   const { data: pembiayaan, loading, error } = useDashboardData()
 
   const [kab, setKab] = useState('all')
-  const [tahun, setTahun] = useState('2025')
-  const [trendKab, setTrendKab] = useState('all')
+    const [trendKab, setTrendKab] = useState('all')
   const [mapYear, setMapYear] = useState('2025')
 
   const data = useMemo(() => kab === 'all' ? pembiayaan.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR') : pembiayaan.filter(d => d.kabupaten === kab), [kab, pembiayaan])
@@ -59,7 +58,7 @@ export default function PembiayaanKesehatan() {
 
   return (
     <div className="flex flex-col gap-6">
-      <FilterBar kab={kab} tahun={tahun} onKab={setKab} onTahun={setTahun} hideKabFilter />
+      <FilterBar kab={kab} onKab={setKab} hideKabFilter />
 
       {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

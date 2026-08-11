@@ -28,8 +28,7 @@ export default function KesehatanLingkungan() {
   const { data: kesling, loading, error } = useDashboardData()
 
   const [kab, setKab] = useState('all')
-  const [tahun, setTahun] = useState('2025')
-  const [indic, setIndic] = useState('air_minum_memenuhi_syarat_pct')
+    const [indic, setIndic] = useState('air_minum_memenuhi_syarat_pct')
 
   const data = useMemo(() => kab === 'all' ? kesling.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR') : kesling.filter(d => d.kabupaten === kab), [kab, kesling])
 
@@ -70,7 +69,7 @@ export default function KesehatanLingkungan() {
 
   return (
     <div className="flex flex-col gap-5">
-      <FilterBar kab={kab} tahun={tahun} onKab={setKab} onTahun={setTahun} kabupaten={''} />
+      <FilterBar kab={kab} onKab={setKab} kabupaten={''} />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <KPICard title="Air Minum Layak" value={avgAir.toFixed(1) + '%'} sub="Rata-rata" icon="💧" color="#06B5D0" />

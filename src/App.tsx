@@ -152,12 +152,17 @@ function MainApp() {
         {/* Logo */}
         <div className="flex items-center gap-3 px-5 py-6 border-b shrink-0" style={{ borderColor: 'var(--color-border)', background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent2) 100%)', color: 'white' }}>
           {sidebarOpen ? (
-            <div className="min-w-0">
-              <div className="font-bold text-xl leading-tight mb-1">Profil Kesehatan</div>
-              <div className="text-[13px] font-medium" style={{ opacity: 0.9 }}>Jawa Timur 2025</div>
-            </div>
+            <>
+              <img src="/logo_dinkes.png" alt="Logo Dinkes" className="h-10 w-auto object-contain shrink-0" />
+              <div className="min-w-0">
+                <div className="font-bold text-[19px] leading-tight mb-0.5">Profil Kesehatan</div>
+                <div className="text-[13px] font-medium" style={{ opacity: 0.9 }}>Jawa Timur</div>
+              </div>
+            </>
           ) : (
-            <div className="w-full text-center font-bold text-xl">PK</div>
+            <div className="w-full text-center font-bold text-xl flex justify-center">
+              <img src="/logo_dinkes.png" alt="Logo Dinkes" className="h-8 w-auto object-contain" />
+            </div>
           )}
         </div>
 

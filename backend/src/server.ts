@@ -57,6 +57,19 @@ app.get('/api/data', async (req, res) => {
   }
 })
 
+app.get('/api/years', async (req, res) => {
+  try {
+    const years = await prisma.dashboardData.findMany({
+      select: { year: true },
+      distinct: ['year'],
+      orderBy: { year: 'asc' }
+    })
+    res.json(years.map(y => y.year))
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch years' })
+  }
+})
+
 // --- Admin CRUD Routes ---
 app.get('/api/admin/data', authenticateAdmin, async (req, res) => {
   try {
@@ -122,6 +135,16 @@ app.delete('/api/admin/data/:id', authenticateAdmin, async (req, res) => {
     res.json({ success: true })
   } catch (err) {
     res.status(500).json({ error: 'Failed to delete data' })
+  }
+})
+
+app.delete('/api/admin/data/year/:year', authenticateAdmin, async (req, res) => {
+  const { year } = req.params
+  try {
+    await prisma.dashboardData.deleteMany({ where: { year: parseInt(year) } })
+    res.json({ success: true })
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete data for year' })
   }
 })
 

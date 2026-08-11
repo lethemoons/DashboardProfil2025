@@ -33,8 +33,7 @@ const ANAK_OPTIONS = [
 
 export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
   const [kab, setKab] = useState('all')
-  const [tahun, setTahun] = useState('2025')
-  const [ibuIndic, setIbuIndic] = useState('k1_pct')
+    const [ibuIndic, setIbuIndic] = useState('k1_pct')
   const [anakIndic, setAnakIndic] = useState('stunting_pct')
   const [tab, setTab] = useState<'ibu' | 'anak' | 'lansia'>('ibu')
 
@@ -78,7 +77,7 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
 
   return (
     <div className="flex flex-col gap-5">
-      <FilterBar kab={kab} tahun={tahun} onKab={setKab} onTahun={setTahun} kabupaten={''} />
+      <FilterBar kab={kab} onKab={setKab} kabupaten={''} />
 
       {/* Sub-tabs */}
       <div className="flex gap-2 border-b border-gray-100 pb-0">

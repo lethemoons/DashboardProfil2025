@@ -28,8 +28,7 @@ const INDICATOR_OPTIONS = [
 export default function GambaranUmum() {
   const { data: demografi, loading, error } = useDashboardData()
   const [kab, setKab] = useState('all')
-  const [tahun, setTahun] = useState('2025')
-  const [indicator, setIndicator] = useState('jumlah_penduduk_desa_+_kelurahan')
+    const [indicator, setIndicator] = useState('jumlah_penduduk_desa_+_kelurahan')
   const [corrX, setCorrX] = useState('jumlah_penduduk_desa_+_kelurahan')
   const [corrY, setCorrY] = useState('kepadatan_penduduk_per_km2_desa_+_kelurahan')
 
@@ -68,7 +67,7 @@ export default function GambaranUmum() {
 
   return (
     <div className="flex flex-col gap-5">
-      <FilterBar kab={kab} tahun={tahun} onKab={setKab} onTahun={setTahun} kabupaten={''} hideKabFilter={true} />
+      <FilterBar kab={kab} onKab={setKab} kabupaten={''} hideKabFilter={true} />
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
         <KPICard title="Jumlah Kab/Kota" value={data.length.toString()} sub="Wilayah" color="#8b5cf6" />

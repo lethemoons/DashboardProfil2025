@@ -38,8 +38,7 @@ const PTM_OPTIONS = [
 
 export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) {
   const [kab, setKab] = useState('all')
-  const [tahun, setTahun] = useState('2025')
-  const [tab, setTab] = useState<'menular' | 'pd3i' | 'vektor' | 'ptm'>('menular')
+    const [tab, setTab] = useState<'menular' | 'pd3i' | 'vektor' | 'ptm'>('menular')
   const [menularIndic, setMenularIndic] = useState('tbc_kasus')
   const [vektorIndic, setVektorIndic] = useState('dbd_kasus')
   const [ptmIndic, setPtmIndic] = useState('hipertensi_laki')
@@ -83,7 +82,7 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
 
   return (
     <div className="flex flex-col gap-5">
-      <FilterBar kab={kab} tahun={tahun} onKab={setKab} onTahun={setTahun} kabupaten={''} />
+      <FilterBar kab={kab} onKab={setKab} kabupaten={''} />
 
       <div className="flex gap-2 pb-0">
         {TABS.map(t => (

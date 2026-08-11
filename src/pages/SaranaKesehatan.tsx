@@ -84,8 +84,7 @@ const CustomYAxisTick = ({ x, y, payload }: any) => {
 export default function SaranaKesehatan() {
   const { data: saranaKesehatan, loading, error } = useDashboardData()
 
-  const [tahun, setTahun] = useState('2025')
-  const [kategori, setKategori] = useState('Semua')
+    const [kategori, setKategori] = useState('Semua')
   const [tampilan, setTampilan] = useState('Top 10')
 
   const jatim = useMemo(() => saranaKesehatan.find(d => d.kabupaten === 'PROV. JAWA TIMUR') || {}, [saranaKesehatan])
@@ -151,7 +150,7 @@ export default function SaranaKesehatan() {
 
   return (
     <div className="flex flex-col gap-5">
-      <FilterBar kab="PROV. JAWA TIMUR" hideKabFilter tahun={tahun} onKab={() => { }} onTahun={setTahun} />
+      <FilterBar kab="PROV. JAWA TIMUR" hideKabFilter onKab={() => { }} />
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         <KPICard title="Rumah Sakit" value={totRS.toLocaleString('id-ID')} sub="Umum + Khusus" icon="🏨" color="#06B5D0" />
