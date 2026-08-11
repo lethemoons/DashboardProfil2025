@@ -103,10 +103,10 @@ app.get('/api/admin/data', authenticateAdmin, async (req, res) => {
 })
 
 app.post('/api/admin/data', authenticateAdmin, async (req, res) => {
-  const { tableNo, no, kabupaten, metric, value } = req.body
+  const { tableNo, no, kabupaten, metric, value, year } = req.body
   try {
     const newData = await prisma.dashboardData.create({
-      data: { tableNo: Number(tableNo), no: String(no), kabupaten, metric, value: String(value) }
+      data: { tableNo: Number(tableNo), no: String(no), kabupaten, metric, value: String(value), year: Number(year) || 2025 }
     })
     res.json(newData)
   } catch (err) {
@@ -116,11 +116,11 @@ app.post('/api/admin/data', authenticateAdmin, async (req, res) => {
 
 app.put('/api/admin/data/:id', authenticateAdmin, async (req, res) => {
   const { id } = req.params
-  const { tableNo, no, kabupaten, metric, value } = req.body
+  const { tableNo, no, kabupaten, metric, value, year } = req.body
   try {
     const updated = await prisma.dashboardData.update({
       where: { id: Number(id) },
-      data: { tableNo: Number(tableNo), no: String(no), kabupaten, metric, value: String(value) }
+      data: { tableNo: Number(tableNo), no: String(no), kabupaten, metric, value: String(value), year: Number(year) || 2025 }
     })
     res.json(updated)
   } catch (err) {
@@ -181,13 +181,15 @@ app.post('/api/admin/import', authenticateAdmin, upload.single('file'), async (r
 })
 
 app.get('/api/admin/export', authenticateAdmin, async (req, res) => {
-  const data = await prisma.dashboardData.findMany()
+  const year = parseInt(req.query.year as string)
+  const where = year ? { year } : {}
+  const data = await prisma.dashboardData.findMany({ where, orderBy: { id: 'asc' } })
   let csvStr = 'table_no,no,kabupaten,metric,value\n'
   data.forEach(row => {
     csvStr += `${row.tableNo},${row.no},${row.kabupaten},${row.metric},${row.value}\n`
   })
   res.setHeader('Content-Type', 'text/csv')
-  res.setHeader('Content-Disposition', 'attachment; filename=export.csv')
+  res.setHeader('Content-Disposition', `attachment; filename=export_${year || 'all'}.csv`)
   res.send(csvStr)
 })
 

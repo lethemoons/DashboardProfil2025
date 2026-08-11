@@ -135,7 +135,7 @@ function MainApp() {
 
   const activeGroup = PAGE_TO_NAV_GROUP[page]
   const { isAuthenticated, isAdmin, logout } = useAuth()
-  const { year, setYear } = useFilter()
+  const { year, setYear, availableYears } = useFilter()
 
   // --- Admin Routing Logic ---
   if (page === 'admin' && !(isAuthenticated && isAdmin)) {
@@ -156,7 +156,7 @@ function MainApp() {
               <img src="/logo_dinkes.png" alt="Logo Dinkes" className="h-10 w-auto object-contain shrink-0" />
               <div className="min-w-0">
                 <div className="font-bold text-[19px] leading-tight mb-0.5">Profil Kesehatan</div>
-                <div className="text-[13px] font-medium" style={{ opacity: 0.9 }}>Jawa Timur</div>
+                <div className="text-[13px] font-medium" style={{ opacity: 0.9 }}>Provinsi Jawa Timur</div>
               </div>
             </>
           ) : (
@@ -267,10 +267,9 @@ function MainApp() {
               onChange={(e) => setYear(Number(e.target.value))}
               className="px-3 py-1.5 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[#0FB0AA] text-sm font-medium text-gray-700 bg-white"
             >
-              <option value={2024}>Tahun 2024</option>
-              <option value={2025}>Tahun 2025</option>
-              <option value={2026}>Tahun 2026</option>
-              <option value={2027}>Tahun 2027</option>
+              {availableYears.map(y => (
+                <option key={y} value={y}>Tahun {y}</option>
+              ))}
             </select>
             <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: '#F0FAF9', color: '#0FB0AA' }}>
               <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#0FB0AA' }} />

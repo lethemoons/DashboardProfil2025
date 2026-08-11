@@ -53,63 +53,7 @@ interface BerandaProps {
   onNavigate: (pageId: any, groupId?: any) => void
 }
 
-// Visual Gallery Items with curated high-resolution healthcare imagery
-const GALLERY_ITEMS = [
-  {
-    id: 1,
-    title: 'Pelayanan Kesehatan di Puskesmas',
-    category: 'fasyankes',
-    categoryLabel: 'Fasilitas Kesehatan',
-    image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1000&q=80',
-    description: 'Pelayanan terpadu di fasilitas kesehatan tingkat pertama (FKTP) Puskesmas di wilayah Jawa Timur untuk memberikan akses kesehatan menyeluruh.',
-    location: 'Puskesmas Kabupaten Sidoarjo',
-  },
-  {
-    id: 2,
-    title: 'Pemeriksaan Kesehatan Ibu & Anak',
-    category: 'ibu_anak',
-    categoryLabel: 'Kesehatan Ibu & Anak',
-    image: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1000&q=80',
-    description: 'Pemeriksaan antenatal care (K1-K6) dan pemantauan tumbuh kembang balita secara intensif di posyandu binaan.',
-    location: 'Posyandu Terpadu Kota Surabaya',
-  },
-  {
-    id: 3,
-    title: 'Tenaga Medis & Pelayanan Rumah Sakit',
-    category: 'medis',
-    categoryLabel: 'Tenaga Medis',
-    image: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=1000&q=80',
-    description: 'Dedikasi dokter spesialis, perawat, dan tenaga medis profesional dalam pelayanan rujukan rumah sakit daerah di Jawa Timur.',
-    location: 'RSUD Dr. Soetomo / RSUD Provinsi Jatim',
-  },
-  {
-    id: 4,
-    title: 'Program Imunisasi & Vaksinasi Nasional',
-    category: 'imunisasi',
-    categoryLabel: 'Imunisasi & Pencegahan',
-    image: 'https://images.unsplash.com/photo-1632053002951-b3b4f5efd28c?auto=format&fit=crop&w=1000&q=80',
-    description: 'Pelaksanaan Imunisasi Dasar Lengkap (IDL) dan vaksinasi lanjutan untuk memperkuat kekebalan kelompok terhadap penyakit PD3I.',
-    location: 'Dinas Kesehatan Kabupaten Malang',
-  },
-  {
-    id: 5,
-    title: 'Laboratorium Kesehatan & Pengujian Sampel',
-    category: 'medis',
-    categoryLabel: 'Laboratorium & Diagnostik',
-    image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1000&q=80',
-    description: 'Fasilitas laboratorium kesehatan terakreditasi untuk pengawasan mutu air, uji klinis, dan surveilans penyakit menular.',
-    location: 'Balai Besar Laboratorium Kesehatan Surabaya',
-  },
-  {
-    id: 6,
-    title: 'Layanan Tanggap Darurat & Ambulans 119',
-    category: 'fasyankes',
-    categoryLabel: 'Layanan Darurat',
-    image: 'https://images.unsplash.com/photo-1587745416684-47953f16f02f?auto=format&fit=crop&w=1000&q=80',
-    description: 'Kesiapsiagaan armada ambulans gawat darurat dan Public Safety Center (PSC 119) di seluruh penjuru Jawa Timur.',
-    location: 'Sistem Penanggulangan Gawat Darurat Terpadu Jatim',
-  },
-]
+
 
 export default function Beranda({ onNavigate }: BerandaProps) {
   // Counter animation state
@@ -121,10 +65,7 @@ export default function Beranda({ onNavigate }: BerandaProps) {
     barisData: 0,
   })
 
-  // State for Gallery Category Filter
-  const [galleryFilter, setGalleryFilter] = useState<string>('all')
-  // State for Lightbox Modal
-  const [selectedGalleryItem, setSelectedGalleryItem] = useState<typeof GALLERY_ITEMS[0] | null>(null)
+
   // State for Documentation Modal
   const [showDocModal, setShowDocModal] = useState<boolean>(false)
   // State for available years
@@ -159,7 +100,7 @@ export default function Beranda({ onNavigate }: BerandaProps) {
       setCounts({
         wilayah: Math.round(38 * easeProgress),
         halaman: Math.round(7 * easeProgress),
-        modul: Math.round(10 * easeProgress),
+        modul: Math.round(5 * easeProgress),
         indikator: Math.round(100 * easeProgress),
         barisData: Math.round(47913 * easeProgress),
       })
@@ -172,9 +113,6 @@ export default function Beranda({ onNavigate }: BerandaProps) {
     return () => clearInterval(timer)
   }, [])
 
-  const filteredGallery = galleryFilter === 'all'
-    ? GALLERY_ITEMS
-    : GALLERY_ITEMS.filter(item => item.category === galleryFilter)
 
   return (
     <div className="flex flex-col gap-12 max-w-7xl mx-auto pb-12">
@@ -251,10 +189,6 @@ export default function Beranda({ onNavigate }: BerandaProps) {
               </div>
               <div className="flex items-center gap-1.5">
                 <CheckCircle2 size={16} className="text-teal-600" />
-                <span className="font-medium text-gray-700">76 Tabel Data Standar</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 size={16} className="text-teal-600" />
                 <span className="font-medium text-gray-700">Tahun Data Diperbarui Secara Berkala</span>
               </div>
             </div>
@@ -271,7 +205,7 @@ export default function Beranda({ onNavigate }: BerandaProps) {
               <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent" />
 
               {/* In-image caption */}
-              <div className="absolute bottom-4 left-4 right-4 text-white">
+              <div className="absolute bottom-6 sm:bottom-8 left-4 right-4 sm:right-6 pr-8 sm:pr-48 text-white">
                 <div className="text-xs font-semibold uppercase tracking-wider text-teal-300 mb-1">
                   Pelayanan Kesehatan Terintegrasi
                 </div>
@@ -318,7 +252,7 @@ export default function Beranda({ onNavigate }: BerandaProps) {
           <p className="text-xl font-bold text-gray-800">Statistik Utama Platform Profil Kesehatan</p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm text-center transition-all duration-200 hover:-translate-y-1 hover:shadow-md">
             <div className="w-10 h-10 mx-auto mb-3 rounded-xl flex items-center justify-center text-teal-600 bg-teal-50">
               <MapPin size={20} />
@@ -334,16 +268,16 @@ export default function Beranda({ onNavigate }: BerandaProps) {
             </div>
             <div className="text-2xl lg:text-3xl font-extrabold text-gray-900 mb-1">{counts.halaman}</div>
             <div className="text-xs font-semibold text-gray-700">Modul Utama</div>
-            <div className="text-[11px] text-gray-400 mt-0.5">Struktur 6 Pilar Data</div>
+            <div className="text-[11px] text-gray-400 mt-0.5">Struktur 7 Modul Data</div>
           </div>
 
           <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm text-center transition-all duration-200 hover:-translate-y-1 hover:shadow-md">
             <div className="w-10 h-10 mx-auto mb-3 rounded-xl flex items-center justify-center text-lime-600 bg-lime-50">
               <Calculator size={20} />
             </div>
-            <div className="text-2xl lg:text-3xl font-extrabold text-gray-900 mb-1">{counts.modul}+</div>
+            <div className="text-2xl lg:text-3xl font-extrabold text-gray-900 mb-1">{counts.modul}</div>
             <div className="text-xs font-semibold text-gray-700">Fitur Analisis</div>
-            <div className="text-[11px] text-gray-400 mt-0.5">Spasial, Korelasi & Rank</div>
+            <div className="text-[11px] text-gray-400 mt-0.5">Analisis Statistik & Geospasial</div>
           </div>
 
           <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm text-center transition-all duration-200 hover:-translate-y-1 hover:shadow-md">
@@ -364,16 +298,6 @@ export default function Beranda({ onNavigate }: BerandaProps) {
             <div className="text-[11px] text-gray-400 mt-0.5">Disinkronisasi Rutin</div>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm text-center transition-all duration-200 hover:-translate-y-1 hover:shadow-md">
-            <div className="w-10 h-10 mx-auto mb-3 rounded-xl flex items-center justify-center text-emerald-600 bg-emerald-50">
-              <Table size={20} />
-            </div>
-            <div className="text-2xl lg:text-3xl font-extrabold text-gray-900 mb-1">
-              {counts.barisData.toLocaleString('id-ID')}
-            </div>
-            <div className="text-xs font-semibold text-gray-700">Titik Data Resmi</div>
-            <div className="text-[11px] text-gray-400 mt-0.5">76 Tabel Terstruktur</div>
-          </div>
         </div>
       </section>
 
@@ -473,7 +397,7 @@ export default function Beranda({ onNavigate }: BerandaProps) {
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8">
           <div>
             <div className="text-xs font-bold tracking-wider uppercase text-teal-600 mb-1">Kemampuan Sistem</div>
-            <h2 className="text-2xl font-bold text-gray-900">Fitur Unggulan Dashboard</h2>
+            <h2 className="text-2xl font-bold text-gray-900">Fitur Analisis</h2>
             <p className="text-sm text-gray-500 mt-1">Eksplorasi data dengan berbagai alat analisis modern dan fleksibel</p>
           </div>
           <button
@@ -486,28 +410,6 @@ export default function Beranda({ onNavigate }: BerandaProps) {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          {/* Fitur 1 */}
-          <div
-            onClick={() => onNavigate('gambaran')}
-            className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-teal-200 transition-all duration-200 cursor-pointer group flex flex-col justify-between"
-          >
-            <div>
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center text-teal-600 bg-teal-50 group-hover:bg-teal-600 group-hover:text-white transition-colors mb-3.5">
-                <LayoutDashboard size={20} />
-              </div>
-              <h3 className="font-bold text-sm text-gray-800 mb-1.5 group-hover:text-teal-600 transition-colors">
-                Dashboard Interaktif
-              </h3>
-              <p className="text-xs text-gray-500 leading-relaxed">
-                Tampilan visual komprehensif dengan metrik utama, grafik distribusi, dan rangkuman indikator.
-              </p>
-            </div>
-            <div className="mt-4 pt-3 border-t border-gray-50 flex items-center justify-between text-[11px] font-medium text-teal-600">
-              <span>Buka Gambaran</span>
-              <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
-            </div>
-          </div>
-
           {/* Fitur 2 */}
           <div
             onClick={() => onNavigate('sarana')}
@@ -602,7 +504,40 @@ export default function Beranda({ onNavigate }: BerandaProps) {
             </div>
           </div>
 
-          {/* Fitur 7 */}
+          </div>
+
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 mt-16">
+            <div>
+              <div className="text-xs font-bold tracking-wider uppercase text-teal-600 mb-1">Kemampuan Sistem</div>
+              <h2 className="text-2xl font-bold text-gray-900">Fitur Tambahan</h2>
+              <p className="text-sm text-gray-500 mt-1">Modul pendukung fungsionalitas dan navigasi dashboard</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            {/* Fitur 1 (Dashboard Interaktif) */}
+            <div
+              onClick={() => onNavigate('gambaran')}
+              className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-teal-200 transition-all duration-200 cursor-pointer group flex flex-col justify-between"
+            >
+              <div>
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center text-teal-600 bg-teal-50 group-hover:bg-teal-600 group-hover:text-white transition-colors mb-3.5">
+                  <LayoutDashboard size={20} />
+                </div>
+                <h3 className="font-bold text-sm text-gray-800 mb-1.5 group-hover:text-teal-600 transition-colors">
+                  Dashboard Interaktif
+                </h3>
+                <p className="text-xs text-gray-500 leading-relaxed">
+                  Tampilan visual komprehensif dengan metrik utama, grafik distribusi, dan rangkuman indikator.
+                </p>
+              </div>
+              <div className="mt-4 pt-3 border-t border-gray-50 flex items-center justify-between text-[11px] font-medium text-teal-600">
+                <span>Buka Gambaran</span>
+                <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+
+            {/* Fitur 7 */}
           <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-cyan-200 transition-all duration-200 group flex flex-col justify-between">
             <div>
               <div className="w-10 h-10 rounded-xl flex items-center justify-center text-cyan-600 bg-cyan-50 group-hover:bg-cyan-600 group-hover:text-white transition-colors mb-3.5">
@@ -687,7 +622,7 @@ export default function Beranda({ onNavigate }: BerandaProps) {
         <div className="mb-8">
           <div className="text-xs font-bold tracking-wider uppercase text-teal-600 mb-1">Struktur Informasi</div>
           <h2 className="text-2xl font-bold text-gray-900">Cakupan Data Dashboard</h2>
-          <p className="text-sm text-gray-500 mt-1">6 Pilar utama profil kesehatan Provinsi Jawa Timur</p>
+          <p className="text-sm text-gray-500 mt-1">7 Pilar utama profil kesehatan Provinsi Jawa Timur</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -945,148 +880,70 @@ export default function Beranda({ onNavigate }: BerandaProps) {
       {/* ========================================================================= */}
       {/* SECTION 7: SUMBER DATA & JAMINAN MUTU                                     */}
       {/* ========================================================================= */}
-      <section className="bg-gradient-to-br from-slate-900 to-teal-950 text-white rounded-3xl p-6 md:p-10 shadow-lg relative overflow-hidden">
+      <section className="text-white rounded-3xl p-6 md:p-10 shadow-lg relative overflow-hidden" style={{ background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent2) 100%)' }}>
         {/* Background elements */}
         <div className="absolute right-0 top-0 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           <div className="lg:col-span-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold text-teal-300 bg-teal-900/50 border border-teal-700/50 mb-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold text-[#e8ff7a] bg-black/5 border border-white/10 mb-3">
               <Shield size={14} />
               Otoritas & Tata Kelola Data
             </div>
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-4">
               Sumber Data Resmi & Terintegrasi
             </h2>
-            <p className="text-sm text-gray-300 leading-relaxed mb-6">
+            <p className="text-sm text-white/95 leading-relaxed mb-6">
               Seluruh dataset dikompilasi secara resmi oleh Dinas Kesehatan Provinsi Jawa Timur melalui pelaporan berjenjang dari Fasilitas Pelayanan Kesehatan (Puskesmas dan Rumah Sakit) di 38 Kabupaten/Kota. Data dikurasi dengan standar pedoman Profil Kesehatan Indonesia dari Kementerian Kesehatan Republik Indonesia.
             </p>
 
             <div className="grid grid-cols-2 gap-3">
-              <div className="flex items-center gap-2.5 p-3 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm">
-                <CheckCircle size={18} className="text-teal-400 shrink-0" />
-                <span className="text-xs font-medium text-gray-200">Data Resmi Pemerintah</span>
+              <div className="flex items-center gap-2.5 p-3 rounded-xl bg-black/5 border border-white/10 backdrop-blur-sm">
+                <CheckCircle size={18} className="text-[#e8ff7a] shrink-0" />
+                <span className="text-xs font-medium text-white">Data Resmi Pemerintah</span>
               </div>
-              <div className="flex items-center gap-2.5 p-3 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm">
-                <Layers size={18} className="text-cyan-400 shrink-0" />
-                <span className="text-xs font-medium text-gray-200">Terintegrasi 38 Wilayah</span>
+              <div className="flex items-center gap-2.5 p-3 rounded-xl bg-black/5 border border-white/10 backdrop-blur-sm">
+                <Layers size={18} className="text-[#e8ff7a] shrink-0" />
+                <span className="text-xs font-medium text-white">Terintegrasi 38 Wilayah</span>
               </div>
-              <div className="flex items-center gap-2.5 p-3 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm">
-                <ShieldCheck size={18} className="text-lime-400 shrink-0" />
-                <span className="text-xs font-medium text-gray-200">Terstandarisasi Kemenkes</span>
+              <div className="flex items-center gap-2.5 p-3 rounded-xl bg-black/5 border border-white/10 backdrop-blur-sm">
+                <ShieldCheck size={18} className="text-[#e8ff7a] shrink-0" />
+                <span className="text-xs font-medium text-white">Terstandarisasi Kemenkes</span>
               </div>
-              <div className="flex items-center gap-2.5 p-3 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm">
-                <TrendingUp size={18} className="text-purple-400 shrink-0" />
-                <span className="text-xs font-medium text-gray-200">Siap Analisis & Komparasi</span>
+              <div className="flex items-center gap-2.5 p-3 rounded-xl bg-black/5 border border-white/10 backdrop-blur-sm">
+                <TrendingUp size={18} className="text-[#e8ff7a] shrink-0" />
+                <span className="text-xs font-medium text-white">Siap Analisis & Komparasi</span>
               </div>
             </div>
           </div>
 
-          <div className="lg:col-span-6 bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/15">
-            <div className="text-xs uppercase tracking-wider text-teal-300 font-semibold mb-2">Status Integritas Sistem</div>
-            <h3 className="text-lg font-bold mb-4">Pembaruan & Keandalan Basis Data</h3>
+          <div className="lg:col-span-6 bg-black/5 backdrop-blur-md rounded-2xl p-6 border border-white/10 shadow-lg">
+            <div className="text-xs uppercase tracking-wider text-[#e8ff7a] font-bold mb-2">Status Integritas Sistem</div>
+            <h3 className="text-lg font-bold mb-4 text-white">Pembaruan & Keandalan Basis Data</h3>
 
-            <div className="space-y-3.5 text-xs text-gray-200">
-              <div className="flex justify-between items-center pb-2.5 border-b border-white/10">
-                <span className="text-gray-300">Penerbit Resmi</span>
-                <span className="font-semibold text-white">Dinas Kesehatan Provinsi Jawa Timur</span>
+            <div className="space-y-3.5 text-xs text-white">
+              <div className="flex justify-between items-center pb-2.5 border-b border-white/15">
+                <span className="text-white/90">Penerbit Resmi</span>
+                <span className="font-semibold text-[#e8ff7a]">Dinas Kesehatan Provinsi Jawa Timur</span>
               </div>
-              <div className="flex justify-between items-center pb-2.5 border-b border-white/10">
-                <span className="text-gray-300">Struktur Data</span>
-                <span className="font-semibold text-white">76 Tabel Lampiran Profil Kesehatan</span>
+              <div className="flex justify-between items-center pb-2.5 border-b border-white/15">
+                <span className="text-white/90">Struktur Data</span>
+                <span className="font-semibold text-[#e8ff7a]">76 Tabel Lampiran Profil Kesehatan</span>
               </div>
-              <div className="flex justify-between items-center pb-2.5 border-b border-white/10">
-                <span className="text-gray-300">Cakupan Wilayah</span>
-                <span className="font-semibold text-white">100% Wilayah Jatim (29 Kab, 9 Kota)</span>
+              <div className="flex justify-between items-center pb-2.5 border-b border-white/15">
+                <span className="text-white/90">Cakupan Wilayah</span>
+                <span className="font-semibold text-[#e8ff7a]">100% Wilayah Jatim (29 Kab, 9 Kota)</span>
               </div>
-              <div className="flex justify-between items-center pb-2.5 border-b border-white/10">
-                <span className="text-gray-300">Frekuensi Pembaruan</span>
-                <span className="font-semibold text-white">Tahunan (Sinkronisasi Database Berkala)</span>
+              <div className="flex justify-between items-center pb-2.5 border-b border-white/15">
+                <span className="text-white/90">Frekuensi Pembaruan</span>
+                <span className="font-semibold text-[#e8ff7a]">Tahunan (Sinkronisasi Database Berkala)</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-300">Format Standardisasi</span>
-                <span className="font-semibold text-teal-300">Relational Database & JSON API</span>
+                <span className="text-white/90">Format Standardisasi</span>
+                <span className="font-bold text-[#e8ff7a]">Relational Database & JSON API</span>
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* SECTION 8: GALERI VISUAL SEKTOR KESEHATAN                                 */}
-      {/* ========================================================================= */}
-      <section>
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-6">
-          <div>
-            <div className="text-xs font-bold tracking-wider uppercase text-teal-600 mb-1">Dokumentasi Layanan</div>
-            <h2 className="text-2xl font-bold text-gray-900">Galeri Visual Layanan Kesehatan</h2>
-            <p className="text-sm text-gray-500 mt-1">Potret dedikasi fasyankes dan tenaga medis di Jawa Timur</p>
-          </div>
-
-          {/* Gallery Category Filter */}
-          <div className="mt-4 md:mt-0 flex flex-wrap gap-2">
-            {[
-              { key: 'all', label: 'Semua Foto' },
-              { key: 'fasyankes', label: 'Fasilitas Kesehatan' },
-              { key: 'ibu_anak', label: 'Ibu & Anak' },
-              { key: 'medis', label: 'Tenaga Medis' },
-              { key: 'imunisasi', label: 'Imunisasi' },
-            ].map(tab => (
-              <button
-                key={tab.key}
-                onClick={() => setGalleryFilter(tab.key)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 cursor-pointer ${galleryFilter === tab.key
-                    ? 'bg-teal-600 text-white shadow-sm'
-                    : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
-                  }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Gallery Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredGallery.map(item => (
-            <div
-              key={item.id}
-              onClick={() => setSelectedGalleryItem(item)}
-              className="group bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer flex flex-col"
-            >
-              <div className="relative h-52 overflow-hidden">
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-md text-[11px] font-semibold text-teal-700 shadow-sm">
-                  {item.categoryLabel}
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                  <span className="text-white text-xs font-medium inline-flex items-center gap-1">
-                    <span>Lihat Detail Foto</span>
-                    <ExternalLink size={12} />
-                  </span>
-                </div>
-              </div>
-
-              <div className="p-4 flex-1 flex flex-col justify-between">
-                <div>
-                  <h3 className="font-bold text-sm text-gray-800 mb-1 group-hover:text-teal-600 transition-colors">
-                    {item.title}
-                  </h3>
-                  <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed mb-2">
-                    {item.description}
-                  </p>
-                </div>
-                <div className="flex items-center gap-1 text-[11px] text-gray-400 font-medium pt-2 border-t border-gray-50">
-                  <MapPin size={12} className="text-teal-600" />
-                  <span>{item.location}</span>
-                </div>
-              </div>
-            </div>
-          ))}
         </div>
       </section>
 
@@ -1156,16 +1013,16 @@ export default function Beranda({ onNavigate }: BerandaProps) {
       {/* ========================================================================= */}
       {/* SECTION 10: CALL TO ACTION BANNER                                         */}
       {/* ========================================================================= */}
-      <section className="rounded-3xl p-8 md:p-12 text-center relative overflow-hidden bg-gradient-to-r from-teal-600 via-teal-700 to-cyan-700 text-white shadow-md">
+      <section className="rounded-3xl p-8 md:p-12 text-center relative overflow-hidden text-white shadow-lg" style={{ background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent2) 100%)' }}>
         <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white/15 text-white backdrop-blur-sm mb-4">
             <Sparkles size={14} />
             Eksplorasi Data Lengkap
           </div>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight mb-4">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight mb-4 text-white">
             Siap Menjelajahi Indikator Kesehatan Jawa Timur?
           </h2>
-          <p className="text-sm sm:text-base text-teal-100 leading-relaxed mb-8 max-w-xl">
+          <p className="text-sm sm:text-base text-white/95 leading-relaxed mb-8 max-w-xl">
             Akses seluruh data demografi, sarana kesehatan, tenaga medis, kesehatan keluarga, dan pengendalian penyakit dalam satu platform terpadu.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4">
@@ -1178,7 +1035,7 @@ export default function Beranda({ onNavigate }: BerandaProps) {
             </button>
             <button
               onClick={() => setShowDocModal(true)}
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-white bg-teal-800/60 hover:bg-teal-800/80 border border-teal-400/40 transition-all duration-200 cursor-pointer text-sm"
+              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-teal-900 bg-[#c9da2c] hover:bg-[#b8c920] shadow-md transition-all duration-200 cursor-pointer text-sm"
             >
               <FileText size={16} />
               <span>Panduan & Metodologi</span>
@@ -1195,8 +1052,8 @@ export default function Beranda({ onNavigate }: BerandaProps) {
           {/* Col 1: Branding & Address */}
           <div className="lg:col-span-5 flex flex-col items-start">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-lg" style={{ background: '#0FB0AA' }}>
-                PK
+              <div className="flex items-center justify-center">
+                <img src="/main_logo_dinkes.png" alt="Logo Dinkes" className="h-10 w-auto object-contain" />
               </div>
               <div>
                 <div className="font-bold text-base text-gray-900 leading-tight">Profil Kesehatan</div>
@@ -1261,7 +1118,7 @@ export default function Beranda({ onNavigate }: BerandaProps) {
               <div className="flex justify-between py-1 border-b border-gray-50">
                 <span>Periode Data</span>
                 <span className="font-semibold text-gray-800">
-                  {availableYears.length > 0 
+                  {availableYears.length > 0
                     ? (availableYears.length === 1 ? availableYears[0] : `${availableYears[0]} – ${availableYears[availableYears.length - 1]}`)
                     : 'Berkala'}
                 </span>
@@ -1291,58 +1148,13 @@ export default function Beranda({ onNavigate }: BerandaProps) {
         </div>
       </footer>
 
-      {/* ========================================================================= */}
-      {/* MODAL 1: LIGHTBOX PREVIEW FOTO GALERI                                     */}
-      {/* ========================================================================= */}
-      {selectedGalleryItem && (
-        <div className="fixed inset-0 z-50 bg-gray-900/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-200">
-            <div className="relative h-72 sm:h-80">
-              <img
-                src={selectedGalleryItem.image}
-                alt={selectedGalleryItem.title}
-                className="w-full h-full object-cover"
-              />
-              <button
-                onClick={() => setSelectedGalleryItem(null)}
-                className="absolute top-4 right-4 bg-gray-900/60 hover:bg-gray-900 text-white w-9 h-9 rounded-full flex items-center justify-center transition-colors cursor-pointer"
-              >
-                <X size={18} />
-              </button>
-              <div className="absolute top-4 left-4 bg-teal-600 text-white px-3 py-1 rounded-md text-xs font-semibold">
-                {selectedGalleryItem.categoryLabel}
-              </div>
-            </div>
 
-            <div className="p-6">
-              <div className="flex items-center gap-1.5 text-xs text-teal-700 font-medium mb-1">
-                <MapPin size={14} />
-                <span>{selectedGalleryItem.location}</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">
-                {selectedGalleryItem.title}
-              </h3>
-              <p className="text-sm text-gray-600 leading-relaxed mb-6">
-                {selectedGalleryItem.description}
-              </p>
-              <div className="flex justify-end">
-                <button
-                  onClick={() => setSelectedGalleryItem(null)}
-                  className="px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-xs font-semibold transition-colors cursor-pointer"
-                >
-                  Tutup Pratinjau
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* ========================================================================= */}
       {/* MODAL 2: DOKUMENTASI & METODOLOGI                                         */}
       {/* ========================================================================= */}
       {showDocModal && (
-        <div className="fixed inset-0 z-50 bg-gray-900/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[9999] bg-gray-900/80 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col animate-in fade-in zoom-in-95 duration-200">
             {/* Modal Header */}
             <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-teal-50/50">
@@ -1371,7 +1183,7 @@ export default function Beranda({ onNavigate }: BerandaProps) {
                   1. Struktur Data & Sumber Informasi
                 </h4>
                 <p>
-                  Data yang disajikan pada dashboard ini mengacu pada dokumen resmi Lampiran Profil Kesehatan Provinsi Jawa Timur Tahun 2025 yang diterbitkan oleh Dinas Kesehatan Provinsi Jawa Timur. Struktur data mencakup 76 tabel statistik baku yang dihimpun dari laporan rutin 38 Dinas Kesehatan Kabupaten/Kota dan fasilitas pelayanan kesehatan di seluruh wilayah Jawa Timur.
+                  Data yang disajikan pada dashboard ini mengacu pada dokumen resmi Lampiran Profil Kesehatan Provinsi Jawa Timur yang diterbitkan secara berkala oleh Dinas Kesehatan Provinsi Jawa Timur. Struktur data mencakup 76 tabel statistik baku yang dihimpun dari laporan rutin 38 Dinas Kesehatan Kabupaten/Kota dan fasilitas pelayanan kesehatan di seluruh wilayah Jawa Timur.
                 </p>
               </div>
 
@@ -1395,28 +1207,18 @@ export default function Beranda({ onNavigate }: BerandaProps) {
 
               <div>
                 <h4 className="font-bold text-sm text-gray-900 mb-2 flex items-center gap-2">
-                  <Target size={16} className="text-teal-600" />
-                  3. Standar Pelayanan Minimal (SPM) Kesehatan
-                </h4>
-                <p>
-                  Indikator prioritas kesehatan keluarga, imunisasi anak, dan penanggulangan penyakit menular diselaraskan dengan Peraturan Menteri Kesehatan mengenai Standar Teknis Pemenuhan Mutu Pelayanan Dasar pada SPM Bidang Kesehatan.
-                </p>
-              </div>
-
-              <div>
-                <h4 className="font-bold text-sm text-gray-900 mb-2 flex items-center gap-2">
                   <ShieldCheck size={16} className="text-teal-600" />
-                  4. Pembaruan & Manajemen Data Admin
+                  3. Pembaruan & Manajemen Data Admin
                 </h4>
                 <p>
-                  Pengguna terautentikasi (Admin) dapat melakukan pembaruan data, penyesuaian nilai metrik, dan pemeliharaan tabel secara langsung melalui Portal Admin Dashboard dengan enkripsi token JWT.
+                  Admin yang telah masuk (login) dapat melakukan pembaruan data, penyesuaian angka, dan pemeliharaan tabel secara langsung melalui Portal Admin Dashboard. Seluruh akses ini dilindungi oleh sistem keamanan standar untuk memastikan data tetap aman dan tidak dapat diubah oleh pihak yang tidak berwenang.
                 </p>
               </div>
             </div>
 
             {/* Modal Footer */}
             <div className="px-6 py-4 border-t border-gray-100 bg-gray-50 flex items-center justify-between">
-              <span className="text-xs text-gray-400">Dinas Kesehatan Provinsi Jawa Timur &copy; 2025</span>
+              <span className="text-xs text-gray-400">Dinas Kesehatan Provinsi Jawa Timur &copy; 2026</span>
               <button
                 onClick={() => setShowDocModal(false)}
                 className="px-5 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-semibold text-xs transition-colors cursor-pointer"

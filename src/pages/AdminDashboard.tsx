@@ -4,11 +4,13 @@ import api from '../services/api'
 import { useFilter } from '../contexts/FilterContext'
 
 export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
-  const { year } = useFilter()
+  const { year, refreshYears } = useFilter()
   const [page, setPage] = useState(1)
   const limit = 50
   const [search, setSearch] = useState('')
   const [isUploading, setIsUploading] = useState(false)
+  const [importYear, setImportYear] = useState(new Date().getFullYear())
+  const [showUploadForm, setShowUploadForm] = useState(false)
   
   const { data, total, loading, error, refetch } = useAdminData(page, limit, search)
   const fileInput = useRef<HTMLInputElement>(null)
@@ -28,8 +30,19 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     }
   }
 
-  const handleExport = () => {
-    window.open('http://localhost:3000/api/admin/export', '_blank')
+  const handleExport = async () => {
+    try {
+      const response = await api.get(`/admin/export?year=${year}`, { responseType: 'blob' })
+      const url = window.URL.createObjectURL(new Blob([response.data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', `export_${year}.csv`)
+      document.body.appendChild(link)
+      link.click()
+      link.parentNode?.removeChild(link)
+    } catch (err: any) {
+      alert('Failed to export data')
+    }
   }
 
   const handleDeleteYear = async () => {
@@ -49,7 +62,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     setIsUploading(true)
     const formData = new FormData()
     formData.append('file', file)
-    formData.append('year', year.toString())
+    formData.append('year', importYear.toString())
     
     try {
       await api.post('/admin/import', formData, {
@@ -62,26 +75,54 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     } finally {
       setIsUploading(false)
       if (fileInput.current) fileInput.current.value = ''
+      await refreshYears()
+      setShowUploadForm(false)
     }
   }
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <div className="flex justify-end gap-3 mb-4 shrink-0">
-        <button onClick={handleExport} className="px-4 py-2 border rounded-lg hover:bg-gray-50 text-sm font-medium bg-white">
-          Export CSV
+        <button onClick={handleExport} className="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 text-sm font-medium bg-white text-gray-700 shadow-sm transition-colors">
+          Unduh Data ({year})
         </button>
-        <div>
-          <input type="file" accept=".csv" ref={fileInput} className="hidden" onChange={handleImport} />
+        
+        {!showUploadForm ? (
           <button 
-            onClick={() => fileInput.current?.click()} 
-            disabled={isUploading}
-            className="px-4 py-2 bg-[#0FB0AA] hover:bg-[#0da09a] text-white rounded-lg text-sm font-medium disabled:opacity-50"
-            title={`Akan meng-overwrite data tahun ${year}`}
+            onClick={() => setShowUploadForm(true)}
+            className="px-4 py-2 bg-[#0FB0AA] hover:bg-[#0da09a] text-white rounded-lg text-sm font-medium shadow-sm transition-colors"
           >
-            {isUploading ? 'Importing...' : `Import CSV (${year})`}
+            Unggah Data
           </button>
-        </div>
+        ) : (
+          <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 p-1.5 rounded-xl shadow-sm">
+            <input type="file" accept=".csv" ref={fileInput} className="hidden" onChange={handleImport} />
+            <div className="flex items-center gap-1.5 px-2 text-sm text-gray-600 font-medium">
+              Tahun:
+              <input
+                type="number"
+                value={importYear}
+                onChange={e => setImportYear(Number(e.target.value))}
+                className="w-20 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#0FB0AA] bg-white"
+                title="Tahun data yang akan diunggah"
+              />
+            </div>
+            <button 
+              onClick={() => fileInput.current?.click()} 
+              disabled={isUploading}
+              className="px-3 py-1.5 bg-[#0FB0AA] hover:bg-[#0da09a] text-white rounded text-sm font-medium disabled:opacity-50 transition-colors"
+              title={`Akan menimpa (overwrite) data tahun ${importYear}`}
+            >
+              {isUploading ? 'Mengunggah...' : 'Pilih & Unggah File'}
+            </button>
+            <button 
+              onClick={() => setShowUploadForm(false)}
+              className="px-3 py-1.5 border border-gray-300 text-gray-600 bg-white hover:bg-gray-100 rounded text-sm font-medium transition-colors"
+            >
+              Batal
+            </button>
+          </div>
+        )}
         <button 
           onClick={handleDeleteYear} 
           className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm font-medium"
