@@ -5,7 +5,8 @@
   "scripts": {
     "start": "ts-node src/server.ts",
     "dev": "nodemon src/server.ts",
-    "seed": "ts-node src/seed.ts"
+    "seed": "ts-node src/seed.ts",
+    "build": "tsc"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",

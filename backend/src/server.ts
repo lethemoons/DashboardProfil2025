@@ -11,10 +11,13 @@ import { exec } from 'child_process'
 
 const app = express()
 const prisma = new PrismaClient()
-const PORT = 3000
-const JWT_SECRET = 'supersecret_for_demo'
+const PORT = process.env.PORT || 3000
+const JWT_SECRET = process.env.JWT_SECRET || 'supersecret_for_demo'
 
-app.use(cors())
+app.use(cors({
+  origin: process.env.FRONTEND_URL || '*',
+  credentials: true,
+}))
 app.use(express.json())
 
 const upload = multer({ dest: 'uploads/' })
