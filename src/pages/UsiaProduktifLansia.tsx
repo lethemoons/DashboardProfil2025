@@ -4,7 +4,7 @@ import RiskClusteringMap from '../components/RiskClusteringMap';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   CartesianGrid, Legend, Cell
-} from 'recharts'
+, LabelList } from 'recharts'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
 import FilterBar from '../components/FilterBar'
@@ -117,11 +117,11 @@ export default function UsiaProduktifLansia() {
           </div>
         </div>
         <ResponsiveContainer width="100%" height={280}>
-          <BarChart data={chartData} layout="vertical" margin={{ left: 95, right: 20 }}>
+          <BarChart data={chartData} layout="vertical" margin={{ left: 95, right: 80 }}>
             <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={v => v >= 1e6 ? (v / 1e6).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' juta' : v?.toLocaleString('id-ID')} />
             <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
             <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID')} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
-            <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]} fill="#0F8F8B" />
+            <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]} fill="#0F8F8B" ><LabelList dataKey={indic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -146,8 +146,8 @@ export default function UsiaProduktifLansia() {
             <YAxis tick={{ fontSize: 11 }} tickFormatter={v => (v / 1e3).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + 'rb'} />
             <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID')} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
             <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-            <Bar dataKey="laki" name="Laki-laki" fill="#0F8F8B" radius={[3, 3, 0, 0]} />
-            <Bar dataKey="perempuan" name="Perempuan" fill="#9EAF24" radius={[3, 3, 0, 0]} />
+            <Bar dataKey="laki" name="Laki-laki" fill="#0F8F8B" radius={[3, 3, 0, 0]} ><LabelList dataKey="laki" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+            <Bar dataKey="perempuan" name="Perempuan" fill="#9EAF24" radius={[3, 3, 0, 0]} ><LabelList dataKey="perempuan" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>

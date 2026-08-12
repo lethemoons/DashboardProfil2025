@@ -4,7 +4,7 @@ import RiskClusteringMap from '../components/RiskClusteringMap';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   CartesianGrid, Cell, Legend, ScatterChart, Scatter, ReferenceLine
-} from 'recharts'
+, LabelList } from 'recharts'
 import { evaluateTarget, TARGETS } from '../utils/targets'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
@@ -236,9 +236,9 @@ export default function KesehatanAnak() {
             <YAxis tick={{ fontSize: 11 }} allowDecimals={false} />
             <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
             <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-            <Bar dataKey="neonatal" name="Neonatal" stackId="a" fill="#078FA5" />
-            <Bar dataKey="bayi" name="Bayi" stackId="a" fill="#9EAF24" />
-            <Bar dataKey="balita" name="Balita" stackId="a" fill="#0F8F8B" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="neonatal" name="Neonatal" stackId="a" fill="#078FA5" ><LabelList dataKey="neonatal" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+            <Bar dataKey="bayi" name="Bayi" stackId="a" fill="#9EAF24" ><LabelList dataKey="bayi" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+            <Bar dataKey="balita" name="Balita" stackId="a" fill="#0F8F8B" radius={[4, 4, 0, 0]} ><LabelList dataKey="balita" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -260,7 +260,7 @@ export default function KesehatanAnak() {
           </div>
         </div>
         <ResponsiveContainer width="100%" height={280}>
-          <BarChart data={chartData} layout="vertical" margin={{ left: 95, right: 20 }}>
+          <BarChart data={chartData} layout="vertical" margin={{ left: 95, right: 80 }}>
             <XAxis type="number" tick={{ fontSize: 11 }} domain={[0, 100]} />
             <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
             <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
@@ -294,7 +294,7 @@ export default function KesehatanAnak() {
                 }}
               />
             )}
-            <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]} fill="#0F8F8B" />
+            <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]} fill="#0F8F8B" ><LabelList dataKey={indic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>

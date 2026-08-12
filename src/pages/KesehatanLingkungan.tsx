@@ -4,7 +4,7 @@ import RiskClusteringMap from '../components/RiskClusteringMap';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   CartesianGrid, Legend, Cell, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ReferenceLine
-} from 'recharts'
+, LabelList } from 'recharts'
 import { evaluateTarget, TARGETS } from '../utils/targets'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
@@ -110,7 +110,7 @@ export default function KesehatanLingkungan() {
         <div className="w-full overflow-x-auto pb-4">
           <div style={{ minWidth: keslingFilter === 'all' ? 800 : '100%', height: keslingFilter === 'all' ? 800 : (keslingFilter === '20' ? 600 : 400) }}>
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData} layout="vertical" margin={{ left: 95, right: 20 }}>
+              <BarChart data={chartData} layout="vertical" margin={{ left: 95, right: 80 }}>
                 <XAxis type="number" tick={{ fontSize: 11 }} domain={indic.endsWith('_pct') ? [0, 100] : ['auto', 'auto']} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} interval={0} />
                 <Tooltip 
@@ -138,7 +138,7 @@ export default function KesehatanLingkungan() {
                     />
                   )
                 })()}
-                <Bar dataKey={indic} fill="#0F8F8B" radius={[0, 6, 6, 0]} />
+                <Bar dataKey={indic} fill="#0F8F8B" radius={[0, 6, 6, 0]} ><LabelList dataKey={indic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>

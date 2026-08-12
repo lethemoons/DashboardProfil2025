@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react'
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   CartesianGrid, Legend, Cell, ScatterChart, Scatter
-} from 'recharts'
+, LabelList } from 'recharts'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
 import FilterBar from '../components/FilterBar'
@@ -111,13 +111,13 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
               </select>
             </div>
             <ResponsiveContainer width="100%" height={280}>
-              <BarChart data={menularChart} layout="vertical" margin={{ left: 95, right: 20 }}>
+              <BarChart data={menularChart} layout="vertical" margin={{ left: 95, right: 80 }}>
                 <XAxis type="number" tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
                 <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
                 <Bar dataKey={menularIndic} radius={[0, 6, 6, 0]}>
                   {menularChart.map((_, i) => <Cell key={i} fill={i === 0 ? '#ef4444' : i < 5 ? '#fca5a5' : '#fee2e2'} />)}
-                </Bar>
+                <LabelList dataKey="value" position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -161,13 +161,13 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
           <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
             <h3 className="font-semibold text-gray-800 mb-4" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>DBD — Top Kabupaten</h3>
             <ResponsiveContainer width="100%" height={260}>
-              <BarChart data={pd3iChart} layout="vertical" margin={{ left: 95, right: 20 }}>
+              <BarChart data={pd3iChart} layout="vertical" margin={{ left: 95, right: 80 }}>
                 <XAxis type="number" tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
                 <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
                 <Bar dataKey="dbd_kasus" name="Kasus DBD" radius={[0, 6, 6, 0]}>
                   {pd3iChart.map((_, i) => <Cell key={i} fill={i === 0 ? '#ef4444' : '#fca5a5'} />)}
-                </Bar>
+                <LabelList dataKey="dbd_kasus" position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -208,11 +208,11 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
               </select>
             </div>
             <ResponsiveContainer width="100%" height={260}>
-              <BarChart data={[...pd3iData].sort((a, b) => (b[vektorIndic] as number) - (a[vektorIndic] as number)).slice(0, 15)} layout="vertical" margin={{ left: 95, right: 20 }}>
+              <BarChart data={[...pd3iData].sort((a, b) => (b[vektorIndic] as number) - (a[vektorIndic] as number)).slice(0, 15)} layout="vertical" margin={{ left: 95, right: 80 }}>
                 <XAxis type="number" tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
                 <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
-                <Bar dataKey={vektorIndic} radius={[0, 6, 6, 0]} fill="#ef4444" />
+                <Bar dataKey={vektorIndic} radius={[0, 6, 6, 0]} fill="#ef4444" ><LabelList dataKey={vektorIndic} position="top" style={{ fontSize: 9, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -244,13 +244,13 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
               </select>
             </div>
             <ResponsiveContainer width="100%" height={280}>
-              <BarChart data={ptmChart} layout="vertical" margin={{ left: 95, right: 20 }}>
+              <BarChart data={ptmChart} layout="vertical" margin={{ left: 95, right: 80 }}>
                 <XAxis type="number" tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
                 <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
                 <Bar dataKey={ptmIndic} radius={[0, 6, 6, 0]}>
                   {ptmChart.map((_, i) => <Cell key={i} fill={i === 0 ? '#8b5cf6' : '#c4b5fd'} />)}
-                </Bar>
+                <LabelList dataKey="value" position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>

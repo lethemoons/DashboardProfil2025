@@ -4,7 +4,7 @@ import RiskClusteringMap from '../components/RiskClusteringMap';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   CartesianGrid, Cell, Legend, ReferenceLine
-} from 'recharts'
+, LabelList } from 'recharts'
 import { evaluateTarget, TARGETS } from '../utils/targets'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
@@ -111,7 +111,7 @@ export default function PD3I() {
             <div className="w-full overflow-x-auto pb-4">
               <div style={{ minWidth: pd3iFilter === 'all' ? 800 : '100%', height: pd3iFilter === 'all' ? 800 : (pd3iFilter === '20' ? 600 : 400) }}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={pd3iChart} layout="vertical" margin={{ left: 95, right: 20 }}>
+                  <BarChart data={pd3iChart} layout="vertical" margin={{ left: 95, right: 80 }}>
                     <XAxis type="number" tick={{ fontSize: 11 }} />
                     <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
                     <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
@@ -130,7 +130,7 @@ export default function PD3I() {
                         }}
                       />
                     )}
-                    <Bar dataKey={pd3iIndic} name={pd3iLabel} fill="#0F8F8B" radius={[0, 6, 6, 0]} />
+                    <Bar dataKey={pd3iIndic} name={pd3iLabel} fill="#0F8F8B" radius={[0, 6, 6, 0]} ><LabelList dataKey={pd3iIndic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
                   </BarChart>
                 </ResponsiveContainer>
               </div>

@@ -4,7 +4,7 @@ import RiskClusteringMap from '../components/RiskClusteringMap';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   CartesianGrid, Cell, Legend, ScatterChart, Scatter, ComposedChart, Line, ReferenceLine
-} from 'recharts'
+, LabelList } from 'recharts'
 import { evaluateTarget, TARGETS } from '../utils/targets'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
@@ -173,7 +173,7 @@ export default function TularVektor() {
         <div className="w-full overflow-x-auto pb-4">
           <div style={{ minWidth: vektorFilter === 'all' ? 800 : '100%', height: vektorFilter === 'all' ? 800 : (vektorFilter === '20' ? 600 : 400) }}>
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData} layout="vertical" margin={{ left: 95, right: 20 }}>
+              <BarChart data={chartData} layout="vertical" margin={{ left: 95, right: 80 }}>
                 <XAxis type="number" tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} interval={0} />
                 <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
@@ -192,7 +192,7 @@ export default function TularVektor() {
                     }}
                   />
                 )}
-                <Bar dataKey={indic} name={indicLabel} fill="#0F8F8B" radius={[0, 6, 6, 0]} />
+                <Bar dataKey={indic} name={indicLabel} fill="#0F8F8B" radius={[0, 6, 6, 0]} ><LabelList dataKey={indic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -219,11 +219,11 @@ export default function TularVektor() {
         <div className="w-full overflow-x-auto pb-4">
           <div style={{ minWidth: malariaFilter === 'all' ? 800 : '100%', height: malariaFilter === 'all' ? 800 : (malariaFilter === '20' ? 600 : 400) }}>
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={malariaChartData} layout="vertical" margin={{ left: 95, right: 20 }}>
+              <BarChart data={malariaChartData} layout="vertical" margin={{ left: 95, right: 80 }}>
                 <XAxis type="number" tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} interval={0} />
                 <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
-                <Bar dataKey={malariaIndic} name={malariaLabel} fill="#0F8F8B" radius={[0, 6, 6, 0]} />
+                <Bar dataKey={malariaIndic} name={malariaLabel} fill="#0F8F8B" radius={[0, 6, 6, 0]} ><LabelList dataKey={malariaIndic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>

@@ -4,7 +4,7 @@ import RiskClusteringMap from '../components/RiskClusteringMap';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   CartesianGrid, Legend, ScatterChart, Scatter, ReferenceLine
-} from 'recharts'
+, LabelList } from 'recharts'
 import { evaluateTarget, TARGETS } from '../utils/targets'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
@@ -308,9 +308,9 @@ export default function PenyakitMenular() {
                 <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} domain={[0, 100]} unit="%" />
                 <Tooltip content={<TBCTooltip />} cursor={{ fill: '#f9fafb' }} />
                 <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-                <Bar yAxisId="left" dataKey="kasus" name="Jumlah Kasus" fill="#078FA5" radius={[3, 3, 0, 0]} minPointSize={3} />
-                <Bar yAxisId="right" dataKey="sukses_pct" name="Sukses Pengobatan (%)" fill="#9EAF24" radius={[3, 3, 0, 0]} minPointSize={3} />
-                <Bar yAxisId="right" dataKey="pengobatan_lengkap" name="Pengobatan Lengkap (%)" fill="#0F8F8B" radius={[3, 3, 0, 0]} minPointSize={3} />
+                <Bar yAxisId="left" dataKey="kasus" name="Jumlah Kasus" fill="#078FA5" radius={[3, 3, 0, 0]} minPointSize={3} ><LabelList dataKey="kasus" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+                <Bar yAxisId="right" dataKey="sukses_pct" name="Sukses Pengobatan (%)" fill="#9EAF24" radius={[3, 3, 0, 0]} minPointSize={3} ><LabelList dataKey="sukses_pct" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} /></Bar>
+                <Bar yAxisId="right" dataKey="pengobatan_lengkap" name="Pengobatan Lengkap (%)" fill="#0F8F8B" radius={[3, 3, 0, 0]} minPointSize={3} ><LabelList dataKey="pengobatan_lengkap" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} /></Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -338,7 +338,7 @@ export default function PenyakitMenular() {
         <div className="w-full overflow-x-auto pb-4">
           <div style={{ minWidth: indicFilter === 'all' ? 800 : '100%', height: indicFilter === 'all' ? 800 : (indicFilter === '20' ? 600 : 400) }}>
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData} layout="vertical" margin={{ left: 110, right: 30 }}>
+              <BarChart data={chartData} layout="vertical" margin={{ left: 110, right: 80 }}>
                 <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f3f4f6" />
                 <XAxis type="number" tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 10 }} width={100} interval={0} />
@@ -361,7 +361,7 @@ export default function PenyakitMenular() {
                     />
                   )
                 })()}
-                <Bar dataKey={indic} name={indicLabel} fill="#0F8F8B" radius={[0, 4, 4, 0]} />
+                <Bar dataKey={indic} name={indicLabel} fill="#0F8F8B" radius={[0, 4, 4, 0]} ><LabelList dataKey={indic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -390,9 +390,9 @@ export default function PenyakitMenular() {
                 <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} domain={[0, 100]} unit="%" />
                 <Tooltip content={<ODHIVTooltip />} cursor={{ fill: '#f9fafb' }} />
                 <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-                <Bar yAxisId="left" dataKey="baru" name="ODHIV Baru Ditemukan" fill="#078FA5" radius={[3, 3, 0, 0]} minPointSize={3} />
-                <Bar yAxisId="left" dataKey="arv" name="Mendapat Pengobatan ARV" fill="#9EAF24" radius={[3, 3, 0, 0]} minPointSize={3} />
-                <Bar yAxisId="right" dataKey="arv_pct" name="Persentase ARV (%)" fill="#0F8F8B" radius={[3, 3, 0, 0]} minPointSize={3} />
+                <Bar yAxisId="left" dataKey="baru" name="ODHIV Baru Ditemukan" fill="#078FA5" radius={[3, 3, 0, 0]} minPointSize={3} ><LabelList dataKey="baru" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+                <Bar yAxisId="left" dataKey="arv" name="Mendapat Pengobatan ARV" fill="#9EAF24" radius={[3, 3, 0, 0]} minPointSize={3} ><LabelList dataKey="arv" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+                <Bar yAxisId="right" dataKey="arv_pct" name="Persentase ARV (%)" fill="#0F8F8B" radius={[3, 3, 0, 0]} minPointSize={3} ><LabelList dataKey="arv_pct" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} /></Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -426,9 +426,9 @@ export default function PenyakitMenular() {
                 <YAxis tick={{ fontSize: 11 }} />
                 <Tooltip content={<DiareTooltip />} cursor={{ fill: '#f9fafb' }} />
                 <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-                <Bar dataKey="dilayani" name="Dilayani" fill="#078FA5" radius={[3, 3, 0, 0]} minPointSize={3} />
-                <Bar dataKey="oralit" name="Mendapat Oralit" fill="#0F8F8B" radius={[3, 3, 0, 0]} minPointSize={3} />
-                {isBalita && <Bar dataKey="zinc" name="Mendapat Zinc" fill="#9EAF24" radius={[3, 3, 0, 0]} minPointSize={3} />}
+                <Bar dataKey="dilayani" name="Dilayani" fill="#078FA5" radius={[3, 3, 0, 0]} minPointSize={3} ><LabelList dataKey="dilayani" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+                <Bar dataKey="oralit" name="Mendapat Oralit" fill="#0F8F8B" radius={[3, 3, 0, 0]} minPointSize={3} ><LabelList dataKey="oralit" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+                {isBalita && <Bar dataKey="zinc" name="Mendapat Zinc" fill="#9EAF24" radius={[3, 3, 0, 0]} minPointSize={3} ><LabelList dataKey="zinc" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>}
               </BarChart>
             </ResponsiveContainer>
           </div>

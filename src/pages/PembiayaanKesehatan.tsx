@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react'
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   CartesianGrid, Legend, AreaChart, Area, PieChart, Pie, Cell, Label
-} from 'recharts'
+, LabelList } from 'recharts'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
 import { KABUPATEN_LIST } from '../data/kabupaten'
@@ -251,11 +251,11 @@ export default function PembiayaanKesehatan() {
           </div>
         </div>
         <ResponsiveContainer width="100%" height={chartFilter === 'all' ? 800 : (chartFilter === '20' ? 450 : 350)}>
-          <BarChart data={chartData} layout="vertical" margin={{ left: 100, right: 20 }}>
+          <BarChart data={chartData} layout="vertical" margin={{ left: 100, right: 110 }}>
             <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={v => v >= 1e12 ? (v / 1e12).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + 'T' : v >= 1e9 ? (v / 1e9).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + 'M' : (v / 1e6).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' juta'} />
             <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={98} interval={0} />
             <Tooltip formatter={(v: any) => fmtRp(v)} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
-            <Bar dataKey="2025" name="Anggaran 2025" radius={[0, 6, 6, 0]} fill="#0F8F8B" />
+            <Bar dataKey="2025" name="Anggaran 2025" radius={[0, 6, 6, 0]} fill="#0F8F8B" ><LabelList dataKey="2025" position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : v >= 1e12 ? (v/1e12).toLocaleString('id-ID', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + 'T' : v >= 1e9 ? (v/1e9).toLocaleString('id-ID', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + 'M' : (v/1e6).toLocaleString('id-ID', {minimumFractionDigits: 0, maximumFractionDigits: 0}) + ' jt'} /></Bar>
           </BarChart>
         </ResponsiveContainer>
         <div className="bg-[#F5FBFB] rounded-xl p-5 border border-[#CCEEED] text-sm text-gray-700 mt-4">
@@ -296,7 +296,7 @@ export default function PembiayaanKesehatan() {
             <XAxis dataKey="tahun" tick={{ fontSize: 11 }} />
             <YAxis tick={{ fontSize: 11 }} tickFormatter={v => (v / 1e12).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + 'T'} width={80} />
             <Tooltip formatter={(v: any) => fmtRp(v)} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
-            <Area type="linear" dataKey="total" stroke="#0F8F8B" fill="#0F8F8B22" strokeWidth={3} name="Total Anggaran" activeDot={{ r: 6, fill: '#0F8F8B', stroke: '#fff', strokeWidth: 2 }} />
+            <Area type="linear" dataKey="total" stroke="#0F8F8B" fill="#0F8F8B22" strokeWidth={3} name="Total Anggaran" activeDot={{ r: 6, fill: '#0F8F8B', stroke: '#fff', strokeWidth: 2 }}  dot={{ r: 4, fill: '#0F8F8B', stroke: '#fff', strokeWidth: 2 }} label={{ position: 'top', formatter: (v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID'), fontSize: 10, fill: '#374151', fontWeight: 600 }} />
           </AreaChart>
         </ResponsiveContainer>
         <div className="bg-[#F5FBFB] rounded-xl p-5 border border-[#CCEEED] text-sm text-gray-700">

@@ -186,7 +186,7 @@ export default function SaranaKesehatan() {
         <div className="w-full overflow-x-auto">
           <div style={{ minWidth: 600, width: '100%' }}>
             <ResponsiveContainer width="100%" height={Math.max(chartHeight, 250)}>
-              <BarChart data={chartData} layout="vertical" margin={{ left: calculatedLeftMargin, right: 40, top: 10, bottom: 10 }}>
+              <BarChart data={chartData} layout="vertical" margin={{ left: calculatedLeftMargin, right: 80, top: 10, bottom: 10 }}>
                 <XAxis type="number" tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="name" tick={<CustomYAxisTick />} width={calculatedLeftMargin} interval={0} />
                 <Tooltip content={<CustomTooltip totalFaskes={totalFaskes} />} cursor={{ fill: '#f3f4f6' }} />

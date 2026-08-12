@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react'
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   CartesianGrid, Legend, ScatterChart, Scatter, Cell
-} from 'recharts'
+, LabelList } from 'recharts'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
 import FilterBar from '../components/FilterBar'
@@ -105,13 +105,13 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
               </select>
             </div>
             <ResponsiveContainer width="100%" height={280}>
-              <BarChart data={ibuChartData} layout="vertical" margin={{ left: 95, right: 20 }}>
+              <BarChart data={ibuChartData} layout="vertical" margin={{ left: 95, right: 80 }}>
                 <XAxis type="number" tick={{ fontSize: 11 }} domain={[0, 100]} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
                 <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
                 <Bar dataKey={ibuIndic} radius={[0, 6, 6, 0]}>
                   {ibuChartData.map((_, i) => <Cell key={i} fill={i === 0 ? '#0F8F8B' : '#93c5c3'} />)}
-                </Bar>
+                <LabelList dataKey="value" position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -163,13 +163,13 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
               </select>
             </div>
             <ResponsiveContainer width="100%" height={280}>
-              <BarChart data={anakChartData} layout="vertical" margin={{ left: 95, right: 20 }}>
+              <BarChart data={anakChartData} layout="vertical" margin={{ left: 95, right: 80 }}>
                 <XAxis type="number" tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
                 <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
                 <Bar dataKey={anakIndic} radius={[0, 6, 6, 0]}>
                   {anakChartData.map((_, i) => <Cell key={i} fill={i === 0 ? '#f97316' : '#fcd9b0'} />)}
-                </Bar>
+                <LabelList dataKey="value" position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -222,8 +222,8 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
                 <YAxis tick={{ fontSize: 11 }} tickFormatter={v => (v / 1e3).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + 'rb'} />
                 <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID')} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
                 <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-                <Bar dataKey="lansia" name="Lansia Dilayani" fill="#0F8F8B" radius={[3, 3, 0, 0]} />
-                <Bar dataKey="posyandu" name="Posyandu Lansia" fill="#9EAF24" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="lansia" name="Lansia Dilayani" fill="#0F8F8B" radius={[3, 3, 0, 0]} ><LabelList dataKey="lansia" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+                <Bar dataKey="posyandu" name="Posyandu Lansia" fill="#9EAF24" radius={[3, 3, 0, 0]} ><LabelList dataKey="posyandu" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>

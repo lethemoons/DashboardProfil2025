@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, ReferenceLine
-} from 'recharts';
+, LabelList } from 'recharts';
 import { evaluateTarget, TARGETS } from '../utils/targets';
 import DataTable from './DataTable';
 import { getDynamicDomain } from '../utils/stats';

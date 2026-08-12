@@ -4,7 +4,7 @@ import RiskClusteringMap from '../components/RiskClusteringMap';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   CartesianGrid, Cell, Legend, ScatterChart, Scatter, ReferenceLine
-} from 'recharts'
+, LabelList } from 'recharts'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { evaluateTarget, TARGETS } from '../utils/targets'
 import { descStats, pearsonR } from '../utils/stats'
@@ -242,15 +242,15 @@ export default function KesehatanIbu() {
             hamil: d.kematian_ibu_hamil,
             bersalin: d.kematian_ibu_bersalin,
             nifas: d.kematian_ibu_nifas,
-          }))} layout="vertical" margin={{ left: 80, right: 20 }}>
+          }))} layout="vertical" margin={{ left: 80, right: 80 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
             <XAxis type="number" tick={{ fontSize: 11 }} />
             <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={80} interval={0} />
             <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
             <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-            <Bar dataKey="bersalin" name="Saat Bersalin" stackId="a" fill="#078FA5" />
-            <Bar dataKey="hamil" name="Saat Hamil" stackId="a" fill="#9EAF24" />
-            <Bar dataKey="nifas" name="Saat Nifas" stackId="a" fill="#0F8F8B" radius={[0, 4, 4, 0]} />
+            <Bar dataKey="bersalin" name="Saat Bersalin" stackId="a" fill="#078FA5" ><LabelList dataKey="bersalin" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+            <Bar dataKey="hamil" name="Saat Hamil" stackId="a" fill="#9EAF24" ><LabelList dataKey="hamil" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+            <Bar dataKey="nifas" name="Saat Nifas" stackId="a" fill="#0F8F8B" radius={[0, 4, 4, 0]} ><LabelList dataKey="nifas" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
           </BarChart>
         </ResponsiveContainer>
         <div className="bg-[#F5FBFB] rounded-xl p-5 border border-[#CCEEED] text-sm text-gray-700 mt-4">
@@ -285,7 +285,7 @@ export default function KesehatanIbu() {
           </div>
         </div>
         <ResponsiveContainer width="100%" height={chartFilter === 'all' ? 800 : (chartFilter === '20' ? 500 : 350)}>
-          <BarChart data={chartData} layout="vertical" margin={{ left: 95, right: 20 }}>
+          <BarChart data={chartData} layout="vertical" margin={{ left: 95, right: 80 }}>
             <XAxis type="number" tick={{ fontSize: 11 }} domain={[0, 100]} />
             <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} interval={0} />
             <Tooltip content={<CustomTooltip />} />
@@ -304,7 +304,7 @@ export default function KesehatanIbu() {
                 }}
               />
             )}
-            <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]} fill="#0F8F8B" />
+            <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]} fill="#0F8F8B" ><LabelList dataKey={indic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
           </BarChart>
         </ResponsiveContainer>
         <div className="bg-[#F5FBFB] rounded-xl p-5 border border-[#CCEEED] text-sm text-gray-700 mt-4">
@@ -388,8 +388,8 @@ export default function KesehatanIbu() {
                   <YAxis tick={{ fontSize: 11 }} />
                   <Tooltip content={<CustomPairTooltip />} />
                   <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-                  <Bar dataKey="fe_tablet_pct" name="Tablet Fe (%)" fill="#0F8F8B" radius={[3, 3, 0, 0]} />
-                  <Bar dataKey="k6_pct" name="Kunjungan K6 (%)" fill="#9EAF24" radius={[3, 3, 0, 0]} />
+                  <Bar dataKey="fe_tablet_pct" name="Tablet Fe (%)" fill="#0F8F8B" radius={[3, 3, 0, 0]} ><LabelList dataKey="fe_tablet_pct" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} /></Bar>
+                  <Bar dataKey="k6_pct" name="Kunjungan K6 (%)" fill="#9EAF24" radius={[3, 3, 0, 0]} ><LabelList dataKey="k6_pct" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} /></Bar>
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -421,8 +421,8 @@ export default function KesehatanIbu() {
                   <YAxis tick={{ fontSize: 11 }} />
                   <Tooltip content={<CustomPairTooltip />} />
                   <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-                  <Bar dataKey="ibu_bersalin" name="Ibu Bersalin" fill="#0F8F8B" radius={[3, 3, 0, 0]} />
-                  <Bar dataKey="anak_lahir_hidup" name="Anak Lahir Hidup" fill="#9EAF24" radius={[3, 3, 0, 0]} />
+                  <Bar dataKey="ibu_bersalin" name="Ibu Bersalin" fill="#0F8F8B" radius={[3, 3, 0, 0]} ><LabelList dataKey="ibu_bersalin" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+                  <Bar dataKey="anak_lahir_hidup" name="Anak Lahir Hidup" fill="#9EAF24" radius={[3, 3, 0, 0]} ><LabelList dataKey="anak_lahir_hidup" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -454,8 +454,8 @@ export default function KesehatanIbu() {
                   <YAxis tick={{ fontSize: 11 }} />
                   <Tooltip content={<CustomPairTooltip />} />
                   <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-                  <Bar dataKey="nifas_vit_a_pct" name="Vitamin A Nifas (%)" fill="#0F8F8B" radius={[3, 3, 0, 0]} />
-                  <Bar dataKey="kf_lengkap_pct" name="KF Lengkap (%)" fill="#9EAF24" radius={[3, 3, 0, 0]} />
+                  <Bar dataKey="nifas_vit_a_pct" name="Vitamin A Nifas (%)" fill="#0F8F8B" radius={[3, 3, 0, 0]} ><LabelList dataKey="nifas_vit_a_pct" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} /></Bar>
+                  <Bar dataKey="kf_lengkap_pct" name="KF Lengkap (%)" fill="#9EAF24" radius={[3, 3, 0, 0]} ><LabelList dataKey="kf_lengkap_pct" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} /></Bar>
                 </BarChart>
               </ResponsiveContainer>
             </div>
