@@ -64,8 +64,8 @@ export default function UKBM() {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <KPICard title="Total Posyandu" value="46.414" sub="Unit" icon="🌿" color="#0F8F8B" />
-        <KPICard title="Posyandu Aktif" value={totAktif.toLocaleString('id-ID')} sub={pctAktif.toFixed(1) + '% dari total'} icon="✅" color="#22c55e" />
-        <KPICard title="Posyandu Tidak Aktif" value={totTidakAktif.toLocaleString('id-ID')} sub={(100 - pctAktif).toFixed(1) + '% dari total'} icon="⚠️" color="#f97316" />
+        <KPICard title="Posyandu Aktif" value={totAktif.toLocaleString('id-ID')} sub={pctAktif.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '% dari total'} icon="✅" color="#22c55e" />
+        <KPICard title="Posyandu Tidak Aktif" value={totTidakAktif.toLocaleString('id-ID')} sub={(100 - pctAktif).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '% dari total'} icon="⚠️" color="#f97316" />
         <KPICard title="% Posyandu Aktif" value="95,1%" icon="📊" color="#9EAF24" trend={pctAktif >= 80 ? 'up' : 'down'} trendVal={pctAktif >= 80 ? 'Target tercapai' : ''} />
       </div>
 

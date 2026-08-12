@@ -66,7 +66,7 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
   ] : []
 
   const menularStatInsights = [
-    `Total kasus TBC Jawa Timur: ${totTBC.toLocaleString('id-ID')} | Sukses pengobatan rata-rata: ${avgTBCSukses.toFixed(1)}%.`,
+    `Total kasus TBC Jawa Timur: ${totTBC.toLocaleString('id-ID')} | Sukses pengobatan rata-rata: ${avgTBCSukses.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%.`,
     `Total kasus DBD: ${totDBD.toLocaleString('id-ID')}.`,
     `Total kasus hipertensi (L+P): ${totHipertensi.toLocaleString('id-ID')}.`,
   ]
@@ -98,7 +98,7 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
         <>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <KPICard title="Kasus TBC" value={totTBC.toLocaleString('id-ID')} icon="🫁" color="#f97316" />
-            <KPICard title="Sukses Pengobatan TBC" value={avgTBCSukses.toFixed(1) + '%'} sub="Rata-rata" icon="✅" color="#0F8F8B" />
+            <KPICard title="Sukses Pengobatan TBC" value={avgTBCSukses.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} sub="Rata-rata" icon="✅" color="#0F8F8B" />
             <KPICard title="ODHIV Baru" value={menularData.reduce((s, d) => s + (d.odhiv_baru as number), 0).toLocaleString('id-ID')} icon="🔴" color="#ef4444" />
             <KPICard title="Diare Semua Umur" value={menularData.reduce((s, d) => s + (d.diare_semua_umur as number), 0).toLocaleString('id-ID')} icon="💧" color="#078FA5" />
           </div>
@@ -143,7 +143,7 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
           <DataTable data={menularData} columns={[
             { key: 'kabupaten', label: 'Kabupaten/Kota' },
             { key: 'tbc_kasus', label: 'TBC Kasus', format: v => v?.toLocaleString('id-ID') },
-            { key: 'tbc_sukses_pct', label: 'TBC Sukses (%)', format: v => v?.toFixed(1) },
+            { key: 'tbc_sukses_pct', label: 'TBC Sukses (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
             { key: 'odhiv_baru', label: 'ODHIV Baru', format: v => v?.toLocaleString('id-ID') },
             { key: 'diare_semua_umur', label: 'Diare', format: v => v?.toLocaleString('id-ID') },
             { key: 'kusta_mb', label: 'Kusta MB', format: v => v?.toLocaleString('id-ID') },
@@ -156,7 +156,7 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             <KPICard title="Total Kasus Difteri" value={pd3iData.reduce((s, d) => s + (d.difteri_kasus as number), 0)} icon="⚠️" color="#f97316" />
             <KPICard title="Kasus Campak" value={pd3iData.reduce((s, d) => s + (d.campak_kasus as number), 0)} icon="🔴" color="#ef4444" />
-            <KPICard title="KLB <24 Jam" value={(pd3iData.reduce((s, d) => s + (d.klb_24jam_pct as number), 0) / Math.max(pd3iData.length, 1)).toFixed(1) + '%'} sub="Rata-rata" icon="🚨" color="#0F8F8B" />
+            <KPICard title="KLB <24 Jam" value={(pd3iData.reduce((s, d) => s + (d.klb_24jam_pct as number), 0) / Math.max(pd3iData.length, 1)).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} sub="Rata-rata" icon="🚨" color="#0F8F8B" />
           </div>
           <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
             <h3 className="font-semibold text-gray-800 mb-4" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>DBD — Top Kabupaten</h3>
@@ -184,9 +184,9 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
             { key: 'difteri_kasus', label: 'Difteri' },
             { key: 'campak_kasus', label: 'Campak' },
             { key: 'dbd_kasus', label: 'DBD', format: v => v?.toLocaleString('id-ID') },
-            { key: 'dbd_cfr', label: 'DBD CFR (%)', format: v => v?.toFixed(2) },
+            { key: 'dbd_cfr', label: 'DBD CFR (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) },
             { key: 'malaria_positif', label: 'Malaria Positif' },
-            { key: 'klb_24jam_pct', label: 'KLB <24jam (%)', format: v => v?.toFixed(1) },
+            { key: 'klb_24jam_pct', label: 'KLB <24jam (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
           ]} />
         </>
       )}
@@ -197,7 +197,7 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
             <KPICard title="Kasus DBD" value={totDBD.toLocaleString('id-ID')} icon="🦟" color="#ef4444" />
             <KPICard title="Malaria Positif" value={pd3iData.reduce((s, d) => s + (d.malaria_positif as number), 0).toLocaleString('id-ID')} icon="🦠" color="#f97316" />
             <KPICard title="Filariasis Kronis" value={pd3iData.reduce((s, d) => s + (d.filariasis_kronis as number), 0).toLocaleString('id-ID')} icon="🌊" color="#078FA5" />
-            <KPICard title="DBD CFR Rata-rata" value={(pd3iData.reduce((s, d) => s + (d.dbd_cfr as number), 0) / Math.max(pd3iData.length, 1)).toFixed(2) + '%'} icon="📊" color="#9EAF24" />
+            <KPICard title="DBD CFR Rata-rata" value={(pd3iData.reduce((s, d) => s + (d.dbd_cfr as number), 0) / Math.max(pd3iData.length, 1)).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%'} icon="📊" color="#9EAF24" />
           </div>
           <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
             <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
@@ -232,7 +232,7 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <KPICard title="Hipertensi Total" value={totHipertensi.toLocaleString('id-ID')} icon="❤️" color="#ef4444" />
             <KPICard title="DM Terdiagnosis" value={ptmData.reduce((s, d) => s + (d.dm_terdiagnosis as number), 0).toLocaleString('id-ID')} icon="🩸" color="#f97316" />
-            <KPICard title="DM Terkendali" value={(ptmData.reduce((s, d) => s + (d.dm_terkendali_pct as number), 0) / Math.max(ptmData.length, 1)).toFixed(1) + '%'} sub="Rata-rata" icon="✅" color="#0F8F8B" />
+            <KPICard title="DM Terkendali" value={(ptmData.reduce((s, d) => s + (d.dm_terkendali_pct as number), 0) / Math.max(ptmData.length, 1)).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} sub="Rata-rata" icon="✅" color="#0F8F8B" />
             <KPICard title="Skizofrenia" value={ptmData.reduce((s, d) => s + (d.jiwa_skizofrenia as number), 0).toLocaleString('id-ID')} icon="🧠" color="#8b5cf6" />
           </div>
           <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
@@ -270,7 +270,7 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
             { key: 'hipertensi_laki', label: 'Hipertensi L', format: v => v?.toLocaleString('id-ID') },
             { key: 'hipertensi_perempuan', label: 'Hipertensi P', format: v => v?.toLocaleString('id-ID') },
             { key: 'dm_terdiagnosis', label: 'DM Diagnosis', format: v => v?.toLocaleString('id-ID') },
-            { key: 'dm_terkendali_pct', label: 'DM Terkendali (%)', format: v => v?.toFixed(1) },
+            { key: 'dm_terkendali_pct', label: 'DM Terkendali (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
             { key: 'jiwa_skizofrenia', label: 'Skizofrenia', format: v => v?.toLocaleString('id-ID') },
           ]} />
         </>

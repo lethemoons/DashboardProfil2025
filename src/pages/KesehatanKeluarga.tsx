@@ -57,12 +57,12 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
   const minIbu = ibuData.length ? ibuData.reduce((a, b) => (a[ibuIndic] as number) < (b[ibuIndic] as number) ? a : b) : null
 
   const ibuChartInsights = maxIbu && minIbu ? [
-    `${maxIbu.kabupaten} mencatat capaian tertinggi untuk indikator ${ibuLabel} (${(maxIbu[ibuIndic] as number).toFixed(1)}%). Pemerataan dan kemudahan akses ke fasilitas sayang-ibu di daerah tersebut dapat dicontoh agar kejadian komplikasi kehamilan bisa dideteksi lebih dini.`,
+    `${maxIbu.kabupaten} mencatat capaian tertinggi untuk indikator ${ibuLabel} (${(maxIbu[ibuIndic] as number).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%). Pemerataan dan kemudahan akses ke fasilitas sayang-ibu di daerah tersebut dapat dicontoh agar kejadian komplikasi kehamilan bisa dideteksi lebih dini.`,
   ] : []
 
   const ibuStatInsights = [
     `Total kematian ibu (saat hamil, bersalin, maupun nifas) se-Jawa Timur mencapai ${totKematianIbu} kasus. Kematian ibu sering kali terkait dengan "Tiga Terlambat" (terlambat mengambil keputusan, terlambat sampai di faskes, dan terlambat ditangani). Optimalisasi Desa Siaga dan akses transportasi darurat menjadi kunci pencegahan.`,
-    `Rata-rata cakupan Kunjungan Pertama (K1) ibu hamil berada di angka ${avgK1.toFixed(1)}%. Tingginya K1 menandakan tingginya kesadaran ibu untuk memeriksakan kehamilannya sejak dini, yang sangat berguna untuk mendeteksi risiko komplikasi fatal seperti preeklampsia (darah tinggi saat hamil).`,
+    `Rata-rata cakupan Kunjungan Pertama (K1) ibu hamil berada di angka ${avgK1.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%. Tingginya K1 menandakan tingginya kesadaran ibu untuk memeriksakan kehamilannya sejak dini, yang sangat berguna untuk mendeteksi risiko komplikasi fatal seperti preeklampsia (darah tinggi saat hamil).`,
   ]
 
   const TABS = [
@@ -92,9 +92,9 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
         <>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <KPICard title="Kematian Ibu" value={totKematianIbu} sub="Total (hamil+bersalin+nifas)" icon="💔" color="#ef4444" />
-            <KPICard title="Cakupan K1" value={avgK1.toFixed(1) + '%'} sub="Rata-rata" icon="🤰" color="#0F8F8B" />
-            <KPICard title="KB Aktif" value={(ibuData.reduce((s, d) => s + (d.kb_aktif_pct as number), 0) / Math.max(ibuData.length, 1)).toFixed(1) + '%'} sub="Rata-rata" icon="🔵" color="#078FA5" />
-            <KPICard title="Bumil KEK" value={(ibuData.reduce((s, d) => s + (d.bumil_kek_pct as number), 0) / Math.max(ibuData.length, 1)).toFixed(1) + '%'} sub="Rata-rata" icon="⚠️" color="#f97316" />
+            <KPICard title="Cakupan K1" value={avgK1.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} sub="Rata-rata" icon="🤰" color="#0F8F8B" />
+            <KPICard title="KB Aktif" value={(ibuData.reduce((s, d) => s + (d.kb_aktif_pct as number), 0) / Math.max(ibuData.length, 1)).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} sub="Rata-rata" icon="🔵" color="#078FA5" />
+            <KPICard title="Bumil KEK" value={(ibuData.reduce((s, d) => s + (d.bumil_kek_pct as number), 0) / Math.max(ibuData.length, 1)).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} sub="Rata-rata" icon="⚠️" color="#f97316" />
           </div>
           <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
             <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
@@ -108,7 +108,7 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
               <BarChart data={ibuChartData} layout="vertical" margin={{ left: 95, right: 20 }}>
                 <XAxis type="number" tick={{ fontSize: 11 }} domain={[0, 100]} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
-                <Tooltip formatter={(v: any) => v?.toFixed(1) + '%'} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
+                <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
                 <Bar dataKey={ibuIndic} radius={[0, 6, 6, 0]}>
                   {ibuChartData.map((_, i) => <Cell key={i} fill={i === 0 ? '#0F8F8B' : '#93c5c3'} />)}
                 </Bar>
@@ -119,7 +119,7 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
           <StatPanel
             stats={ibuStats}
             label={ibuLabel}
-            format={v => v.toFixed(1) + '%'}
+            format={v => v.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'}
             rightElement={
               <select value={ibuIndic} onChange={e => setIbuIndic(e.target.value)}
                 className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[250px]">
@@ -137,11 +137,11 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
           />
           <DataTable data={ibuData} columns={[
             { key: 'kabupaten', label: 'Kabupaten/Kota' },
-            { key: 'k1_pct', label: 'K1 (%)', format: v => v?.toFixed(1) },
-            { key: 'k6_pct', label: 'K6 (%)', format: v => v?.toFixed(1) },
-            { key: 'persalinan_fasyankes_pct', label: 'Persalinan Fasyankes (%)', format: v => v?.toFixed(1) },
-            { key: 'bumil_kek_pct', label: 'Bumil KEK (%)', format: v => v?.toFixed(1) },
-            { key: 'kb_aktif_pct', label: 'KB Aktif (%)', format: v => v?.toFixed(1) },
+            { key: 'k1_pct', label: 'K1 (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
+            { key: 'k6_pct', label: 'K6 (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
+            { key: 'persalinan_fasyankes_pct', label: 'Persalinan Fasyankes (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
+            { key: 'bumil_kek_pct', label: 'Bumil KEK (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
+            { key: 'kb_aktif_pct', label: 'KB Aktif (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
           ]} />
         </>
       )}
@@ -150,9 +150,9 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
         <>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <KPICard title="Kematian Neonatal+Bayi" value={totKematianAnak} icon="💔" color="#ef4444" />
-            <KPICard title="Prevalensi Stunting" value={avgStunting.toFixed(1) + '%'} sub="Rata-rata" icon="📏" color="#f97316" />
-            <KPICard title="Imunisasi Dasar" value={(anakData.reduce((s, d) => s + (d.imunisasi_dasar_lengkap_pct as number), 0) / Math.max(anakData.length, 1)).toFixed(1) + '%'} sub="Rata-rata" icon="💉" color="#0F8F8B" />
-            <KPICard title="ASI Eksklusif" value={(anakData.reduce((s, d) => s + (d.asi_eksklusif_pct as number), 0) / Math.max(anakData.length, 1)).toFixed(1) + '%'} sub="Rata-rata" icon="🍼" color="#9EAF24" />
+            <KPICard title="Prevalensi Stunting" value={avgStunting.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} sub="Rata-rata" icon="📏" color="#f97316" />
+            <KPICard title="Imunisasi Dasar" value={(anakData.reduce((s, d) => s + (d.imunisasi_dasar_lengkap_pct as number), 0) / Math.max(anakData.length, 1)).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} sub="Rata-rata" icon="💉" color="#0F8F8B" />
+            <KPICard title="ASI Eksklusif" value={(anakData.reduce((s, d) => s + (d.asi_eksklusif_pct as number), 0) / Math.max(anakData.length, 1)).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} sub="Rata-rata" icon="🍼" color="#9EAF24" />
           </div>
           <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
             <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
@@ -166,7 +166,7 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
               <BarChart data={anakChartData} layout="vertical" margin={{ left: 95, right: 20 }}>
                 <XAxis type="number" tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
-                <Tooltip formatter={(v: any) => v?.toFixed(1) + '%'} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
+                <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
                 <Bar dataKey={anakIndic} radius={[0, 6, 6, 0]}>
                   {anakChartData.map((_, i) => <Cell key={i} fill={i === 0 ? '#f97316' : '#fcd9b0'} />)}
                 </Bar>
@@ -176,7 +176,7 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
           <StatPanel
             stats={anakStats}
             label={anakLabel}
-            format={v => v.toFixed(1) + '%'}
+            format={v => v.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'}
             rightElement={
               <select value={anakIndic} onChange={e => setAnakIndic(e.target.value)}
                 className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[250px]">
@@ -185,7 +185,7 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
             }
           />
           <InsightBox insights={[
-            `Rata-rata prevalensi balita stunting di Jawa Timur berada pada angka ${avgStunting.toFixed(1)}%. Stunting bukan sekadar masalah fisik tubuh yang pendek, tetapi mengindikasikan gagal kembang otak yang berakibat pada rendahnya kecerdasan anak di masa depan. Intervensi gizi wajib diprioritaskan pada 1000 Hari Pertama Kehidupan (HPK).`,
+            `Rata-rata prevalensi balita stunting di Jawa Timur berada pada angka ${avgStunting.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%. Stunting bukan sekadar masalah fisik tubuh yang pendek, tetapi mengindikasikan gagal kembang otak yang berakibat pada rendahnya kecerdasan anak di masa depan. Intervensi gizi wajib diprioritaskan pada 1000 Hari Pertama Kehidupan (HPK).`,
             `Kematian neonatal dan bayi yang terpantau mencapai ${totKematianAnak} kasus. Tingginya kematian pada bulan pertama kehidupan ini mayoritas dipicu oleh bayi lahir prematur atau Berat Badan Lahir Rendah (BBLR). Pemenuhan gizi ibu hamil sejak sebelum konsepsi adalah pencegahan paling efektif.`,
           ]} />
           <CrosstabSection
@@ -197,9 +197,9 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
           />
           <DataTable data={anakData} columns={[
             { key: 'kabupaten', label: 'Kabupaten/Kota' },
-            { key: 'stunting_pct', label: 'Stunting (%)', format: v => v?.toFixed(1) },
-            { key: 'gizi_kurang_pct', label: 'Gizi Kurang (%)', format: v => v?.toFixed(1) },
-            { key: 'imunisasi_dasar_lengkap_pct', label: 'Imunisasi (%)', format: v => v?.toFixed(1) },
+            { key: 'stunting_pct', label: 'Stunting (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
+            { key: 'gizi_kurang_pct', label: 'Gizi Kurang (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
+            { key: 'imunisasi_dasar_lengkap_pct', label: 'Imunisasi (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
             { key: 'kematian_neonatal', label: 'Kematian Neonatal' },
             { key: 'kematian_bayi', label: 'Kematian Bayi' },
           ]} />
@@ -219,7 +219,7 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
               <BarChart data={lansiaData.slice(0, 12).map(d => ({ kabupaten: d.kabupaten.replace('Kota ', ''), lansia: d.lansia_dilayani, posyandu: d.posyandu_lansia }))} margin={{ bottom: 40 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
                 <XAxis dataKey="kabupaten" tick={{ fontSize: 10 }} angle={-35} textAnchor="end" height={60} />
-                <YAxis tick={{ fontSize: 11 }} tickFormatter={v => (v / 1e3).toFixed(0) + 'rb'} />
+                <YAxis tick={{ fontSize: 11 }} tickFormatter={v => (v / 1e3).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + 'rb'} />
                 <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID')} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
                 <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
                 <Bar dataKey="lansia" name="Lansia Dilayani" fill="#0F8F8B" radius={[3, 3, 0, 0]} />

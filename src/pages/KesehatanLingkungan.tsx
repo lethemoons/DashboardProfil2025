@@ -46,8 +46,8 @@ export default function KesehatanLingkungan() {
   const indicLabel = KESLING_OPTIONS.find(o => o.key === indic)?.label ?? indic
 
   const chartInsights = maxKab && minKab ? [
-    `${maxKab.kabupaten} mencatat angka tertinggi (${(maxKab[indic] as number).toFixed(1)}%). Kondisi ini sangat berdampak positif untuk menekan risiko penularan penyakit berbasis lingkungan di masyarakat.`,
-    `${minKab.kabupaten} berada di angka terendah (${(minKab[indic] as number).toFixed(1)}%). Daerah ini memerlukan intervensi segera guna mencegah potensi wabah penyakit yang berkaitan erat dengan sanitasi dan kualitas lingkungan yang kurang memadai.`,
+    `${maxKab.kabupaten} mencatat angka tertinggi (${(maxKab[indic] as number).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%). Kondisi ini sangat berdampak positif untuk menekan risiko penularan penyakit berbasis lingkungan di masyarakat.`,
+    `${minKab.kabupaten} berada di angka terendah (${(minKab[indic] as number).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%). Daerah ini memerlukan intervensi segera guna mencegah potensi wabah penyakit yang berkaitan erat dengan sanitasi dan kualitas lingkungan yang kurang memadai.`,
   ] : []
 
   if (loading) return <div className="p-8 text-center text-gray-500">Loading data...</div>
@@ -115,7 +115,7 @@ export default function KesehatanLingkungan() {
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} interval={0} />
                 <Tooltip 
                   formatter={(v: any) => [
-                    indic.endsWith('_pct') ? v?.toFixed(1) + '%' : v?.toLocaleString('id-ID'), 
+                    indic.endsWith('_pct') ? v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%' : v?.toLocaleString('id-ID'), 
                     indicLabel
                   ]} 
                   contentStyle={{ borderRadius: 12, fontSize: 12 }} 
@@ -149,7 +149,7 @@ export default function KesehatanLingkungan() {
       <StatPanel
         stats={stats}
         label={indicLabel}
-        format={v => indic.endsWith('_pct') ? v.toFixed(1) + '%' : v.toLocaleString('id-ID')}
+        format={v => indic.endsWith('_pct') ? v.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%' : v.toLocaleString('id-ID')}
         rightElement={
           <select value={indic} onChange={e => setIndic(e.target.value)}
             className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[250px]">
@@ -177,11 +177,11 @@ export default function KesehatanLingkungan() {
 
       <DataTable data={data} columns={[
         { key: 'kabupaten', label: 'Kabupaten/Kota' },
-        { key: 'air_minum_memenuhi_syarat_pct', label: 'Air Minum (%)', format: v => v?.toFixed(1) },
-        { key: 'sanitasi_aman_pct', label: 'Sanitasi Aman (%)', format: v => v?.toFixed(1) },
+        { key: 'air_minum_memenuhi_syarat_pct', label: 'Air Minum (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
+        { key: 'sanitasi_aman_pct', label: 'Sanitasi Aman (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
         { key: 'stbm_5pilar_jumlah', label: 'STBM 5 Pilar', format: v => v?.toLocaleString('id-ID') },
-        { key: 'tfu_memenuhi_syarat_pct', label: 'TFU (%)', format: v => v?.toFixed(1) },
-        { key: 'kualitas_udara_ms_pct', label: 'Kualitas Udara (%)', format: v => v?.toFixed(1) },
+        { key: 'tfu_memenuhi_syarat_pct', label: 'TFU (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
+        { key: 'kualitas_udara_ms_pct', label: 'Kualitas Udara (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
       ]} />
     </div>
   )

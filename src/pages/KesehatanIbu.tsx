@@ -37,7 +37,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
         <div className="flex items-center gap-2 mb-1">
           <div className="w-2 h-2 rounded-full" style={{ background: payload[0].fill }}></div>
           <span className="text-gray-600">{name}:</span>
-          <span className="font-semibold">{value?.toFixed(1)}%</span>
+          <span className="font-semibold">{value?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%</span>
         </div>
         {jumlah !== undefined && jumlah !== null && (
           <div className="flex items-center gap-2 mt-1">
@@ -58,7 +58,7 @@ const CustomPairTooltip = ({ active, payload, label }: any) => {
     const p2 = payload[1];
     
     const isPct = p1.name.includes('%') || p1.dataKey.includes('pct');
-    const fmt = (v: number) => isPct ? v.toFixed(1) + '%' : Math.round(v).toLocaleString('id-ID');
+    const fmt = (v: number) => isPct ? v.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%' : Math.round(v).toLocaleString('id-ID');
 
     const diff = Math.abs(p1.value - p2.value);
 
@@ -168,18 +168,18 @@ export default function KesehatanIbu() {
   ]
 
   const chartInsights = maxKab && minKab ? [
-    `${maxKab.kabupaten} tertinggi pada ${indicLabel}: ${(maxKab[indic] as number).toFixed(1)}%.`,
-    `${minKab.kabupaten} terendah: ${(minKab[indic] as number).toFixed(1)}% — perlu perhatian khusus.`,
+    `${maxKab.kabupaten} tertinggi pada ${indicLabel}: ${(maxKab[indic] as number).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%.`,
+    `${minKab.kabupaten} terendah: ${(minKab[indic] as number).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}% — perlu perhatian khusus.`,
   ] : []
 
   const scatterInsights = [
-    `Korelasi: Terdapat hubungan antara ${corrX.toUpperCase()} dan ${corrY.toUpperCase()} dengan r = ${r.toFixed(3)}.`,
+    `Korelasi: Terdapat hubungan antara ${corrX.toUpperCase()} dan ${corrY.toUpperCase()} dengan r = ${r.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}.`,
   ]
 
   const statInsights = [
     `Berdasarkan data yang terkumpul, total kematian ibu hamil, bersalin, dan nifas berjumlah ${totKematianIbu} kasus.`,
-    `Cakupan pelayanan kehamilan awal (K1) rata-rata mencapai ${avgK1.toFixed(1)}%, sementara kunjungan lengkap (K6) berada di angka ${avgK6.toFixed(1)}%. Hal ini menunjukkan bahwa sebagian besar ibu hamil telah memiliki kesadaran untuk memeriksakan kehamilannya.`,
-    `Tingkat persalinan di fasilitas pelayanan kesehatan rata-rata berada pada ${avgFasyankes.toFixed(1)}%, menandakan bahwa peran fasilitas kesehatan semakin diutamakan sebagai tempat persalinan yang aman.`,
+    `Cakupan pelayanan kehamilan awal (K1) rata-rata mencapai ${avgK1.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%, sementara kunjungan lengkap (K6) berada di angka ${avgK6.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%. Hal ini menunjukkan bahwa sebagian besar ibu hamil telah memiliki kesadaran untuk memeriksakan kehamilannya.`,
+    `Tingkat persalinan di fasilitas pelayanan kesehatan rata-rata berada pada ${avgFasyankes.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%, menandakan bahwa peran fasilitas kesehatan semakin diutamakan sebagai tempat persalinan yang aman.`,
   ]
 
   if (loading) return <div className="p-8 text-center text-gray-500">Loading data...</div>
@@ -192,9 +192,9 @@ export default function KesehatanIbu() {
       {/* Kematian ibu cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <KPICard title="Total Kematian Ibu" value={totKematianIbu} sub="Hamil + Bersalin + Nifas" icon="❤️" color="#ef4444" />
-        <KPICard title="Persentase K1" value={avgK1.toFixed(1) + '%'} sub="Cakupan Kunjungan Pertama" icon="🤰" color="#0F8F8B" />
-        <KPICard title="Persentase K6" value={avgK6.toFixed(1) + '%'} sub="Kunjungan Lengkap" icon="📋" color="#078FA5" targetData={evaluateTarget(avgK6, 'k6_pct')} />
-        <KPICard title="Persentase Persalinan di Fasyankes" value={avgFasyankes.toFixed(1) + '%'} sub="Rata-rata" icon="🏥" color="#9EAF24" targetData={evaluateTarget(avgFasyankes, 'pf_pct')} />
+        <KPICard title="Persentase K1" value={avgK1.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} sub="Cakupan Kunjungan Pertama" icon="🤰" color="#0F8F8B" />
+        <KPICard title="Persentase K6" value={avgK6.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} sub="Kunjungan Lengkap" icon="📋" color="#078FA5" targetData={evaluateTarget(avgK6, 'k6_pct')} />
+        <KPICard title="Persentase Persalinan di Fasyankes" value={avgFasyankes.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} sub="Rata-rata" icon="🏥" color="#9EAF24" targetData={evaluateTarget(avgFasyankes, 'pf_pct')} />
       </div>
 
       {/* CHOROPLETH MAP SECTION */}
@@ -334,7 +334,7 @@ export default function KesehatanIbu() {
             className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400">
             {IBU_OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
           </select>
-          <span className="ml-auto text-xs font-mono px-3 py-1 rounded-full" style={{ background: '#F0FAF9', color: '#0F8F8B' }}>r = {r.toFixed(3)}</span>
+          <span className="ml-auto text-xs font-mono px-3 py-1 rounded-full" style={{ background: '#F0FAF9', color: '#0F8F8B' }}>r = {r.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}</span>
         </div>
         <ResponsiveContainer width="100%" height={200}>
           <ScatterChart margin={{ top: 5, right: 20, bottom: 5, left: 5 }}>
@@ -344,7 +344,7 @@ export default function KesehatanIbu() {
             <Tooltip content={({ payload }) => {
               if (!payload?.length) return null
               const p = payload[0].payload
-              return <div className="bg-white border border-gray-100 rounded-xl shadow p-3 text-xs"><div className="font-semibold mb-1">{p.name}</div><div>X: {p.x?.toFixed(1)}%</div><div>Y: {p.y?.toFixed(1)}%</div></div>
+              return <div className="bg-white border border-gray-100 rounded-xl shadow p-3 text-xs"><div className="font-semibold mb-1">{p.name}</div><div>X: {p.x?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%</div><div>Y: {p.y?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%</div></div>
             }} />
             <Scatter data={scatterData} fill="#0F8F8B" fillOpacity={0.75} />
           </ScatterChart>
@@ -355,7 +355,7 @@ export default function KesehatanIbu() {
       <StatPanel
         stats={stats}
         label={indicLabel}
-        format={v => v.toFixed(1) + '%'}
+        format={v => v.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'}
         rightElement={
           <select value={indic} onChange={e => setIndic(e.target.value)}
             className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[250px]">
@@ -495,11 +495,11 @@ export default function KesehatanIbu() {
 
       <DataTable data={data} columns={[
         { key: 'kabupaten', label: 'Kabupaten/Kota' },
-        { key: 'k1_pct', label: 'K1 (%)', format: v => v?.toFixed(1) },
-        { key: 'k6_pct', label: 'K6 (%)', format: v => v?.toFixed(1) },
-        { key: 'persalinan_fasyankes_pct', label: 'Persalinan Fasyankes (%)', format: v => v?.toFixed(1) },
-        { key: 'bumil_kek_pct', label: 'Bumil KEK (%)', format: v => v?.toFixed(1) },
-        { key: 'kb_aktif_pct', label: 'KB Aktif (%)', format: v => v?.toFixed(1) },
+        { key: 'k1_pct', label: 'K1 (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
+        { key: 'k6_pct', label: 'K6 (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
+        { key: 'persalinan_fasyankes_pct', label: 'Persalinan Fasyankes (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
+        { key: 'bumil_kek_pct', label: 'Bumil KEK (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
+        { key: 'kb_aktif_pct', label: 'KB Aktif (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
         { key: 'kematian_ibu_hamil', label: 'Mati Hamil' },
         { key: 'kematian_ibu_bersalin', label: 'Mati Bersalin' },
         { key: 'kematian_ibu_nifas', label: 'Mati Nifas' },

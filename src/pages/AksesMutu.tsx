@@ -76,12 +76,12 @@ export default function AksesMutu() {
 
 
   const scatterInsights = [
-    `Analisis perbandingan antara indikator mutu ${corrX.toUpperCase()} dan ${corrY.toUpperCase()} menunjukkan korelasi ${Math.abs(r) > 0.7 ? 'kuat' : Math.abs(r) > 0.4 ? 'sedang' : 'lemah'} (r = ${r.toFixed(3)}). Evaluasi berkala sangat penting bagi manajemen rumah sakit untuk memastikan apakah efisiensi penggunaan tempat tidur turut berbanding lurus dengan kualitas layanan dan kecepatan kesembuhan pasien.`,
+    `Analisis perbandingan antara indikator mutu ${corrX.toUpperCase()} dan ${corrY.toUpperCase()} menunjukkan korelasi ${Math.abs(r) > 0.7 ? 'kuat' : Math.abs(r) > 0.4 ? 'sedang' : 'lemah'} (r = ${r.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}). Evaluasi berkala sangat penting bagi manajemen rumah sakit untuk memastikan apakah efisiensi penggunaan tempat tidur turut berbanding lurus dengan kualitas layanan dan kecepatan kesembuhan pasien.`,
   ]
 
   const statInsights = [
-    `Rata-rata tingkat hunian tempat tidur RS (BOR) di Jawa Timur sebesar ${avgBOR.toFixed(1)}%. Angka ini ${avgBOR >= 60 && avgBOR <= 85 ? 'berada dalam rentang ideal, menandakan rumah sakit beroperasi secara efisien baik dari sisi medis maupun finansial' : avgBOR < 60 ? 'masih di bawah standar ideal, yang mengisyaratkan banyaknya tempat tidur kosong sehingga rawan membebani biaya operasional RS' : 'melebihi kapasitas ideal, kondisi ini sangat rentan membahayakan pasien akibat kelelahan tenaga medis dan memicu penularan infeksi di dalam ruangan (HAI)'}.`,
-    `Adapun rata-rata lama pasien dirawat (ALOS) mencapai ${avgALOS.toFixed(1)} hari, dengan Angka Kematian Kotor (GDR) ${avgGDR.toFixed(1)}‰ dan Angka Kematian Bersih (NDR) ${avgNDR.toFixed(1)}‰. Khusus untuk NDR (kematian >48 jam setelah dirawat), jika nilainya terus mendekati batas maksimal, maka rumah sakit perlu segera melakukan evaluasi menyeluruh terhadap prosedur penanganan pasien kritis.`,
+    `Rata-rata tingkat hunian tempat tidur RS (BOR) di Jawa Timur sebesar ${avgBOR.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%. Angka ini ${avgBOR >= 60 && avgBOR <= 85 ? 'berada dalam rentang ideal, menandakan rumah sakit beroperasi secara efisien baik dari sisi medis maupun finansial' : avgBOR < 60 ? 'masih di bawah standar ideal, yang mengisyaratkan banyaknya tempat tidur kosong sehingga rawan membebani biaya operasional RS' : 'melebihi kapasitas ideal, kondisi ini sangat rentan membahayakan pasien akibat kelelahan tenaga medis dan memicu penularan infeksi di dalam ruangan (HAI)'}.`,
+    `Adapun rata-rata lama pasien dirawat (ALOS) mencapai ${avgALOS.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} hari, dengan Angka Kematian Kotor (GDR) ${avgGDR.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}‰ dan Angka Kematian Bersih (NDR) ${avgNDR.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}‰. Khusus untuk NDR (kematian >48 jam setelah dirawat), jika nilainya terus mendekati batas maksimal, maka rumah sakit perlu segera melakukan evaluasi menyeluruh terhadap prosedur penanganan pasien kritis.`,
   ]
 
   if (loading) return <div className="p-8 text-center text-gray-500">Loading data...</div>
@@ -94,10 +94,10 @@ export default function AksesMutu() {
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         <KPICard title="Total Kunjungan Rawat Jalan" value={totRawatJalan.toLocaleString('id-ID')} icon="🚶" color="#0FB0AA" />
         <KPICard title="Total Kunjungan Rawat Inap" value={totRawatInap.toLocaleString('id-ID')} icon="🛏️" color="#06B5D0" />
-        <KPICard title="BOR Provinsi" value={avgBOR.toFixed(1) + '%'} sub="Ideal: 60–85%" icon="🏥" color="#CBD92C" trend={avgBOR >= 60 && avgBOR <= 85 ? 'neutral' : avgBOR < 60 ? 'down' : 'up'} trendVal={avgBOR >= 60 && avgBOR <= 85 ? 'Dalam rentang ideal' : avgBOR < 60 ? 'Di bawah ideal' : 'Melebihi ideal'} />
-        <KPICard title="Gross Death Rate" value={avgGDR.toFixed(1) + '‰'} sub="Batas maks: 45‰" icon="📉" color="#f97316" trend={avgGDR <= 45 ? 'neutral' : 'down'} trendVal={avgGDR <= 45 ? 'Dalam batas' : 'Melebihi batas'} />
-        <KPICard title="Net Death Rate" value={avgNDR.toFixed(1) + '‰'} sub="Batas maks: 25‰" icon="📉" color="#8b5cf6" trend={avgNDR <= 25 ? 'neutral' : 'down'} trendVal={avgNDR <= 25 ? 'Dalam batas' : 'Melebihi batas'} />
-        <KPICard title="% Puskesmas dg Ketersediaan Obat Esensial & Vaksin" value={pctPuskesmas.toFixed(1) + '%'} icon="💊" color="#22c55e" />
+        <KPICard title="BOR Provinsi" value={avgBOR.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} sub="Ideal: 60–85%" icon="🏥" color="#CBD92C" trend={avgBOR >= 60 && avgBOR <= 85 ? 'neutral' : avgBOR < 60 ? 'down' : 'up'} trendVal={avgBOR >= 60 && avgBOR <= 85 ? 'Dalam rentang ideal' : avgBOR < 60 ? 'Di bawah ideal' : 'Melebihi ideal'} />
+        <KPICard title="Gross Death Rate" value={avgGDR.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '‰'} sub="Batas maks: 45‰" icon="📉" color="#f97316" trend={avgGDR <= 45 ? 'neutral' : 'down'} trendVal={avgGDR <= 45 ? 'Dalam batas' : 'Melebihi batas'} />
+        <KPICard title="Net Death Rate" value={avgNDR.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '‰'} sub="Batas maks: 25‰" icon="📉" color="#8b5cf6" trend={avgNDR <= 25 ? 'neutral' : 'down'} trendVal={avgNDR <= 25 ? 'Dalam batas' : 'Melebihi batas'} />
+        <KPICard title="% Puskesmas dg Ketersediaan Obat Esensial & Vaksin" value={pctPuskesmas.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} icon="💊" color="#22c55e" />
       </div>
 
       <div className="flex flex-col gap-4">
@@ -122,7 +122,7 @@ export default function AksesMutu() {
             className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[200px]">
             {RS_OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
           </select>
-          <span className="ml-auto text-xs font-mono px-3 py-1 rounded-full" style={{ background: '#F0FAF9', color: '#0FB0AA' }}>r = {r.toFixed(3)}</span>
+          <span className="ml-auto text-xs font-mono px-3 py-1 rounded-full" style={{ background: '#F0FAF9', color: '#0FB0AA' }}>r = {r.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}</span>
         </div>
         <ResponsiveContainer width="100%" height={220}>
           <ScatterChart margin={{ top: 10, right: 20, bottom: 10, left: 10 }}>
@@ -132,7 +132,7 @@ export default function AksesMutu() {
             <Tooltip content={({ payload }) => {
               if (!payload?.length) return null
               const p = payload[0].payload
-              return <div className="bg-white border border-gray-100 rounded-xl shadow p-3 text-xs"><div className="font-semibold mb-1">{p.name}</div><div>{corrX.toUpperCase()}: {p.x?.toFixed(2)}</div><div>{corrY.toUpperCase()}: {p.y?.toFixed(2)}</div></div>
+              return <div className="bg-white border border-gray-100 rounded-xl shadow p-3 text-xs"><div className="font-semibold mb-1">{p.name}</div><div>{corrX.toUpperCase()}: {p.x?.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div><div>{corrY.toUpperCase()}: {p.y?.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div></div>
             }} />
             <Scatter data={scatterData} fill="#0FB0AA" fillOpacity={0.75} />
           </ScatterChart>
@@ -143,7 +143,7 @@ export default function AksesMutu() {
       <StatPanel
         stats={stats}
         label={statIndicLabel}
-        format={v => v.toFixed(2)}
+        format={v => v.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
         rightElement={
           <select value={statIndic} onChange={e => setStatIndic(e.target.value)}
             className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[250px]">
@@ -170,12 +170,12 @@ export default function AksesMutu() {
 
       <DataTable data={data} columns={[
         { key: 'kabupaten', label: 'Kabupaten/Kota' },
-        { key: 'bor', label: 'BOR (%)', format: v => v?.toFixed(1) },
-        { key: 'bto', label: 'BTO', format: v => v?.toFixed(1) },
-        { key: 'toi', label: 'TOI (hr)', format: v => v?.toFixed(1) },
-        { key: 'alos', label: 'ALOS (hr)', format: v => v?.toFixed(1) },
-        { key: 'gdr', label: 'GDR (‰)', format: v => v?.toFixed(1) },
-        { key: 'ndr', label: 'NDR (‰)', format: v => v?.toFixed(1) },
+        { key: 'bor', label: 'BOR (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
+        { key: 'bto', label: 'BTO', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
+        { key: 'toi', label: 'TOI (hr)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
+        { key: 'alos', label: 'ALOS (hr)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
+        { key: 'gdr', label: 'GDR (‰)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
+        { key: 'ndr', label: 'NDR (‰)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
       ]} />
     </div>
   )

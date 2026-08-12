@@ -15,7 +15,7 @@ import DataTable from '../components/DataTable'
 import ChoroplethMap from '../components/ChoroplethMap'
 import CrosstabSection from '../components/CrosstabSection'
 
-const fmtRp = (v: number) => 'Rp ' + (v >= 1e12 ? (v / 1e12).toFixed(2) + ' T' : v >= 1e9 ? (v / 1e9).toFixed(1) + ' M' : v >= 1e6 ? (v / 1e6).toFixed(0) + ' jt' : v.toLocaleString('id-ID'))
+const fmtRp = (v: number) => 'Rp ' + (v >= 1e12 ? (v / 1e12).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' T' : v >= 1e9 ? (v / 1e9).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' M' : v >= 1e6 ? (v / 1e6).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' juta' : v.toLocaleString('id-ID'))
 
 export default function PembiayaanKesehatan() {
   const { data: pembiayaan, loading, error } = useDashboardData()
@@ -58,7 +58,7 @@ export default function PembiayaanKesehatan() {
     { tahun: '2024', total: val24 },
     { tahun: '2025', total: val25 },
   ]
-  const growth = val24 > 0 ? ((val25 - val24) / val24 * 100).toFixed(1) : '0';
+  const growth = val24 > 0 ? ((val25 - val24) / val24 * 100).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : '0';
 
   const sortedData = [...data]
     .filter(d => d.kabupaten !== 'PROV. JAWA TIMUR')
@@ -228,7 +228,7 @@ export default function PembiayaanKesehatan() {
         </div>
         <ResponsiveContainer width="100%" height={chartFilter === 'all' ? 800 : (chartFilter === '20' ? 450 : 350)}>
           <BarChart data={chartData} layout="vertical" margin={{ left: 100, right: 20 }}>
-            <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={v => v >= 1e12 ? (v / 1e12).toFixed(1) + 'T' : v >= 1e9 ? (v / 1e9).toFixed(0) + 'M' : (v / 1e6).toFixed(0) + 'jt'} />
+            <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={v => v >= 1e12 ? (v / 1e12).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + 'T' : v >= 1e9 ? (v / 1e9).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + 'M' : (v / 1e6).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' juta'} />
             <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={98} interval={0} />
             <Tooltip formatter={(v: any) => fmtRp(v)} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
             <Bar dataKey="2025" name="Anggaran 2025" radius={[0, 6, 6, 0]} fill="#0F8F8B" />
@@ -270,7 +270,7 @@ export default function PembiayaanKesehatan() {
           <AreaChart data={trendData} margin={{ left: 20, right: 20 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
             <XAxis dataKey="tahun" tick={{ fontSize: 11 }} />
-            <YAxis tick={{ fontSize: 11 }} tickFormatter={v => (v / 1e12).toFixed(1) + 'T'} width={80} />
+            <YAxis tick={{ fontSize: 11 }} tickFormatter={v => (v / 1e12).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + 'T'} width={80} />
             <Tooltip formatter={(v: any) => fmtRp(v)} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
             <Area type="monotone" dataKey="total" stroke="#0F8F8B" fill="#0F8F8B22" strokeWidth={3} name="Total Anggaran" activeDot={{ r: 6, fill: '#0F8F8B', stroke: '#fff', strokeWidth: 2 }} />
           </AreaChart>

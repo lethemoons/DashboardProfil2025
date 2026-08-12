@@ -53,7 +53,7 @@ const TBCTooltip = ({ active, payload, label }: any) => {
               <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: pSukses.color }}></div>
               <span className="text-gray-600">Sukses Pengobatan</span>
             </div>
-            <span className="font-semibold text-gray-800">{Number(pSukses.value).toFixed(1)}%</span>
+            <span className="font-semibold text-gray-800">{Number(pSukses.value).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%</span>
           </div>
         )}
 
@@ -63,7 +63,7 @@ const TBCTooltip = ({ active, payload, label }: any) => {
               <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: pLengkap.color }}></div>
               <span className="text-gray-600">Pengobatan Lengkap</span>
             </div>
-            <span className="font-semibold text-gray-800">{Number(pLengkap.value).toFixed(1)}%</span>
+            <span className="font-semibold text-gray-800">{Number(pLengkap.value).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%</span>
           </div>
         )}
       </div>
@@ -107,7 +107,7 @@ const ODHIVTooltip = ({ active, payload, label }: any) => {
               <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: pPct.color }}></div>
               <span className="text-gray-600">Persentase ARV</span>
             </div>
-            <span className="font-semibold text-gray-800">{Number(pPct.value).toFixed(1)}%</span>
+            <span className="font-semibold text-gray-800">{Number(pPct.value).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%</span>
           </div>
         )}
       </div>
@@ -235,7 +235,7 @@ export default function PenyakitMenular() {
   ] : []
 
   const scatterInsights = [
-    `Korelasi ${OPTIONS.find(o => o.key === corrX)?.label?.split(' —')[0]} vs ${OPTIONS.find(o => o.key === corrY)?.label?.split(' —')[0]}: r = ${r.toFixed(3)}.`,
+    `Korelasi ${OPTIONS.find(o => o.key === corrX)?.label?.split(' —')[0]} vs ${OPTIONS.find(o => o.key === corrY)?.label?.split(' —')[0]}: r = ${r.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}.`,
   ]
 
   const statInsights = [
@@ -448,7 +448,7 @@ export default function PenyakitMenular() {
             className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400">
             {OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
           </select>
-          <span className="ml-auto text-xs font-mono px-3 py-1 rounded-full" style={{ background: '#F0FAF9', color: '#0F8F8B' }}>r = {r.toFixed(3)}</span>
+          <span className="ml-auto text-xs font-mono px-3 py-1 rounded-full" style={{ background: '#F0FAF9', color: '#0F8F8B' }}>r = {r.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}</span>
         </div>
         <ResponsiveContainer width="100%" height={200}>
           <ScatterChart margin={{ top: 5, right: 20, bottom: 5, left: 5 }}>

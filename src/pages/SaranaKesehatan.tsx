@@ -55,7 +55,7 @@ const CustomTooltip = ({ active, payload, totalFaskes }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload
     const isCountable = !ALL_FASILITAS.find(f => f.label === data.name)?.isNotFaskes
-    const percentage = isCountable && totalFaskes > 0 ? ((data.value / totalFaskes) * 100).toFixed(1) : null
+    const percentage = isCountable && totalFaskes > 0 ? ((data.value / totalFaskes) * 100).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : null
 
     return (
       <div className="bg-white p-3 rounded-xl border border-gray-100 shadow-lg">
@@ -122,7 +122,7 @@ export default function SaranaKesehatan() {
 
     const max = validData[0]
     const min = validData[validData.length - 1]
-    const pctMax = totalFaskes > 0 ? ((max.value / totalFaskes) * 100).toFixed(1) : 0
+    const pctMax = totalFaskes > 0 ? ((max.value / totalFaskes) * 100).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : 0
 
     return [
       `Total fasilitas kesehatan yang tercatat pada kategori ${kategori} se-Jawa Timur berjumlah ${totalFaskes.toLocaleString('id-ID')} unit.`,

@@ -57,19 +57,19 @@ const CustomCompareTooltip = ({ active, payload, label, data }: any) => {
               <div className="w-2 h-2 rounded-full" style={{ background: p1.fill }}></div>
               <span className="text-gray-600">{p1.name}:</span>
             </div>
-            <span className="font-semibold">{p1.value?.toFixed(1)}% ({Number(p1.payload[`${p1.dataKey}_val`] || 0).toLocaleString('id-ID')})</span>
+            <span className="font-semibold">{p1.value?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}% ({Number(p1.payload[`${p1.dataKey}_val`] || 0).toLocaleString('id-ID')})</span>
           </div>
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full" style={{ background: p2.fill }}></div>
               <span className="text-gray-600">{p2.name}:</span>
             </div>
-            <span className="font-semibold">{p2.value?.toFixed(1)}% ({Number(p2.payload[`${p2.dataKey}_val`] || 0).toLocaleString('id-ID')})</span>
+            <span className="font-semibold">{p2.value?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}% ({Number(p2.payload[`${p2.dataKey}_val`] || 0).toLocaleString('id-ID')})</span>
           </div>
         </div>
         <div className="mt-3 pt-2 border-t border-gray-100 flex justify-between items-center">
           <span className="text-gray-500">Selisih (absolut):</span>
-          <span className="font-bold">{diff.toFixed(1)}%</span>
+          <span className="font-bold">{diff.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%</span>
         </div>
 
       </div>
@@ -263,7 +263,7 @@ export default function KesehatanAnak() {
           <BarChart data={chartData} layout="vertical" margin={{ left: 95, right: 20 }}>
             <XAxis type="number" tick={{ fontSize: 11 }} domain={[0, 100]} />
             <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
-            <Tooltip formatter={(v: any) => v?.toFixed(1) + '%'} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
+            <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
             {TARGETS[indic] && (
               <ReferenceLine 
                 x={TARGETS[indic].target_value} 
@@ -344,7 +344,7 @@ export default function KesehatanAnak() {
             className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400">
             {ANAK_OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
           </select>
-          <span className="ml-auto text-xs font-mono px-3 py-1 rounded-full" style={{ background: '#F0FAF9', color: '#0F8F8B' }}>r = {r.toFixed(3)} — {Math.abs(r) > 0.7 ? 'kuat' : Math.abs(r) > 0.4 ? 'sedang' : 'lemah'}</span>
+          <span className="ml-auto text-xs font-mono px-3 py-1 rounded-full" style={{ background: '#F0FAF9', color: '#0F8F8B' }}>r = {r.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 })} — {Math.abs(r) > 0.7 ? 'kuat' : Math.abs(r) > 0.4 ? 'sedang' : 'lemah'}</span>
         </div>
         <ResponsiveContainer width="100%" height={200}>
           <ScatterChart margin={{ top: 5, right: 20, bottom: 5, left: 5 }}>
@@ -354,7 +354,7 @@ export default function KesehatanAnak() {
             <Tooltip content={({ payload }) => {
               if (!payload?.length) return null
               const p = payload[0].payload
-              return <div className="bg-white border border-gray-100 rounded-xl shadow p-3 text-xs"><div className="font-semibold mb-1">{p.name}</div><div>X: {p.x?.toFixed(1)}%</div><div>Y: {p.y?.toFixed(1)}%</div></div>
+              return <div className="bg-white border border-gray-100 rounded-xl shadow p-3 text-xs"><div className="font-semibold mb-1">{p.name}</div><div>X: {p.x?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%</div><div>Y: {p.y?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%</div></div>
             }} />
             <Scatter data={scatterData} fill="#078FA5" fillOpacity={0.75} />
           </ScatterChart>
@@ -380,10 +380,10 @@ export default function KesehatanAnak() {
 
       <DataTable data={data} columns={[
         { key: 'kabupaten', label: 'Kabupaten/Kota' },
-        { key: 'gizi_kurang_pct', label: 'Gizi Kurang (%)', format: v => v?.toFixed(1) },
-        { key: 'gizi_buruk_pct', label: 'Gizi Buruk (%)', format: v => v?.toFixed(1) },
-        { key: 'bblr_pct', label: 'BBLR (%)', format: v => v?.toFixed(1) },
-        { key: 'imunisasi_dasar_lengkap_pct', label: 'Imunisasi (%)', format: v => v?.toFixed(1) },
+        { key: 'gizi_kurang_pct', label: 'Gizi Kurang (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
+        { key: 'gizi_buruk_pct', label: 'Gizi Buruk (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
+        { key: 'bblr_pct', label: 'BBLR (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
+        { key: 'imunisasi_dasar_lengkap_pct', label: 'Imunisasi (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
         { key: 'kematian_neonatal', label: 'Mati Neonatal' },
         { key: 'kematian_bayi', label: 'Mati Bayi' },
         { key: 'kematian_balita', label: 'Mati Balita' },

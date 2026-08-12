@@ -16,7 +16,7 @@ import RankChart from '../components/RankChart'
 import CrosstabSection from '../components/CrosstabSection'
 
 const COLORS = ['#0F8F8B', '#9EAF24', '#078FA5', '#f97316', '#8b5cf6']
-const fmt = (v: number) => v >= 1e6 ? (v / 1e6).toFixed(2) + ' jt' : v.toLocaleString('id-ID')
+const fmt = (v: number) => v >= 1e6 ? (v / 1e6).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' juta' : v.toLocaleString('id-ID')
 
 const INDICATOR_OPTIONS = [
   { key: 'jumlah_penduduk_desa_+_kelurahan', label: 'Jumlah Penduduk' },
@@ -56,7 +56,7 @@ export default function GambaranUmum() {
   const indLabel = INDICATOR_OPTIONS.find(o => o.key === indicator)?.label ?? indicator
 
   const scatterInsights = [
-    `Terdapat korelasi ${rDir} yang ${rLabel} (r = ${r.toFixed(2)}) antara ${INDICATOR_OPTIONS.find(o => o.key === corrX)?.label} dan ${INDICATOR_OPTIONS.find(o => o.key === corrY)?.label}. Jika korelasi bernilai positif, peningkatan satu indikator akan diikuti oleh peningkatan indikator lainnya. Evaluasi korelasi ini penting untuk perumusan kebijakan tata letak dan jangkauan layanan Puskesmas/Rumah Sakit agar merata ke seluruh penduduk.`,
+    `Terdapat korelasi ${rDir} yang ${rLabel} (r = ${r.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}) antara ${INDICATOR_OPTIONS.find(o => o.key === corrX)?.label} dan ${INDICATOR_OPTIONS.find(o => o.key === corrY)?.label}. Jika korelasi bernilai positif, peningkatan satu indikator akan diikuti oleh peningkatan indikator lainnya. Evaluasi korelasi ini penting untuk perumusan kebijakan tata letak dan jangkauan layanan Puskesmas/Rumah Sakit agar merata ke seluruh penduduk.`,
   ]
 
   const statInsights = stats ? [
@@ -123,12 +123,12 @@ export default function GambaranUmum() {
             className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400">
             {INDICATOR_OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
           </select>
-          <span className="ml-auto text-xs font-mono bg-teal-50 text-teal-700 px-3 py-1 rounded-full">r = {r.toFixed(3)}</span>
+          <span className="ml-auto text-xs font-mono bg-teal-50 text-teal-700 px-3 py-1 rounded-full">r = {r.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}</span>
         </div>
         <ResponsiveContainer width="100%" height={240}>
           <ScatterChart margin={{ top: 10, right: 20, bottom: 10, left: 10 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-            <XAxis dataKey="x" type="number" name={corrX} tick={{ fontSize: 11 }} tickFormatter={v => v >= 1e6 ? (v / 1e6).toFixed(1) + 'jt' : v} />
+            <XAxis dataKey="x" type="number" name={corrX} tick={{ fontSize: 11 }} tickFormatter={v => v >= 1e6 ? (v / 1e6).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' juta' : v} />
             <YAxis dataKey="y" type="number" name={corrY} tick={{ fontSize: 11 }} />
             <Tooltip cursor={{ strokeDasharray: '3 3' }} content={({ payload }) => {
               if (!payload?.length) return null

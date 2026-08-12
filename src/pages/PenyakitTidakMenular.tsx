@@ -59,7 +59,7 @@ export default function PenyakitTidakMenular() {
 
   const ptmInsights = [
     `Total kasus hipertensi (Laki-laki & Perempuan) mencapai ${totHipertensi.toLocaleString('id-ID')}. Tingginya angka ini mengindikasikan perlunya edukasi gaya hidup sehat dan pembatasan konsumsi garam di masyarakat untuk mencegah penyakit fatal seperti stroke atau serangan jantung.`,
-    `Terdapat ${totDM.toLocaleString('id-ID')} kasus Diabetes Melitus yang terdiagnosis, dengan rata-rata keberhasilan pengendalian sebesar ${avgDMTerkendali.toFixed(1)}%. Pengendalian DM sangat krusial untuk mencegah komplikasi mematikan seperti gagal ginjal atau kebutaan.`,
+    `Terdapat ${totDM.toLocaleString('id-ID')} kasus Diabetes Melitus yang terdiagnosis, dengan rata-rata keberhasilan pengendalian sebesar ${avgDMTerkendali.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%. Pengendalian DM sangat krusial untuk mencegah komplikasi mematikan seperti gagal ginjal atau kebutaan.`,
     `Total penderita skizofrenia tercatat sebanyak ${totSkizo.toLocaleString('id-ID')} orang. Fakta ini menegaskan pentingnya akses layanan kesehatan jiwa dan dukungan sosial demi mencegah diskriminasi serta memastikan mereka mendapatkan perawatan berkelanjutan.`,
   ]
 
@@ -119,7 +119,7 @@ export default function PenyakitTidakMenular() {
               <BarChart data={hipertensiGender} margin={{ bottom: 40 }} barGap={0}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" vertical={false} />
                 <XAxis dataKey="kabupaten" tick={{ fontSize: 10 }} angle={-35} textAnchor="end" height={60} interval={0} />
-                <YAxis tick={{ fontSize: 11 }} tickFormatter={v => (v / 1e3).toFixed(0) + 'rb'} />
+                <YAxis tick={{ fontSize: 11 }} tickFormatter={v => (v / 1e3).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + 'rb'} />
                 <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID')} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
                 <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
                 <Bar dataKey="laki" name="Hipertensi Laki-laki" fill="#078FA5" radius={[3, 3, 0, 0]} />
@@ -208,7 +208,7 @@ export default function PenyakitTidakMenular() {
         { key: 'hipertensi_laki', label: 'Hipertensi L', format: v => v?.toLocaleString('id-ID') },
         { key: 'hipertensi_perempuan', label: 'Hipertensi P', format: v => v?.toLocaleString('id-ID') },
         { key: 'dm_terdiagnosis', label: 'DM Diagnosis', format: v => v?.toLocaleString('id-ID') },
-        { key: 'dm_terkendali_pct', label: 'DM Terkendali (%)', format: v => v?.toFixed(1) },
+        { key: 'dm_terkendali_pct', label: 'DM Terkendali (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
         { key: 'jiwa_skizofrenia', label: 'Skizofrenia', format: v => v?.toLocaleString('id-ID') },
       ]} />
     </div>

@@ -68,8 +68,8 @@ export default function UsiaProduktifLansia() {
 
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-        <KPICard title="Usia Produktif Laki-laki" value={(totLaki / 1e6).toFixed(2) + ' jt'} sub="Jiwa" icon="👨" color="#0F8F8B" />
-        <KPICard title="Usia Produktif Perempuan" value={(totPerempuan / 1e6).toFixed(2) + ' jt'} sub="Jiwa" icon="👩" color="#078FA5" />
+        <KPICard title="Usia Produktif Laki-laki" value={(totLaki / 1e6).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' juta'} sub="Jiwa" icon="👨" color="#0F8F8B" />
+        <KPICard title="Usia Produktif Perempuan" value={(totPerempuan / 1e6).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' juta'} sub="Jiwa" icon="👩" color="#078FA5" />
         <KPICard title="Lansia Dilayani Sesuai Standar" value={totLansia.toLocaleString('id-ID')} sub="Usia 60+" icon="👴" color="#9EAF24" />
       </div>
 
@@ -118,7 +118,7 @@ export default function UsiaProduktifLansia() {
         </div>
         <ResponsiveContainer width="100%" height={280}>
           <BarChart data={chartData} layout="vertical" margin={{ left: 95, right: 20 }}>
-            <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={v => v >= 1e6 ? (v / 1e6).toFixed(1) + 'jt' : v?.toLocaleString('id-ID')} />
+            <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={v => v >= 1e6 ? (v / 1e6).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' juta' : v?.toLocaleString('id-ID')} />
             <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
             <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID')} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
             <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]} fill="#0F8F8B" />
@@ -143,7 +143,7 @@ export default function UsiaProduktifLansia() {
           <BarChart data={genderData} margin={{ bottom: 40 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
             <XAxis dataKey="kabupaten" tick={{ fontSize: 10 }} angle={-35} textAnchor="end" height={60} />
-            <YAxis tick={{ fontSize: 11 }} tickFormatter={v => (v / 1e3).toFixed(0) + 'rb'} />
+            <YAxis tick={{ fontSize: 11 }} tickFormatter={v => (v / 1e3).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + 'rb'} />
             <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID')} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
             <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
             <Bar dataKey="laki" name="Laki-laki" fill="#0F8F8B" radius={[3, 3, 0, 0]} />

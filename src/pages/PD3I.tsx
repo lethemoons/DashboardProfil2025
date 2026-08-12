@@ -162,8 +162,8 @@ export default function PD3I() {
             { key: 'difteri_kasus', label: 'Difteri' },
             { key: 'campak_suspek_kasus', label: 'Suspek Campak' },
             { key: 'pertusis_kasus', label: 'Pertusis' },
-            { key: 'afp_kasus', label: 'Kasus AFP (Non Polio)', format: v => v?.toFixed(1) },
-            { key: 'klb_24jam_pct', label: 'KLB <24jam (%)', format: v => v?.toFixed(1) },
+            { key: 'afp_kasus', label: 'Kasus AFP (Non Polio)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
+            { key: 'klb_24jam_pct', label: 'KLB <24jam (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
           ]} />
     </div>
   )

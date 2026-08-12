@@ -75,12 +75,12 @@ export default function TularVektor() {
   ] : []
 
   const scatterInsights = [
-    `Hubungan antara jumlah kasus DBD dengan CFR (tingkat kematian) menunjukkan korelasi ${Math.abs(r) > 0.7 ? 'kuat' : Math.abs(r) > 0.4 ? 'sedang' : 'lemah'} (r = ${r.toFixed(3)}). Artinya, tingginya jumlah kasus DBD dapat ditekan angka kematiannya apabila didukung dengan kesigapan deteksi dini dan kecepatan penanganan darurat pasien di fasilitas kesehatan.`,
+    `Hubungan antara jumlah kasus DBD dengan CFR (tingkat kematian) menunjukkan korelasi ${Math.abs(r) > 0.7 ? 'kuat' : Math.abs(r) > 0.4 ? 'sedang' : 'lemah'} (r = ${r.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}). Artinya, tingginya jumlah kasus DBD dapat ditekan angka kematiannya apabila didukung dengan kesigapan deteksi dini dan kecepatan penanganan darurat pasien di fasilitas kesehatan.`,
   ]
 
   const statInsights = [
     `Total kasus DBD se-Jawa Timur mencapai ${totDBD.toLocaleString('id-ID')}. Musim penghujan dan banyaknya tempat genangan air bersih yang tidak ditutup rapat menjadi faktor lingkungan pemicu utama ledakan perkembangbiakan nyamuk pembawa virus.`,
-    `Tingkat fatalitas (CFR DBD) rata-rata adalah ${avgCFR.toFixed(2)}%, yang ${avgCFR <= 1 ? 'masih berada dalam batas aman standar nasional (≤1%)' : 'sudah mengkhawatirkan (melebihi batas aman 1%)'}. CFR yang terus dievaluasi sangat penting untuk mengukur kualitas perawatan dan kecepatan rujukan di rumah sakit.`,
+    `Tingkat fatalitas (CFR DBD) rata-rata adalah ${avgCFR.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%, yang ${avgCFR <= 1 ? 'masih berada dalam batas aman standar nasional (≤1%)' : 'sudah mengkhawatirkan (melebihi batas aman 1%)'}. CFR yang terus dievaluasi sangat penting untuk mengukur kualitas perawatan dan kecepatan rujukan di rumah sakit.`,
     `Terdapat pula ${totMalaria.toLocaleString('id-ID')} kasus Malaria Positif dan ${totFilariasis.toLocaleString('id-ID')} penderita Filariasis (kaki gajah) kronis. Pencegahan melalui kelambu berinsektisida dan obat pencegahan massal sangat dianjurkan untuk mencegah kecacatan permanen yang menurunkan produktivitas ekonomi warga.`,
   ]
 
@@ -235,7 +235,7 @@ export default function TularVektor() {
       <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
         <div className="flex items-center gap-3 mb-4">
           <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Korelasi Kasus DBD vs CFR</h3>
-          <span className="ml-auto text-xs font-mono px-3 py-1 rounded-full" style={{ background: '#F0FAF9', color: '#0F8F8B' }}>r = {r.toFixed(3)}</span>
+          <span className="ml-auto text-xs font-mono px-3 py-1 rounded-full" style={{ background: '#F0FAF9', color: '#0F8F8B' }}>r = {r.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}</span>
         </div>
         <ResponsiveContainer width="100%" height={200}>
           <ScatterChart margin={{ top: 5, right: 20, bottom: 5, left: 5 }}>
@@ -245,7 +245,7 @@ export default function TularVektor() {
             <Tooltip content={({ payload }) => {
               if (!payload?.length) return null
               const p = payload[0].payload
-              return <div className="bg-white border border-gray-100 rounded-xl shadow p-3 text-xs"><div className="font-semibold mb-1">{p.name}</div><div>Kasus: {p.x?.toLocaleString('id-ID')}</div><div>CFR: {p.y?.toFixed(2)}%</div></div>
+              return <div className="bg-white border border-gray-100 rounded-xl shadow p-3 text-xs"><div className="font-semibold mb-1">{p.name}</div><div>Kasus: {p.x?.toLocaleString('id-ID')}</div><div>CFR: {p.y?.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%</div></div>
             }} />
             <Scatter data={scatterData} fill="#0F8F8B" fillOpacity={0.75} />
           </ScatterChart>
@@ -284,7 +284,7 @@ export default function TularVektor() {
       <DataTable data={data} columns={[
         { key: 'kabupaten', label: 'Kabupaten/Kota' },
         { key: 'dbd_kasus', label: 'Kasus DBD', format: v => v?.toLocaleString('id-ID') },
-        { key: 'dbd_cfr', label: 'CFR DBD (%)', format: v => v?.toFixed(2) },
+        { key: 'dbd_cfr', label: 'CFR DBD (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) },
         { key: 'malaria_positif', label: 'Malaria Positif' },
         { key: 'filariasis_kronis', label: 'Filariasis Kronis' },
       ]} />
