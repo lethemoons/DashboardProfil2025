@@ -470,6 +470,7 @@ export default function KesehatanIbu() {
 
       
       <RiskClusteringMap 
+        title="Analisis Klasterisasi Pemetaan Risiko Kesehatan Ibu"
         data={data} 
         variables={['kematian_ibu_hamil', 'k6_pct', 'persalinan_fasyankes_pct', 'kf_lengkap_pct']} 
         directions={[1, -1, -1, -1]} 

@@ -165,6 +165,7 @@ export default function UsiaProduktifLansia() {
 
       
       <RiskClusteringMap 
+        title="Analisis Klasterisasi Pemetaan Risiko Usia Produktif & Lansia"
         data={data} 
         variables={['produktif_laki', 'lansia_dilayani']} 
         directions={[-1, -1]} 

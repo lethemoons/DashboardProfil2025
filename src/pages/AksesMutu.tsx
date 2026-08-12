@@ -161,6 +161,7 @@ export default function AksesMutu() {
       />
 
       <RiskClusteringMap 
+        title="Analisis Klasterisasi Pemetaan Risiko Akses & Mutu Pelayanan Kesehatan"
         data={data} 
         variables={['bor', 'gdr', 'ndr']} 
         directions={[1, 1, 1]} 

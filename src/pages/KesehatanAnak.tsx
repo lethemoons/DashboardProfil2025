@@ -340,6 +340,7 @@ export default function KesehatanAnak() {
 
       
       <RiskClusteringMap 
+        title="Analisis Klasterisasi Pemetaan Risiko Kesehatan Anak"
         data={data} 
         variables={['kematian_bayi', 'gizi_buruk_pct', 'imunisasi_dasar_lengkap_pct']} 
         directions={[1, 1, -1]} 

@@ -460,6 +460,7 @@ export default function PenyakitMenular() {
 
       
       <RiskClusteringMap 
+        title="Analisis Klasterisasi Pemetaan Risiko Penyakit Menular Langsung"
         data={data} 
         variables={['tbc_kasus', 'tbc_sukses_pct', 'arv_pct', 'diare_semua_umur', 'kusta_mb']} 
         directions={[1, -1, -1, 1, 1]} 

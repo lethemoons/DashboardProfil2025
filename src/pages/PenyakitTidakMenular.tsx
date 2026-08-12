@@ -175,6 +175,7 @@ export default function PenyakitTidakMenular() {
       />
       
       <RiskClusteringMap 
+        title="Analisis Klasterisasi Pemetaan Risiko Penyakit Tidak Menular"
         data={ptmData} 
         variables={['hipertensi_laki', 'dm_terkendali_pct']} 
         directions={[-1, -1]} 

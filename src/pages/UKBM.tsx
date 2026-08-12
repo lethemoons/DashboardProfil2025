@@ -127,6 +127,7 @@ export default function UKBM() {
         </h3>
         
       <RiskClusteringMap 
+        title="Analisis Klasterisasi Pemetaan Risiko Keaktifan Posyandu"
         data={data} 
         variables={['pct_aktif']} 
         directions={[-1]} 

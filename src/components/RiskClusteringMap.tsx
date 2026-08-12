@@ -11,6 +11,7 @@ const getKabupatenName = (properties: any, id: string) => {
 };
 
 interface RiskClusteringMapProps {
+  title?: string;
   data: any[];
   variables: string[];
   directions: RiskDirection[];
@@ -23,7 +24,7 @@ const RISK_COLORS = {
   Tinggi: '#dc2626', // Merah
 };
 
-export default function RiskClusteringMap({ data, variables, directions, variableLabels }: RiskClusteringMapProps) {
+export default function RiskClusteringMap({ title, data, variables, directions, variableLabels }: RiskClusteringMapProps) {
   const [tooltip, setTooltip] = useState<{ text: string, x: number, y: number } | null>(null);
   const [hoveredKab, setHoveredKab] = useState<string | null>(null);
 
@@ -139,9 +140,9 @@ export default function RiskClusteringMap({ data, variables, directions, variabl
   };
 
   return (
-    <div className="flex flex-col gap-6 mt-8">
+    <div className="flex flex-col gap-6 mt-8 bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
       <div>
-        <h3 className="text-lg font-bold text-gray-800 mb-1">Analisis Clustering Pemetaan Risiko</h3>
+        <h3 className="text-lg font-bold text-gray-800 mb-1">{title || 'Analisis Clustering Pemetaan Risiko'}</h3>
         <p className="text-sm text-gray-500">
           Indikator yang digunakan: {variableLabels.map(v => <span key={v} className="inline-block bg-gray-100 px-2 py-0.5 rounded text-gray-700 mr-2 text-xs font-medium border border-gray-200">{v}</span>)}
         </p>

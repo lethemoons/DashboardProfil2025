@@ -134,6 +134,7 @@ export default function PD3I() {
 
           
       <RiskClusteringMap 
+        title="Analisis Klasterisasi Pemetaan Risiko PD3I"
         data={pd3iData} 
         variables={['difteri_kasus', 'campak_suspek_kasus', 'klb_24jam_pct']} 
         directions={[1, 1, -1]} 

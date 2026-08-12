@@ -142,6 +142,7 @@ export default function KesehatanLingkungan() {
 
       
       <RiskClusteringMap 
+        title="Analisis Klasterisasi Pemetaan Risiko Kesehatan Lingkungan"
         data={data} 
         variables={['air_minum_memenuhi_syarat_pct', 'sanitasi_aman_pct', 'kualitas_udara_ms_pct', 'babs_pct']} 
         directions={[-1, -1, -1, 1]} 

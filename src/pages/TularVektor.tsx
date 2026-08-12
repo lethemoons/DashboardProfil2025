@@ -258,6 +258,7 @@ export default function TularVektor() {
 
       
       <RiskClusteringMap 
+        title="Analisis Klasterisasi Pemetaan Risiko Penyakit Tular Vektor & Zoonotik"
         data={data} 
         variables={['dbd_kasus', 'dbd_cfr', 'malaria_positif']} 
         directions={[1, 1, 1]} 
