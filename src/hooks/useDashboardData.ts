@@ -105,18 +105,23 @@ const TABLE_METRIC_ALIASES: Record<string, string> = {
   // === TABLE 60: Treatment Success Rate TBC ===
   '60_lakilaki_jumlah':             'tbc_sukses_jumlah',
   '60_lakilaki_+_perempuan':        'tbc_sukses_pct',
+  '60_lakilaki_+_perempuan_2':      'tbc_pengobatan_lengkap_pct',
 
   // === TABLE 61: Pneumonia Balita ===
-  '61_jumlah_kunjungan':            'pneumonia_balita',
+  '61_jumlah_l_+_p':                'pneumonia_balita',
   '61_persentase_yang_diberikan_tatalaksana_standar_1': 'pneumonia_standar_pct',
 
   // === TABLE 63: HIV / ODHIV ===
   '63_tahun_2025_odhiv_baru_ditemukan':                          'odhiv_baru',
+  '63_tahun_2025_odhiv_baru_ditemukan_dan_mendapat_pengobatan_arv': 'odhiv_arv_jumlah',
   '63_tahun_2025_persentase_odhiv_baru_mendapat_pengobatan_arv': 'arv_pct',
 
   // === TABLE 64: Diare ===
   '64_semua_umur_jumlah':           'diare_semua_umur',
+  '64_semua_umur_jumlah_2':         'diare_semua_umur_oralit',
   '64_balita_jumlah':               'diare_balita',
+  '64_balita_jumlah_2':             'diare_balita_oralit',
+  '64_balita_jumlah_3':             'diare_balita_zinc',
 
   // === TABLE 65: Hepatitis B pada Bumil ===
   '65_jumlah_ibu_hamil_diperiksa_reaktif': 'hepatitis_bumil_reaktif',
@@ -127,12 +132,12 @@ const TABLE_METRIC_ALIASES: Record<string, string> = {
   '67_multi_basiler_mb_kusta_basah_l+p':  'kusta_mb',
 
   // === TABLE 71: AFP ===
-  '71_tahun_2025_jumlah_kasus_afp_non_polio': 'afp_rate',
+  '71_tahun_2025_jumlah_kasus_afp_non_polio': 'afp_kasus',
 
   // === TABLE 72: Penyakit PD3I ===
   '72_jumlah_kasus_l+p_1':          'difteri_kasus',
-  '72_jumlah_kasus_l+p_2':          'campak_kasus',
-  '72_jumlah_kasus_l+p_3':          'pertusis_kasus',
+  '72_meninggal_l+p_3':             'pertusis_kasus',
+  '72_meninggal_l+p_4':             'campak_suspek_kasus',
 
   // === TABLE 73: Kejadian Luar Biasa (KLB) ===
   '73_klb_di_desa_kelurahan':        'klb_24jam_pct',
@@ -142,10 +147,12 @@ const TABLE_METRIC_ALIASES: Record<string, string> = {
   '75_cfr_l+p':                      'dbd_cfr',
 
   // === TABLE 76: Malaria ===
+  '76_suspek':                       'malaria_suspek',
   '76_positif_l+p':                  'malaria_positif',
+  '76_meninggal_l+p':                'malaria_meninggal',
 
   // === TABLE 77: Filariasis ===
-  '77_kasus_kronis_baru_ditemukan_l+p': 'filariasis_kronis',
+  '77_jumlah_seluruh_kasus_kronis_l+p': 'filariasis_kronis',
 
   // === TABLE 78: Hipertensi ===
   '78_lakilaki_1':                   'hipertensi_laki',
@@ -177,23 +184,23 @@ const TABLE_METRIC_ALIASES: Record<string, string> = {
   '88_9':                            'kualitas_udara_ms_pct',
 }
 
-let dbCache: Record<number, KabRow[]> = {}
-let dbPromise: Record<number, Promise<KabRow[]>> = {}
+let dbCache4: Record<number, KabRow[]> = {}
+let dbPromise4: Record<number, Promise<KabRow[]>> = {}
 
 export function clearCache() {
-  dbCache = {}
-  dbPromise = {}
+  dbCache4 = {}
+  dbPromise4 = {}
 }
 
 export function useDashboardData() {
   const { year } = useFilter()
-  const [data, setData] = useState<KabRow[]>(dbCache[year] || [])
-  const [loading, setLoading] = useState(!dbCache[year])
+  const [data, setData] = useState<KabRow[]>(dbCache4[year] || [])
+  const [loading, setLoading] = useState(!dbCache4[year])
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (dbCache[year]) {
-      setData(dbCache[year])
+    if (dbCache4[year]) {
+      setData(dbCache4[year])
       setLoading(false)
       return
     }
@@ -202,8 +209,8 @@ export function useDashboardData() {
     let isMounted = true
     const fetchData = async () => {
       try {
-        if (!dbPromise[year]) {
-          dbPromise[year] = api.get('/data', { params: { year } }).then(res => {
+        if (!dbPromise4[year]) {
+          dbPromise4[year] = api.get('/data', { params: { year } }).then(res => {
             const rawData: RawDataRow[] = res.data
             const grouped: Record<string, KabRow> = {}
             
@@ -271,8 +278,8 @@ export function useDashboardData() {
           })
         }
 
-        const result = await dbPromise[year]
-        dbCache[year] = result
+        const result = await dbPromise4[year]
+        dbCache4[year] = result
 
         if (isMounted) {
           setData(result)

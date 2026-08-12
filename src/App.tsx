@@ -12,6 +12,7 @@ import UsiaProduktifLansia from './pages/UsiaProduktifLansia'
 import PenyakitMenular from './pages/PenyakitMenular'
 import PD3I from './pages/PD3I'
 import TularVektor from './pages/TularVektor'
+import PenyakitTidakMenular from './pages/PenyakitTidakMenular'
 import KesehatanLingkungan from './pages/KesehatanLingkungan'
 import AdminLogin from './pages/AdminLogin'
 import AdminDashboard from './pages/AdminDashboard'
@@ -26,7 +27,7 @@ type PageId =
   | 'sdm'
   | 'pembiayaan'
   | 'ibu' | 'anak' | 'usia_produktif'
-  | 'penyakit_menular' | 'pd3i' | 'tular_vektor'
+  | 'penyakit_menular' | 'pd3i' | 'tular_vektor' | 'ptm'
   | 'lingkungan'
   | 'admin'
 
@@ -64,6 +65,7 @@ const NAV: NavItem[] = [
       { id: 'penyakit_menular', label: '6.1 Penyakit Menular Langsung' },
       { id: 'pd3i', label: '6.2 PD3I' },
       { id: 'tular_vektor', label: '6.3 Tular Vektor & Zoonotik' },
+      { id: 'ptm', label: '6.4 Penyakit Tidak Menular (PTM)' },
     ],
   },
   { id: 'lingkungan', label: 'Kesehatan Lingkungan', icon: Droplets },
@@ -84,6 +86,7 @@ const SECTION_LABELS: Partial<Record<PageId, string>> = {
   penyakit_menular: 'Penyakit Menular Langsung',
   pd3i: 'Penyakit yang Dapat Dicegah Dengan Imunisasi',
   tular_vektor: 'Penyakit Tular Vektor & Zoonotik',
+  ptm: 'Penyakit Tidak Menular',
   lingkungan: 'Kesehatan Lingkungan',
   admin: 'Admin Dashboard',
 }
@@ -97,6 +100,7 @@ const PARENT_SECTION: Partial<Record<PageId, string>> = {
   penyakit_menular: 'Pengendalian Penyakit',
   pd3i: 'Pengendalian Penyakit',
   tular_vektor: 'Pengendalian Penyakit',
+  ptm: 'Pengendalian Penyakit',
 }
 
 // Which nav group is active for a given page
@@ -107,7 +111,7 @@ const PAGE_TO_NAV_GROUP: Record<PageId, PageId> = {
   sdm: 'sdm',
   pembiayaan: 'pembiayaan',
   ibu: 'ibu', anak: 'ibu', usia_produktif: 'ibu',
-  penyakit_menular: 'penyakit_menular', pd3i: 'penyakit_menular', tular_vektor: 'penyakit_menular',
+  penyakit_menular: 'penyakit_menular', pd3i: 'penyakit_menular', tular_vektor: 'penyakit_menular', ptm: 'penyakit_menular',
   lingkungan: 'lingkungan',
   admin: 'admin'
 }
@@ -294,6 +298,7 @@ function MainApp() {
           {page === 'penyakit_menular' && <PenyakitMenular />}
           {page === 'pd3i' && <PD3I />}
           {page === 'tular_vektor' && <TularVektor />}
+          {page === 'ptm' && <PenyakitTidakMenular />}
           {page === 'lingkungan' && <KesehatanLingkungan />}
           {page === 'admin' && isAuthenticated && isAdmin && (
             <AdminDashboard onLogout={() => {
