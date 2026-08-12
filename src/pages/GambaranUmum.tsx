@@ -50,17 +50,17 @@ export default function GambaranUmum() {
   const r = pearsonR(scatterData.map(d => d.x), scatterData.map(d => d.y))
   const rLabel = Math.abs(r) > 0.7 ? 'kuat' : Math.abs(r) > 0.4 ? 'sedang' : 'lemah'
   const rDir = r > 0 ? 'positif' : 'negatif'
-
+  
   const maxKab = data.length ? data.reduce((a, b) => (a[indicator] as number) > (b[indicator] as number) ? a : b) : null
   const minKab = data.length ? data.reduce((a, b) => (a[indicator] as number) < (b[indicator] as number) ? a : b) : null
   const indLabel = INDICATOR_OPTIONS.find(o => o.key === indicator)?.label ?? indicator
 
   const scatterInsights = [
-    `Terdapat korelasi ${rDir} yang ${rLabel} (${r.toFixed(2)}) antara ${INDICATOR_OPTIONS.find(o => o.key === corrX)?.label} dan ${INDICATOR_OPTIONS.find(o => o.key === corrY)?.label}.`
+    `Terdapat korelasi ${rDir} yang ${rLabel} (r = ${r.toFixed(2)}) antara ${INDICATOR_OPTIONS.find(o => o.key === corrX)?.label} dan ${INDICATOR_OPTIONS.find(o => o.key === corrY)?.label}. Jika korelasi bernilai positif, peningkatan satu indikator akan diikuti oleh peningkatan indikator lainnya. Evaluasi korelasi ini penting untuk perumusan kebijakan tata letak dan jangkauan layanan Puskesmas/Rumah Sakit agar merata ke seluruh penduduk.`,
   ]
 
   const statInsights = stats ? [
-    `Rata-rata ${indLabel} se-Jawa Timur adalah ${fmt(Math.round(stats.mean))}, dengan nilai tengah (median) sebesar ${fmt(Math.round(stats.median))}.`
+    `Rata-rata ${indLabel} di seluruh kabupaten/kota Jawa Timur adalah ${fmt(Math.round(stats.mean))}, dengan nilai tengah (median) sebesar ${fmt(Math.round(stats.median))}. Jika nilai rata-rata jauh lebih tinggi dari median, berarti terdapat ketimpangan (ada beberapa daerah yang angkanya sangat besar/kecil dibandingkan daerah lain), yang menuntut pemerataan pembangunan dan anggaran ke depannya.`
   ] : []
 
   if (loading) return <div className="p-8 text-center text-gray-500">Loading data...</div>
@@ -159,7 +159,6 @@ export default function GambaranUmum() {
         }
       />
 
-      {statInsights.length > 0 && <InsightBox insights={statInsights} />}
 
       <CrosstabSection
         data={data}

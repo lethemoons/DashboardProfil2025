@@ -46,9 +46,9 @@ export default function PD3I() {
   const pd3iLabel = PD3I_OPTIONS.find(o => o.key === pd3iIndic)?.label ?? pd3iIndic
 
   const pd3iInsights = [
-    `Total kasus Difteri: ${totDifteri} | Suspek Campak: ${totCampakSuspek} | Pertusis: ${totPertusis}.`,
-    `AFP Rate (Non Polio) < 15 Tahun sebesar 6.3 per 100.000 penduduk < 15 tahun.`,
-    `KLB ditangani dalam 24 jam mencapai 100%.`,
+    `Total kasus kumulatif: Difteri (${totDifteri}), Suspek Campak (${totCampakSuspek}), dan Pertusis (${totPertusis}). Kemunculan penyakit-penyakit yang seharusnya bisa dicegah dengan imunisasi (PD3I) ini menandakan masih adanya "kantong" wilayah di mana anak-anak belum mendapatkan imunisasi dasar secara lengkap.`,
+    `Tingkat penemuan kasus lumpuh layuh akut (AFP Non-Polio) pada anak <15 tahun mencapai 6.3 per 100.000 anak. Pencapaian di atas target standar ini adalah kabar baik, membuktikan bahwa sistem pengawasan kesehatan (surveilans) sangat peka dan cepat mendeteksi sekecil apapun ancaman kelumpuhan akibat Polio.`,
+    `Kecepatan respon terhadap Kejadian Luar Biasa (KLB) dalam kurun waktu <24 jam sukses mencapai target 100%. Kesigapan tenaga kesehatan ini sangat vital untuk langsung memutus rantai penularan wabah agar tidak memakan korban jiwa atau menyebar ke desa sebelah.`,
   ]
 
 

@@ -68,7 +68,9 @@ export function useSdmData() {
               const num = Number(row.value)
               if (!isNaN(num) && row.value.trim() !== '') {
                 grouped[normalizedKab][row.metric] = num
-                indSet.add(row.metric)
+                if (!row.metric.toUpperCase().includes('PUSKESMAS')) {
+                  indSet.add(row.metric)
+                }
               }
             })
 

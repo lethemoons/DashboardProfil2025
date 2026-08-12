@@ -76,12 +76,12 @@ export default function AksesMutu() {
 
 
   const scatterInsights = [
-    `Korelasi ${corrX.toUpperCase()} vs ${corrY.toUpperCase()}: r = ${r.toFixed(3)} (${Math.abs(r) > 0.7 ? 'kuat' : Math.abs(r) > 0.4 ? 'sedang' : 'lemah'}).`,
+    `Analisis perbandingan antara indikator mutu ${corrX.toUpperCase()} dan ${corrY.toUpperCase()} menunjukkan korelasi ${Math.abs(r) > 0.7 ? 'kuat' : Math.abs(r) > 0.4 ? 'sedang' : 'lemah'} (r = ${r.toFixed(3)}). Evaluasi berkala sangat penting bagi manajemen rumah sakit untuk memastikan apakah efisiensi penggunaan tempat tidur turut berbanding lurus dengan kualitas layanan dan kecepatan kesembuhan pasien.`,
   ]
 
   const statInsights = [
-    `Rata-rata BOR Jawa Timur: ${avgBOR.toFixed(1)}% — ${avgBOR >= 60 && avgBOR <= 85 ? 'sudah dalam rentang ideal (60–85%)' : avgBOR < 60 ? 'masih di bawah ideal, RS kurang dimanfaatkan' : 'melebihi ideal, risiko HAI meningkat'}.`,
-    `ALOS rata-rata: ${avgALOS.toFixed(1)} hari | GDR: ${avgGDR.toFixed(1)}‰ | NDR: ${avgNDR.toFixed(1)}‰.`,
+    `Rata-rata tingkat hunian tempat tidur RS (BOR) di Jawa Timur sebesar ${avgBOR.toFixed(1)}%. Angka ini ${avgBOR >= 60 && avgBOR <= 85 ? 'berada dalam rentang ideal, menandakan rumah sakit beroperasi secara efisien baik dari sisi medis maupun finansial' : avgBOR < 60 ? 'masih di bawah standar ideal, yang mengisyaratkan banyaknya tempat tidur kosong sehingga rawan membebani biaya operasional RS' : 'melebihi kapasitas ideal, kondisi ini sangat rentan membahayakan pasien akibat kelelahan tenaga medis dan memicu penularan infeksi di dalam ruangan (HAI)'}.`,
+    `Adapun rata-rata lama pasien dirawat (ALOS) mencapai ${avgALOS.toFixed(1)} hari, dengan Angka Kematian Kotor (GDR) ${avgGDR.toFixed(1)}‰ dan Angka Kematian Bersih (NDR) ${avgNDR.toFixed(1)}‰. Khusus untuk NDR (kematian >48 jam setelah dirawat), jika nilainya terus mendekati batas maksimal, maka rumah sakit perlu segera melakukan evaluasi menyeluruh terhadap prosedur penanganan pasien kritis.`,
   ]
 
   if (loading) return <div className="p-8 text-center text-gray-500">Loading data...</div>

@@ -70,17 +70,17 @@ export default function TularVektor() {
   const r = pearsonR(scatterData.map(d => d.x), scatterData.map(d => d.y))
 
   const chartInsights = maxKab && minKab ? [
-    `${maxKab.kabupaten} tertinggi untuk ${indicLabel}: ${(maxKab[indic] as number).toLocaleString('id-ID')}.`,
+    `${maxKab.kabupaten} mencatat angka tertinggi untuk indikator ${indicLabel} (${(maxKab[indic] as number).toLocaleString('id-ID')}). Tingginya penyebaran ini mengisyaratkan perlunya pemberantasan sarang nyamuk (PSN) secara masif dan menjaga kebersihan lingkungan perumahan guna menekan angka penularan.`,
   ] : []
 
   const scatterInsights = [
-    `Korelasi kasus DBD vs CFR: r = ${r.toFixed(3)} (${Math.abs(r) > 0.7 ? 'kuat' : Math.abs(r) > 0.4 ? 'sedang' : 'lemah'}).`,
+    `Hubungan antara jumlah kasus DBD dengan CFR (tingkat kematian) menunjukkan korelasi ${Math.abs(r) > 0.7 ? 'kuat' : Math.abs(r) > 0.4 ? 'sedang' : 'lemah'} (r = ${r.toFixed(3)}). Artinya, tingginya jumlah kasus DBD dapat ditekan angka kematiannya apabila didukung dengan kesigapan deteksi dini dan kecepatan penanganan darurat pasien di fasilitas kesehatan.`,
   ]
 
   const statInsights = [
-    `Total kasus DBD Jawa Timur: ${totDBD.toLocaleString('id-ID')} kasus.`,
-    `Rata-rata CFR DBD: ${avgCFR.toFixed(2)}% — ${avgCFR <= 1 ? 'masih dalam batas toleransi (≤1%)' : 'melebihi batas toleransi CFR 1%'}.`,
-    `Total malaria positif: ${totMalaria.toLocaleString('id-ID')} | Filariasis kronis: ${totFilariasis.toLocaleString('id-ID')} kasus.`,
+    `Total kasus DBD se-Jawa Timur mencapai ${totDBD.toLocaleString('id-ID')}. Musim penghujan dan banyaknya tempat genangan air bersih yang tidak ditutup rapat menjadi faktor lingkungan pemicu utama ledakan perkembangbiakan nyamuk pembawa virus.`,
+    `Tingkat fatalitas (CFR DBD) rata-rata adalah ${avgCFR.toFixed(2)}%, yang ${avgCFR <= 1 ? 'masih berada dalam batas aman standar nasional (≤1%)' : 'sudah mengkhawatirkan (melebihi batas aman 1%)'}. CFR yang terus dievaluasi sangat penting untuk mengukur kualitas perawatan dan kecepatan rujukan di rumah sakit.`,
+    `Terdapat pula ${totMalaria.toLocaleString('id-ID')} kasus Malaria Positif dan ${totFilariasis.toLocaleString('id-ID')} penderita Filariasis (kaki gajah) kronis. Pencegahan melalui kelambu berinsektisida dan obat pencegahan massal sangat dianjurkan untuk mencegah kecacatan permanen yang menurunkan produktivitas ekonomi warga.`,
   ]
 
   if (loading) return <div className="p-8 text-center text-gray-500">Loading data...</div>

@@ -18,9 +18,8 @@ const KESLING_OPTIONS = [
   { key: 'air_minum_memenuhi_syarat_pct', label: 'Air Minum Memenuhi Syarat (%)' },
   { key: 'sanitasi_aman_pct', label: 'Sanitasi Aman (%)' },
   { key: 'sanitasi_layak_pct', label: 'Sanitasi Layak (%)' },
-  { key: 'babs_pct', label: 'BABS (%)' },
   { key: 'stop_babs_kk_pct', label: 'Stop BABS KK (%)' },
-  { key: 'stbm_5pilar_pct', label: 'STBM 5 Pilar (%)' },
+  { key: 'stbm_5pilar_jumlah', label: 'STBM 5 Pilar' },
   { key: 'tfu_memenuhi_syarat_pct', label: 'TFU Memenuhi Syarat (%)' },
   { key: 'tpp_memenuhi_syarat_pct', label: 'TPP Memenuhi Syarat (%)' },
   { key: 'kualitas_udara_ms_pct', label: 'Kualitas Udara MS (%)' },
@@ -35,6 +34,8 @@ export default function KesehatanLingkungan() {
   const [keslingFilter, setKeslingFilter] = useState('10')
 
   const data = useMemo(() => kesling.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [kesling])
+
+  const totalSTBM = data.reduce((s, d) => s + (d.stbm_5pilar_jumlah as number || 0), 0)
 
   const chartSorted = [...data].sort((a, b) => (b[indic] as number) - (a[indic] as number))
   const chartData = keslingFilter === 'all' ? chartSorted : chartSorted.slice(0, Number(keslingFilter))
@@ -58,7 +59,7 @@ export default function KesehatanLingkungan() {
       <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
         <KPICard title="Air Minum Memenuhi Syarat" value="69.6%" sub="Rumah tangga dengan air minum yang memenuhi syarat 35%" icon="💧" color="#0F8F8B" />
         <KPICard title="Sanitasi Aman" value="6.75%" sub="Akses sanitasi layak sendiri 83.49%" icon="🚿" color="#0F8F8B" />
-        <KPICard title="Desa/Kel 5 Pilar STBM" value="25.3%" sub="Cakupan" icon="🌿" color="#0F8F8B" />
+        <KPICard title="Desa/Kel 5 Pilar STBM" value={totalSTBM.toLocaleString('id-ID')} sub="Desa/Kelurahan" icon="🌿" color="#0F8F8B" />
         <KPICard title="TFU Pengawasan Standar" value="72.7%" sub="Fasilitas Umum" icon="🏢" color="#0F8F8B" />
         <KPICard title="TPP Memenuhi Syarat" value="79.7%" sub="Pengelolaan Pangan" icon="🍽️" color="#0F8F8B" />
         <KPICard title="Kualitas Udara" value="47.3%" sub="Memenuhi Syarat" icon="💨" color="#0F8F8B" />
@@ -109,9 +110,15 @@ export default function KesehatanLingkungan() {
           <div style={{ minWidth: keslingFilter === 'all' ? 800 : '100%', height: keslingFilter === 'all' ? 800 : (keslingFilter === '20' ? 600 : 400) }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} layout="vertical" margin={{ left: 95, right: 20 }}>
-                <XAxis type="number" tick={{ fontSize: 11 }} domain={[0, 100]} />
+                <XAxis type="number" tick={{ fontSize: 11 }} domain={indic.endsWith('_pct') ? [0, 100] : ['auto', 'auto']} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} interval={0} />
-                <Tooltip formatter={(v: any) => v?.toFixed(1) + '%'} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
+                <Tooltip 
+                  formatter={(v: any) => [
+                    indic.endsWith('_pct') ? v?.toFixed(1) + '%' : v?.toLocaleString('id-ID'), 
+                    indicLabel
+                  ]} 
+                  contentStyle={{ borderRadius: 12, fontSize: 12 }} 
+                />
                 <Bar dataKey={indic} fill="#0F8F8B" radius={[0, 6, 6, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -123,7 +130,7 @@ export default function KesehatanLingkungan() {
       <StatPanel
         stats={stats}
         label={indicLabel}
-        format={v => v.toFixed(1) + '%'}
+        format={v => indic.endsWith('_pct') ? v.toFixed(1) + '%' : v.toLocaleString('id-ID')}
         rightElement={
           <select value={indic} onChange={e => setIndic(e.target.value)}
             className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[250px]">
@@ -144,17 +151,16 @@ export default function KesehatanLingkungan() {
       <RiskClusteringMap 
         title="Analisis Klasterisasi Pemetaan Risiko Kesehatan Lingkungan"
         data={data} 
-        variables={['air_minum_memenuhi_syarat_pct', 'sanitasi_aman_pct', 'kualitas_udara_ms_pct', 'babs_pct']} 
-        directions={[-1, -1, -1, 1]} 
-        variableLabels={['Air Minum MS (%)', 'Sanitasi Aman (%)', 'Kualitas Udara MS (%)', 'BABS (%)']} 
+        variables={['air_minum_memenuhi_syarat_pct', 'sanitasi_aman_pct', 'kualitas_udara_ms_pct', 'stbm_5pilar_jumlah']} 
+        directions={[-1, -1, -1, -1]} 
+        variableLabels={['Air Minum MS (%)', 'Sanitasi Aman (%)', 'Kualitas Udara MS (%)', 'STBM 5 Pilar']} 
       />
 
       <DataTable data={data} columns={[
         { key: 'kabupaten', label: 'Kabupaten/Kota' },
         { key: 'air_minum_memenuhi_syarat_pct', label: 'Air Minum (%)', format: v => v?.toFixed(1) },
         { key: 'sanitasi_aman_pct', label: 'Sanitasi Aman (%)', format: v => v?.toFixed(1) },
-        { key: 'babs_pct', label: 'BABS (%)', format: v => v?.toFixed(1) },
-        { key: 'stbm_5pilar_pct', label: 'STBM 5 Pilar (%)', format: v => v?.toFixed(1) },
+        { key: 'stbm_5pilar_jumlah', label: 'STBM 5 Pilar', format: v => v?.toLocaleString('id-ID') },
         { key: 'tfu_memenuhi_syarat_pct', label: 'TFU (%)', format: v => v?.toFixed(1) },
         { key: 'kualitas_udara_ms_pct', label: 'Kualitas Udara (%)', format: v => v?.toFixed(1) },
       ]} />

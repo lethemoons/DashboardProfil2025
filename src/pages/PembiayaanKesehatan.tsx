@@ -265,7 +265,7 @@ export default function PembiayaanKesehatan() {
           <div className="flex items-start gap-2 ml-1">
             <div className="w-1.5 h-1.5 rounded-full bg-[#0F8F8B] mt-1.5 flex-shrink-0" />
             <div className="leading-relaxed">
-              Jika kita melihat tiga tahun ke belakang, total dana kesehatan di wilayah ini sebesar <strong>{fmtRp(val25)}</strong> pada tahun 2025. Angka ini {Number(growth) > 0 ? "naik" : Number(growth) < 0 ? "turun" : "tetap sama"} sekitar <strong>{Math.abs(Number(growth))}%</strong> jika dibandingkan dengan tahun lalu (2024).
+              Melihat pergerakan tiga tahun terakhir, total anggaran kesehatan wilayah ini dialokasikan sebesar <strong>{fmtRp(val25)}</strong> pada tahun 2025. Angka ini {Number(growth) > 0 ? "mengalami kenaikan" : Number(growth) < 0 ? "mengalami penurunan" : "tetap sama"} sekitar <strong>{Math.abs(Number(growth))}%</strong> jika dibandingkan dengan tahun lalu (2024). {Number(growth) > 0 ? "Tren kenaikan ini merupakan komitmen positif pemerintah; implikasinya, masyarakat semestinya bisa menikmati fasilitas puskesmas yang lebih baik, antrean JKN yang lebih terlayani, dan program gizi anak yang lebih merata." : Number(growth) < 0 ? "Penurunan anggaran ini perlu dikelola secara hati-hati agar efisiensi biaya tidak sampai memotong anggaran prioritas yang langsung menyentuh rakyat miskin, seperti subsidi BPJS Kesehatan atau ketersediaan stok obat gratis." : "Alokasi dana yang stagnan (tetap) menuntut pemerintah daerah untuk membelanjakan anggaran dengan sangat efisien agar pelayanan RS dan Puskesmas tidak menurun kualitasnya."}
             </div>
           </div>
         </div>

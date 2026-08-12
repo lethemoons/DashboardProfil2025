@@ -177,11 +177,14 @@ const TABLE_METRIC_ALIASES: Record<string, string> = {
   '85_kk_stop_babs_sbs':             'stop_babs_kk_pct',
   '85_desa_kelurahan_5_pilar_stbm_jumlah': 'stbm_5pilar_jumlah',
 
+  // === TABLE 86: TFU ===
+  '86_480':                          'tfu_memenuhi_syarat_pct',
+
   // === TABLE 87: Tempat Pengelolaan Pangan (TPP) ===
   '87_60':                           'tpp_memenuhi_syarat_pct',
 
   // === TABLE 88: Kualitas Udara ===
-  '88_9':                            'kualitas_udara_ms_pct',
+  '88_tms_160':                      'kualitas_udara_ms_pct',
 }
 
 let dbCache4: Record<number, KabRow[]> = {}

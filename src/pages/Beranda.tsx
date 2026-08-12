@@ -179,6 +179,16 @@ export default function Beranda({ onNavigate }: BerandaProps) {
                 <FileText size={18} className="text-teal-600" />
                 <span>Lihat Dokumentasi</span>
               </button>
+
+              <a
+                href="https://dinkes.jatimprov.go.id/source/bankdata&statis&sekretariat&PPA&105__1784015649_profil-kesehatan-2025-14072026.pdf"
+                target="_blank"
+                rel="noreferrer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-semibold text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 transition-all duration-200 cursor-pointer"
+              >
+                <Download size={18} className="text-teal-600" />
+                <span>Profil Kesehatan Jatim 2025</span>
+              </a>
             </div>
 
             {/* Micro Highlights strip */}

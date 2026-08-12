@@ -7,7 +7,6 @@ import KPICard from '../components/KPICard'
 import DataTable from '../components/DataTable'
 import ChoroplethMap from '../components/ChoroplethMap'
 import RankChart from '../components/RankChart'
-import DynamicAnalysis from '../components/DynamicAnalysis'
 import InsightBox from '../components/InsightBox'
 import CrosstabSection from '../components/CrosstabSection'
 
@@ -184,8 +183,6 @@ export default function SDMKesehatan() {
         {selectedInd && <ChoroplethMap data={provData} indicatorKey={selectedInd} indicatorLabel={selectedInd.replace(/_/g, ' ').toUpperCase()} />}
       </div>
 
-      <DynamicAnalysis data={rawData} indicators={indicators} />
-
       <CrosstabSection
         data={provData}
         variables={indicators.map(ind => ({ key: ind, label: ind.replace(/_/g, ' ').toUpperCase() }))}
@@ -200,8 +197,9 @@ export default function SDMKesehatan() {
 
       {selectedInd && (
         <InsightBox>
-          Berdasarkan filter yang aktif, indikator <strong>{selectedInd.replace(/_/g, ' ')}</strong> memiliki rata-rata provinsi sebesar <strong>{Math.round(avgInd).toLocaleString('id-ID')}</strong>.
+          Berdasarkan filter yang aktif, indikator <strong>{selectedInd.replace(/_/g, ' ')}</strong> memiliki rata-rata ketersediaan provinsi sebesar <strong>{Math.round(avgInd).toLocaleString('id-ID')}</strong>.
           Ketersediaan tertinggi berada di <strong>{maxIndKab?.kabupaten}</strong> ({Number(maxIndKab?.[selectedInd] || 0).toLocaleString('id-ID')}), sedangkan ketersediaan terendah berada di <strong>{minIndKab?.kabupaten}</strong> ({Number(minIndKab?.[selectedInd] || 0).toLocaleString('id-ID')}).
+          {" "}Ketimpangan distribusi tenaga medis ini dapat berdampak fatal, seperti antrean penanganan yang terlalu panjang atau rujukan terlambat di daerah pelosok. Pemerataan distribusi tenaga kesehatan sangat penting untuk memastikan seluruh lapisan masyarakat mendapat akses pengobatan yang adil dan cepat.
         </InsightBox>
       )}
     </div>

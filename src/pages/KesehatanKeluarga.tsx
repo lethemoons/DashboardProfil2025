@@ -57,12 +57,12 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
   const minIbu = ibuData.length ? ibuData.reduce((a, b) => (a[ibuIndic] as number) < (b[ibuIndic] as number) ? a : b) : null
 
   const ibuChartInsights = maxIbu && minIbu ? [
-    `${maxIbu.kabupaten} memiliki ${ibuLabel} tertinggi (${(maxIbu[ibuIndic] as number).toFixed(1)}%).`,
+    `${maxIbu.kabupaten} mencatat capaian tertinggi untuk indikator ${ibuLabel} (${(maxIbu[ibuIndic] as number).toFixed(1)}%). Pemerataan dan kemudahan akses ke fasilitas sayang-ibu di daerah tersebut dapat dicontoh agar kejadian komplikasi kehamilan bisa dideteksi lebih dini.`,
   ] : []
 
   const ibuStatInsights = [
-    `Kematian ibu total (hamil + bersalin + nifas): ${totKematianIbu} kasus.`,
-    `Rata-rata cakupan K1: ${avgK1.toFixed(1)}%.`,
+    `Total kematian ibu (saat hamil, bersalin, maupun nifas) se-Jawa Timur mencapai ${totKematianIbu} kasus. Kematian ibu sering kali terkait dengan "Tiga Terlambat" (terlambat mengambil keputusan, terlambat sampai di faskes, dan terlambat ditangani). Optimalisasi Desa Siaga dan akses transportasi darurat menjadi kunci pencegahan.`,
+    `Rata-rata cakupan Kunjungan Pertama (K1) ibu hamil berada di angka ${avgK1.toFixed(1)}%. Tingginya K1 menandakan tingginya kesadaran ibu untuk memeriksakan kehamilannya sejak dini, yang sangat berguna untuk mendeteksi risiko komplikasi fatal seperti preeklampsia (darah tinggi saat hamil).`,
   ]
 
   const TABS = [
@@ -185,8 +185,8 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
             }
           />
           <InsightBox insights={[
-            `Rata-rata stunting: ${avgStunting.toFixed(1)}%.`,
-            `Total kematian neonatal + bayi: ${totKematianAnak} kasus di wilayah yang dipilih.`,
+            `Rata-rata prevalensi balita stunting di Jawa Timur berada pada angka ${avgStunting.toFixed(1)}%. Stunting bukan sekadar masalah fisik tubuh yang pendek, tetapi mengindikasikan gagal kembang otak yang berakibat pada rendahnya kecerdasan anak di masa depan. Intervensi gizi wajib diprioritaskan pada 1000 Hari Pertama Kehidupan (HPK).`,
+            `Kematian neonatal dan bayi yang terpantau mencapai ${totKematianAnak} kasus. Tingginya kematian pada bulan pertama kehidupan ini mayoritas dipicu oleh bayi lahir prematur atau Berat Badan Lahir Rendah (BBLR). Pemenuhan gizi ibu hamil sejak sebelum konsepsi adalah pencegahan paling efektif.`,
           ]} />
           <CrosstabSection
             data={anakData}
@@ -228,8 +228,8 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
             </ResponsiveContainer>
           </div>
           <InsightBox insights={[
-            `Total lansia dilayani: ${lansiaData.reduce((s, d) => s + (d.lansia_dilayani as number), 0).toLocaleString('id-ID')} jiwa.`,
-            `Total posyandu lansia: ${lansiaData.reduce((s, d) => s + (d.posyandu_lansia as number), 0).toLocaleString('id-ID')} unit.`,
+            `Total lansia yang berhasil mendapat pelayanan kesehatan sesuai standar mencapai ${lansiaData.reduce((s, d) => s + (d.lansia_dilayani as number), 0).toLocaleString('id-ID')} jiwa. Seiring meningkatnya usia harapan hidup, lansia sangat rentan terhadap penyakit degeneratif kronis (seperti diabetes dan stroke) yang butuh pengobatan seumur hidup.`,
+            `Ketersediaan posyandu lansia tercatat sebanyak ${lansiaData.reduce((s, d) => s + (d.posyandu_lansia as number), 0).toLocaleString('id-ID')} unit. Posyandu lansia sangat esensial sebagai sarana skrining rutin (cek tensi, cek gula darah) agar lansia tetap mandiri, aktif, dan mencegah kelumpuhan akibat penyakit penyerta.`,
           ]} />
           <CrosstabSection
             data={lansiaData}

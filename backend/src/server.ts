@@ -6,6 +6,8 @@ import { PrismaClient } from '@prisma/client'
 import multer from 'multer'
 import csv from 'csv-parser'
 import fs from 'fs'
+import path from 'path'
+import { exec } from 'child_process'
 
 const app = express()
 const prisma = new PrismaClient()
@@ -16,6 +18,17 @@ app.use(cors())
 app.use(express.json())
 
 const upload = multer({ dest: 'uploads/' })
+
+// Disk storage that preserves extension for Excel files
+const excelStorage = multer.diskStorage({
+  destination: 'uploads/',
+  filename: (_req, file, cb) => {
+    const unique = Date.now() + '-' + Math.round(Math.random() * 1e9)
+    const ext = path.extname(file.originalname) || '.xlsx'
+    cb(null, unique + ext)
+  }
+})
+const uploadExcel = multer({ storage: excelStorage })
 
 // --- Auth Middleware ---
 const authenticateAdmin = (req: any, res: any, next: any) => {
@@ -178,6 +191,71 @@ app.post('/api/admin/import', authenticateAdmin, upload.single('file'), async (r
         res.status(500).json({ error: 'Database import failed' })
       }
     })
+})
+
+app.post('/api/admin/import-excel', authenticateAdmin, uploadExcel.single('file'), async (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'No file uploaded' })
+  
+  const year = parseInt(req.body.year) || 2025
+  // Use process.cwd() which is the 'backend' dir; __dirname may be 'backend/src'
+  const excelPath = path.resolve(process.cwd(), req.file.path)
+  const csvPath = `${excelPath}.parsed.csv`
+  // Locate parse_excel.py relative to this source file (backend/src -> backend)
+  const scriptPath = path.resolve(__dirname, '..', 'parse_excel.py')
+
+  console.log(`[import-excel] scriptPath: ${scriptPath}`)
+  console.log(`[import-excel] excelPath:  ${excelPath}`)
+  console.log(`[import-excel] csvPath:    ${csvPath}`)
+
+  const cleanup = () => {
+    try { if (fs.existsSync(excelPath)) fs.unlinkSync(excelPath) } catch {}
+    try { if (fs.existsSync(csvPath)) fs.unlinkSync(csvPath) } catch {}
+  }
+
+  exec(`python "${scriptPath}" "${excelPath}" "${csvPath}"`, { timeout: 120000 }, (error, stdout, stderr) => {
+    console.log(`[import-excel] stdout: ${stdout}`)
+    if (stderr) console.warn(`[import-excel] stderr: ${stderr}`)
+
+    if (error || !fs.existsSync(csvPath)) {
+      console.error(`[import-excel] exec error:`, error)
+      cleanup()
+      return res.status(500).json({ 
+        error: 'Failed to parse Excel file',
+        detail: stderr || (error ? error.message : 'CSV output not found')
+      })
+    }
+    
+    const results: any[] = []
+    fs.createReadStream(csvPath)
+      .pipe(csv())
+      .on('data', (data) => {
+        if (data.table_no && data.kabupaten && data.metric) {
+          results.push({
+            year,
+            tableNo: parseInt(data.table_no),
+            no: data.no || '',
+            kabupaten: data.kabupaten,
+            metric: data.metric,
+            value: data.value || ''
+          })
+        }
+      })
+      .on('end', async () => {
+        try {
+          await prisma.dashboardData.deleteMany({ where: { year } })
+          await prisma.dashboardData.createMany({ data: results })
+          cleanup()
+          res.json({ success: true, count: results.length })
+        } catch (err: any) {
+          cleanup()
+          res.status(500).json({ error: 'Database import failed', detail: err.message })
+        }
+      })
+      .on('error', (err) => {
+        cleanup()
+        res.status(500).json({ error: 'Failed to read parsed CSV', detail: err.message })
+      })
+  })
 })
 
 app.get('/api/admin/export', authenticateAdmin, async (req, res) => {

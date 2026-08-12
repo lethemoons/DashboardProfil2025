@@ -9,6 +9,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const limit = 50
   const [search, setSearch] = useState('')
   const [isUploading, setIsUploading] = useState(false)
+  const [uploadingExcel, setUploadingExcel] = useState(false)
   const [importYear, setImportYear] = useState(new Date().getFullYear())
   const [showUploadForm, setShowUploadForm] = useState(false)
   
@@ -60,20 +61,27 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     const file = e.target.files?.[0]
     if (!file) return
     setIsUploading(true)
+    const isExcel = file.name.endsWith('.xlsx')
+    setUploadingExcel(isExcel)
     const formData = new FormData()
     formData.append('file', file)
     formData.append('year', importYear.toString())
     
     try {
-      await api.post('/admin/import', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+      const endpoint = file.name.endsWith('.xlsx') ? '/admin/import-excel' : '/admin/import';
+      const timeoutMs = file.name.endsWith('.xlsx') ? 120000 : 30000;
+      await api.post(endpoint, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        timeout: timeoutMs,
       })
       alert('Import successful')
       refetch()
     } catch (err: any) {
-      alert(err.response?.data?.error || 'Import failed')
+      const detail = err.response?.data?.detail || err.response?.data?.error || err.message || 'Import failed'
+      alert(`Import gagal: ${detail}`)
     } finally {
       setIsUploading(false)
+      setUploadingExcel(false)
       if (fileInput.current) fileInput.current.value = ''
       await refreshYears()
       setShowUploadForm(false)
@@ -96,7 +104,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
           </button>
         ) : (
           <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 p-1.5 rounded-xl shadow-sm">
-            <input type="file" accept=".csv" ref={fileInput} className="hidden" onChange={handleImport} />
+            <input type="file" accept=".csv, .xlsx" ref={fileInput} className="hidden" onChange={handleImport} />
             <div className="flex items-center gap-1.5 px-2 text-sm text-gray-600 font-medium">
               Tahun:
               <input
@@ -113,7 +121,9 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
               className="px-3 py-1.5 bg-[#0F8F8B] hover:bg-[#0da09a] text-white rounded text-sm font-medium disabled:opacity-50 transition-colors"
               title={`Akan menimpa (overwrite) data tahun ${importYear}`}
             >
-              {isUploading ? 'Mengunggah...' : 'Pilih & Unggah File'}
+              {isUploading 
+                ? (uploadingExcel ? 'Memproses Excel... (30-60 detik)' : 'Mengunggah...')
+                : 'Pilih & Unggah File'}
             </button>
             <button 
               onClick={() => setShowUploadForm(false)}

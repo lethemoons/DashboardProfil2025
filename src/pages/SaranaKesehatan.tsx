@@ -125,9 +125,9 @@ export default function SaranaKesehatan() {
     const pctMax = totalFaskes > 0 ? ((max.value / totalFaskes) * 100).toFixed(1) : 0
 
     return [
-      `Total fasilitas pada kategori ${kategori}: ${totalFaskes.toLocaleString('id-ID')} unit.`,
-      `Fasilitas dengan jumlah terbanyak: ${max.name} (${max.value.toLocaleString('id-ID')} unit), memberikan kontribusi sebesar ${pctMax}% terhadap total kategori.`,
-      `Fasilitas dengan jumlah paling sedikit: ${min.name} (${min.value.toLocaleString('id-ID')} unit).`
+      `Total fasilitas kesehatan yang tercatat pada kategori ${kategori} se-Jawa Timur berjumlah ${totalFaskes.toLocaleString('id-ID')} unit.`,
+      `${max.name} mendominasi dengan jumlah terbanyak, yaitu ${max.value.toLocaleString('id-ID')} unit (berkontribusi sebesar ${pctMax}%). Fasilitas ini berperan sebagai garda terdepan layanan pada kategorinya, sehingga ketersediaan alat, obat, dan mutunya harus dijaga secara konsisten.`,
+      `Sebaliknya, ${min.name} tercatat paling minim dengan jumlah ${min.value.toLocaleString('id-ID')} unit. Angka ini perlu dievaluasi lebih lanjut: apakah jumlah tersebut sudah memadai untuk populasi yang ada, atau justru masyarakat kesulitan mendapat akses sehingga butuh pembangunan fasilitas tambahan.`
     ]
   }, [chartDataRaw, kategori, totalFaskes])
 

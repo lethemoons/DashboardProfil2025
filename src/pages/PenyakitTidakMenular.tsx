@@ -52,10 +52,14 @@ export default function PenyakitTidakMenular() {
     perempuan: d.hipertensi_perempuan,
   }))
 
+  const hipertensiGenderInsights = [
+    `Grafik di atas membandingkan penderita hipertensi laki-laki dan perempuan. Perbedaan angka ini dapat didorong oleh faktor risiko gaya hidup seperti kebiasaan merokok (umumnya tinggi pada pria) atau faktor stres dan hormonal (pada wanita). Promosi kesehatan terkait cek tekanan darah rutin perlu ditargetkan secara spesifik sesuai profil gender tertinggi di masing-masing wilayah.`,
+  ]
+
   const ptmInsights = [
-    `Total hipertensi (L+P): ${totHipertensi.toLocaleString('id-ID')} kasus.`,
-    `Total DM terdiagnosis: ${totDM.toLocaleString('id-ID')} | DM terkendali: ${avgDMTerkendali.toFixed(1)}% rata-rata.`,
-    `Total skizofrenia: ${totSkizo.toLocaleString('id-ID')} kasus.`,
+    `Total kasus hipertensi (Laki-laki & Perempuan) mencapai ${totHipertensi.toLocaleString('id-ID')}. Tingginya angka ini mengindikasikan perlunya edukasi gaya hidup sehat dan pembatasan konsumsi garam di masyarakat untuk mencegah penyakit fatal seperti stroke atau serangan jantung.`,
+    `Terdapat ${totDM.toLocaleString('id-ID')} kasus Diabetes Melitus yang terdiagnosis, dengan rata-rata keberhasilan pengendalian sebesar ${avgDMTerkendali.toFixed(1)}%. Pengendalian DM sangat krusial untuk mencegah komplikasi mematikan seperti gagal ginjal atau kebutaan.`,
+    `Total penderita skizofrenia tercatat sebanyak ${totSkizo.toLocaleString('id-ID')} orang. Fakta ini menegaskan pentingnya akses layanan kesehatan jiwa dan dukungan sosial demi mencegah diskriminasi serta memastikan mereka mendapatkan perawatan berkelanjutan.`,
   ]
 
   if (loading) return <div className="p-8 text-center text-gray-500">Loading data...</div>
@@ -124,6 +128,7 @@ export default function PenyakitTidakMenular() {
           </div>
         </div>
       </div>
+      <InsightBox insights={hipertensiGenderInsights} />
 
       <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
         <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
