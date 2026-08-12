@@ -1,5 +1,4 @@
 import { useState, useMemo } from 'react'
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import { useSdmData } from '../hooks/useSdmData'
 import { descStats } from '../utils/stats'
 import StatPanel from '../components/StatPanel'
@@ -148,19 +147,13 @@ export default function SDMKesehatan() {
           </div>
         </div>
         {selectedInd && rankData.length > 0 && (
-          <div className="w-full h-[400px] overflow-y-auto pr-2">
-            <ResponsiveContainer width="100%" height={Math.max(400, rankData.length * 40)}>
-              <BarChart data={rankData} layout="vertical" margin={{ left: 100, right: 20 }}>
-                <XAxis type="number" tick={{ fontSize: 11 }} />
-                <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={98} interval={0} />
-                <Tooltip
-                  formatter={(v: any) => v.toLocaleString('id-ID')}
-                  labelFormatter={(l) => `Kabupaten ${l}`}
-                  contentStyle={{ borderRadius: 12, fontSize: 12 }}
-                />
-                <Bar dataKey="value" name={selectedInd.replace(/_/g, ' ').toUpperCase()} radius={[0, 6, 6, 0]} fill="#0F8F8B" />
-              </BarChart>
-            </ResponsiveContainer>
+          <div className="mt-4">
+            <RankChart 
+              data={provData} 
+              indicators={indicators.map(ind => ({ key: ind, label: ind.replace(/_/g, ' ').toUpperCase(), isPercentage: false }))} 
+              defaultIndicator={selectedInd}
+              title=""
+            />
           </div>
         )}
       </div>

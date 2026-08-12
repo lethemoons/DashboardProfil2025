@@ -3,8 +3,9 @@ import ChoroplethMap from '../components/ChoroplethMap';
 import RiskClusteringMap from '../components/RiskClusteringMap';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  CartesianGrid, Cell, Legend, ScatterChart, Scatter
+  CartesianGrid, Cell, Legend, ScatterChart, Scatter, ReferenceLine
 } from 'recharts'
+import { evaluateTarget, TARGETS } from '../utils/targets'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
 import FilterBar from '../components/FilterBar'
@@ -180,9 +181,9 @@ export default function KesehatanAnak() {
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         <KPICard title="Kematian Neonatal" value="3.159" sub="Kasus" icon="💔" color="#ef4444" />
         <KPICard title="Kematian Bayi" value="3.695" sub="Kasus" icon="👶" color="#f97316" />
-        <KPICard title="Balita Gizi Kurang" value="4,7%" icon="📏" color="#0F8F8B" />
-        <KPICard title="Balita Gizi Buruk" value="0,6%" icon="⚠️" color="#f97316" />
-        <KPICard title="Imunisasi Bayi Lengkap" value="84,8%" icon="💉" color="#0F8F8B" />
+        <KPICard title="Balita Gizi Kurang" value="4,7%" icon="📏" color="#0F8F8B" targetData={evaluateTarget(4.7, 'underweight_pct')} />
+        <KPICard title="Balita Gizi Buruk" value="0,6%" icon="⚠️" color="#f97316" targetData={evaluateTarget(0.6, 'wasting_pct')} />
+        <KPICard title="Imunisasi Bayi Lengkap" value="84,8%" icon="💉" color="#0F8F8B" targetData={evaluateTarget(84.8, 'idl_pct')} />
       </div>
 
       {/* CHOROPLETH MAP SECTION */}
@@ -263,6 +264,36 @@ export default function KesehatanAnak() {
             <XAxis type="number" tick={{ fontSize: 11 }} domain={[0, 100]} />
             <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
             <Tooltip formatter={(v: any) => v?.toFixed(1) + '%'} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
+            {TARGETS[indic] && (
+              <ReferenceLine 
+                x={TARGETS[indic].target_value} 
+                stroke={TARGETS[indic].target_direction === '>=' || TARGETS[indic].target_direction === '>' ? '#0F8F8B' : '#ef4444'}
+                strokeDasharray="3 3"
+                strokeWidth={2}
+                label={{
+                  position: 'insideTopRight',
+                  value: `${['<=', '<'].includes(TARGETS[indic].target_direction) ? 'Batas Maksimum' : 'Target Minimum'}: ${TARGETS[indic].target_value}${TARGETS[indic].isPercentage ? '%' : ''}`,
+                  fill: '#4B5563',
+                  fontSize: 11,
+                  fontWeight: 600
+                }}
+              />
+            )}
+            {indic === 'imunisasi_dasar_lengkap_pct' && TARGETS['idl_pct'] && (
+              <ReferenceLine 
+                x={TARGETS['idl_pct'].target_value} 
+                stroke={TARGETS['idl_pct'].target_direction === '>=' || TARGETS['idl_pct'].target_direction === '>' ? '#0F8F8B' : '#ef4444'}
+                strokeDasharray="3 3"
+                strokeWidth={2}
+                label={{
+                  position: 'insideTopRight',
+                  value: `${['<=', '<'].includes(TARGETS['idl_pct'].target_direction) ? 'Batas Maksimum' : 'Target Minimum'}: ${TARGETS['idl_pct'].target_value}${TARGETS['idl_pct'].isPercentage ? '%' : ''}`,
+                  fill: '#4B5563',
+                  fontSize: 11,
+                  fontWeight: 600
+                }}
+              />
+            )}
             <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]} fill="#0F8F8B" />
           </BarChart>
         </ResponsiveContainer>

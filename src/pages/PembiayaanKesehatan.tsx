@@ -6,6 +6,7 @@ import {
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
 import { KABUPATEN_LIST } from '../data/kabupaten'
+import { evaluateTarget } from '../utils/targets'
 import FilterBar from '../components/FilterBar'
 import KPICard from '../components/KPICard'
 import InsightBox from '../components/InsightBox'
@@ -95,6 +96,23 @@ export default function PembiayaanKesehatan() {
           <div className="text-sm font-medium px-3 py-1 bg-teal-50 text-teal-700 rounded-full">
             78,8% dari total populasi
           </div>
+          {(() => {
+            const jknEval = evaluateTarget(78.8, 'jkn_cakupan_pct');
+            if (!jknEval) return null;
+            return (
+              <div className={`mt-3 flex flex-col gap-1 w-full text-left p-3 rounded-lg border ${jknEval.status === 'tercapai' ? 'border-[#0F8F8B]/20 bg-[#0F8F8B]/5' : 'border-[#ef4444]/20 bg-[#ef4444]/5'}`}>
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Target: {jknEval.targetLabel}</span>
+                  <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${jknEval.status === 'tercapai' ? 'bg-[#0F8F8B]/10 text-[#0F8F8B]' : 'bg-[#ef4444]/10 text-[#ef4444]'}`}>
+                    {jknEval.status === 'tercapai' ? 'Tercapai' : 'Belum Tercapai'}
+                  </span>
+                </div>
+                <div className="text-xs font-medium text-gray-600 mt-1">
+                  {jknEval.text}
+                </div>
+              </div>
+            );
+          })()}
           <p className="text-xs text-gray-500 mt-4 leading-relaxed">
             Jumlah penduduk Provinsi Jawa Timur yang telah terlindungi program Jaminan Kesehatan Nasional.
           </p>

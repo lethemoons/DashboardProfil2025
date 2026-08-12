@@ -3,8 +3,9 @@ import ChoroplethMap from '../components/ChoroplethMap';
 import RiskClusteringMap from '../components/RiskClusteringMap';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  CartesianGrid, Legend, ScatterChart, Scatter
+  CartesianGrid, Legend, ScatterChart, Scatter, ReferenceLine
 } from 'recharts'
+import { evaluateTarget, TARGETS } from '../utils/targets'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
 import KPICard from '../components/KPICard'
@@ -251,9 +252,9 @@ export default function PenyakitMenular() {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <KPICard title="Kasus TBC" value={totTBC.toLocaleString('id-ID')} sub="Semua Tipe" icon="🫁" color="#ef4444" />
-        <KPICard title="Sukses Pengobatan TBC" value="88.26%" sub="Rata-rata" icon="✅" color="#0F8F8B" />
+        <KPICard title="Sukses Pengobatan TBC" value="88.26%" sub="Rata-rata" icon="✅" color="#0F8F8B" targetData={evaluateTarget(88.26, 'tbc_tsr_pct')} />
         <KPICard title="Hepatitis Bumil Reaktif" value="1.6%" sub="7.186 orang" icon="🩸" color="#eab308" />
-        <KPICard title="ODHIV Mendapat ARV" value="75%" sub="7.969 orang" icon="💊" color="#a855f7" />
+        <KPICard title="ODHIV Mendapat ARV" value="75%" sub="7.969 orang" icon="💊" color="#a855f7" targetData={evaluateTarget(75, 'odhiv_arv_pct')} />
         
         <KPICard title="ODHIV Baru" value={totODHIV.toLocaleString('id-ID')} sub="Ditemukan" icon="🔴" color="#8b5cf6" />
         <KPICard title="Kasus Baru Kusta" value="2.225 Kasus" sub="Prevalensi 0.6 per 10.000 penduduk" icon="🦠" color="#14b8a6" />
@@ -342,6 +343,24 @@ export default function PenyakitMenular() {
                 <XAxis type="number" tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 10 }} width={100} interval={0} />
                 <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12, border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} cursor={{ fill: '#f9fafb' }} />
+                {(TARGETS[indic] || (indic === 'tbc_sukses_pct' ? TARGETS['tbc_tsr_pct'] : indic === 'arv_pct' ? TARGETS['odhiv_arv_pct'] : null)) && (() => {
+                  const tgt = TARGETS[indic] || (indic === 'tbc_sukses_pct' ? TARGETS['tbc_tsr_pct'] : indic === 'arv_pct' ? TARGETS['odhiv_arv_pct'] : null);
+                  return (
+                    <ReferenceLine 
+                      x={tgt.target_value} 
+                      stroke={tgt.target_direction === '>=' || tgt.target_direction === '>' ? '#0F8F8B' : '#ef4444'}
+                      strokeDasharray="3 3"
+                      strokeWidth={2}
+                      label={{
+                        position: 'insideTopRight',
+                        value: `${['<=', '<'].includes(tgt.target_direction) ? 'Batas Maksimum' : 'Target Minimum'}: ${tgt.target_value}${tgt.isPercentage ? '%' : ''}`,
+                        fill: '#4B5563',
+                        fontSize: 11,
+                        fontWeight: 600
+                      }}
+                    />
+                  )
+                })()}
                 <Bar dataKey={indic} name={indicLabel} fill="#0F8F8B" radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>

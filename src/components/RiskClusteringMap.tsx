@@ -112,31 +112,29 @@ export default function RiskClusteringMap({ title, data, variables, directions, 
 
   const getNarrative = (profile: any) => {
     const stds = profile.standardizedCentroid;
-    let maxIdx = 0;
-    let maxAbs = -1;
-    for (let i = 0; i < stds.length; i++) {
-      if (Math.abs(stds[i]) > maxAbs) {
-        maxAbs = Math.abs(stds[i]);
-        maxIdx = i;
-      }
-    }
+    const features = stds.map((val: number, idx: number) => ({ val, label: variableLabels[idx].toLowerCase() }));
     
-    const maxVal = stds[maxIdx];
-    const maxLabel = variableLabels[maxIdx];
+    // threshold at 0.25 standard deviations
+    const highFeatures = features.filter((f: any) => f.val > 0.25).map((f: any) => f.label);
+    const lowFeatures = features.filter((f: any) => f.val < -0.25).map((f: any) => f.label);
 
-    const baseText = {
-      'Rendah': 'Cluster ini menunjukkan wilayah dengan profil indikator yang secara umum relatif lebih baik dibandingkan cluster lainnya. Nilai indikator yang digunakan dalam pemetaan risiko cenderung berada pada tingkat yang lebih menguntungkan.',
-      'Sedang': 'Cluster ini menunjukkan wilayah dengan kondisi indikator yang berada pada tingkat menengah. Karakteristik wilayah pada cluster ini berada di antara kelompok risiko rendah dan risiko tinggi.',
-      'Tinggi': 'Cluster ini menunjukkan wilayah dengan profil indikator yang relatif lebih rentan dibandingkan cluster lainnya. Beberapa indikator utama menunjukkan kondisi yang perlu mendapatkan perhatian lebih.'
+    let text = {
+      'Rendah': 'Cluster ini merupakan kelompok wilayah dengan profil risiko kesehatan paling minimal. ',
+      'Sedang': 'Cluster ini mencerminkan wilayah dengan profil risiko kesehatan pada tingkat menengah. ',
+      'Tinggi': 'Cluster ini mewakili wilayah dengan tingkat kerentanan tertinggi, yang sangat membutuhkan prioritas intervensi. '
     }[profile.riskLevel as 'Rendah' | 'Sedang' | 'Tinggi'];
 
-    let specText = '';
-    if (maxAbs > 0.3) {
-      const isHigh = maxVal > 0;
-      specText = ` Karakteristik utama dari cluster ini sangat dipengaruhi oleh tingkat ${maxLabel} yang relatif lebih ${isHigh ? 'tinggi' : 'rendah'} dibandingkan rata-rata wilayah lain.`;
+    if (highFeatures.length > 0 && lowFeatures.length > 0) {
+      text += `Karakteristik utama cluster ini ditandai oleh tingginya angka ${highFeatures.join(', ')}, namun di sisi lain memiliki capaian ${lowFeatures.join(', ')} yang relatif lebih rendah dibandingkan rata-rata provinsi.`;
+    } else if (highFeatures.length > 0) {
+      text += `Secara spesifik, wilayah dalam kelompok ini sangat dipengaruhi oleh tingginya angka ${highFeatures.join(' serta ')} secara signifikan di atas rata-rata keseluruhan.`;
+    } else if (lowFeatures.length > 0) {
+      text += `Ciri khas utama kelompok ini adalah rendahnya angka pada ${lowFeatures.join(' dan ')} bila dibandingkan dengan rata-rata wilayah lainnya.`;
+    } else {
+      text += 'Secara umum, seluruh indikator pemetaan pada cluster ini berada pada tingkat rata-rata provinsi tanpa adanya deviasi ekstrem pada variabel tertentu.';
     }
 
-    return baseText + specText;
+    return text;
   };
 
   return (

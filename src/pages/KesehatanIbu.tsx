@@ -3,9 +3,10 @@ import ChoroplethMap from '../components/ChoroplethMap';
 import RiskClusteringMap from '../components/RiskClusteringMap';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  CartesianGrid, Cell, Legend, ScatterChart, Scatter
+  CartesianGrid, Cell, Legend, ScatterChart, Scatter, ReferenceLine
 } from 'recharts'
 import { useDashboardData } from '../hooks/useDashboardData'
+import { evaluateTarget, TARGETS } from '../utils/targets'
 import { descStats, pearsonR } from '../utils/stats'
 import FilterBar from '../components/FilterBar'
 import KPICard from '../components/KPICard'
@@ -192,8 +193,8 @@ export default function KesehatanIbu() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <KPICard title="Total Kematian Ibu" value={totKematianIbu} sub="Hamil + Bersalin + Nifas" icon="❤️" color="#ef4444" />
         <KPICard title="Persentase K1" value={avgK1.toFixed(1) + '%'} sub="Cakupan Kunjungan Pertama" icon="🤰" color="#0F8F8B" />
-        <KPICard title="Persentase K6" value={avgK6.toFixed(1) + '%'} sub="Kunjungan Lengkap" icon="📋" color="#078FA5" />
-        <KPICard title="Persentase Persalinan di Fasyankes" value="80,2%" sub="Rata-rata" icon="🏥" color="#9EAF24" />
+        <KPICard title="Persentase K6" value={avgK6.toFixed(1) + '%'} sub="Kunjungan Lengkap" icon="📋" color="#078FA5" targetData={evaluateTarget(avgK6, 'k6_pct')} />
+        <KPICard title="Persentase Persalinan di Fasyankes" value={avgFasyankes.toFixed(1) + '%'} sub="Rata-rata" icon="🏥" color="#9EAF24" targetData={evaluateTarget(avgFasyankes, 'pf_pct')} />
       </div>
 
       {/* CHOROPLETH MAP SECTION */}
@@ -288,6 +289,21 @@ export default function KesehatanIbu() {
             <XAxis type="number" tick={{ fontSize: 11 }} domain={[0, 100]} />
             <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} interval={0} />
             <Tooltip content={<CustomTooltip />} />
+            {TARGETS[indic] && (
+              <ReferenceLine 
+                x={TARGETS[indic].target_value} 
+                stroke={TARGETS[indic].target_direction === '>=' || TARGETS[indic].target_direction === '>' ? '#0F8F8B' : '#ef4444'}
+                strokeDasharray="3 3"
+                strokeWidth={2}
+                label={{
+                  position: 'insideTopRight',
+                  value: `${['<=', '<'].includes(TARGETS[indic].target_direction) ? 'Batas Maksimum' : 'Target Minimum'}: ${TARGETS[indic].target_value}${TARGETS[indic].isPercentage ? '%' : ''}`,
+                  fill: '#4B5563',
+                  fontSize: 11,
+                  fontWeight: 600
+                }}
+              />
+            )}
             <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]} fill="#0F8F8B" />
           </BarChart>
         </ResponsiveContainer>

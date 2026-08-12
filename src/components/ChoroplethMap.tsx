@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { geoMercator, geoPath } from 'd3-geo';
 import { scaleLinear } from 'd3-scale';
 import jatimGeo from '../data/jatim-geo.json';
+import { evaluateTarget, TARGETS } from '../utils/targets';
 
 const getKabupatenName = (properties: any, id: string) => {
   let mapName = (properties.kabkot || '');
@@ -19,7 +20,7 @@ interface ChoroplethMapProps {
 const colorRange = ['#F0FAF9', '#B2EBF2', '#0F8F8B', '#095c5a', '#032625'];
 
 export default function ChoroplethMap({ data, indicatorKey, indicatorLabel }: ChoroplethMapProps) {
-  const [tooltip, setTooltip] = useState<{ text: string, x: number, y: number } | null>(null);
+  const [tooltip, setTooltip] = useState<{ text: string, x: number, y: number, value?: number } | null>(null);
   const [hoveredKab, setHoveredKab] = useState<string | null>(null);
 
   // Compute map data and color scale
@@ -72,15 +73,29 @@ export default function ChoroplethMap({ data, indicatorKey, indicatorLabel }: Ch
     <div className="flex flex-col gap-5">
       <div className="relative w-full h-[500px] bg-white rounded-xl overflow-hidden flex flex-col md:flex-row border border-gray-100 shadow-sm relative">
 
-        {/* Tooltip */}
         {tooltip && (
           <div
-            className="absolute z-10 bg-white p-3 rounded-lg shadow-lg border border-gray-100 pointer-events-none transform -translate-x-1/2 -translate-y-[120%]"
+            className="absolute z-10 bg-white p-3 rounded-xl shadow-lg border border-gray-100 pointer-events-none transform -translate-x-1/2 -translate-y-[120%] min-w-[180px]"
             style={{ left: tooltip.x, top: tooltip.y }}
           >
-            <div className="text-xs font-semibold text-gray-800 mb-1">{tooltip.text.split('|')[0]}</div>
+            <div className="text-sm font-bold text-gray-800 mb-1">{tooltip.text}</div>
             <div className="text-xs text-gray-500">{indicatorLabel}</div>
-            <div className="text-sm font-bold text-[#0F8F8B] mt-1">{tooltip.text.split('|')[1]}</div>
+            <div className="text-sm font-bold text-[#0F8F8B] mt-1">{tooltip.value?.toLocaleString('id-ID', { maximumFractionDigits: 1 })}</div>
+            
+            {TARGETS[indicatorKey] && tooltip.value !== undefined && (() => {
+              const evalRes = evaluateTarget(tooltip.value, indicatorKey);
+              if (!evalRes) return null;
+              return (
+                <div className={`mt-2 pt-2 border-t flex flex-col gap-1 ${evalRes.status === 'tercapai' ? 'border-[#0F8F8B]/20' : 'border-[#ef4444]/20'}`}>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Target</span>
+                    <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${evalRes.status === 'tercapai' ? 'bg-[#0F8F8B]/10 text-[#0F8F8B]' : 'bg-[#ef4444]/10 text-[#ef4444]'}`}>
+                      {evalRes.status === 'tercapai' ? 'Tercapai' : 'Belum Tercapai'}
+                    </span>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         )}
 
@@ -106,7 +121,8 @@ export default function ChoroplethMap({ data, indicatorKey, indicatorLabel }: Ch
                     const rect = e.currentTarget.closest('svg')?.getBoundingClientRect();
                     if (rect) {
                       setTooltip({
-                        text: `${kabName}|${val.toLocaleString('id-ID', { maximumFractionDigits: 1 })}`,
+                        text: kabName,
+                        value: val,
                         x: e.clientX - rect.left,
                         y: e.clientY - rect.top
                       });
@@ -159,6 +175,15 @@ export default function ChoroplethMap({ data, indicatorKey, indicatorLabel }: Ch
           <div className="leading-relaxed">
             Berdasarkan pemetaan di Jawa Timur untuk indikator <strong>{indicatorLabel}</strong>, nilai tertinggi berada di <strong>{highKab}</strong> ({max.toLocaleString('id-ID', { maximumFractionDigits: 1 })}) dan terendah di <strong>{lowKab}</strong> ({min.toLocaleString('id-ID', { maximumFractionDigits: 1 })}).
             Rata-rata provinsi adalah <strong>{avg.toLocaleString('id-ID', { maximumFractionDigits: 1 })}</strong>. Terdapat <strong>{countAbove}</strong> kabupaten/kota yang berada di atas rata-rata provinsi.
+            {TARGETS[indicatorKey] && (() => {
+              const targetConfig = TARGETS[indicatorKey];
+              const tercapaiCount = Object.values(mapData).filter(val => evaluateTarget(val, indicatorKey)?.status === 'tercapai').length;
+              return (
+                <span className="block mt-2 font-medium text-gray-800 border-t border-[#CCEEED] pt-2">
+                  Mengacu pada target {['<=', '<'].includes(targetConfig.target_direction) ? 'maksimum' : 'minimum'} ({targetConfig.target_value}{targetConfig.isPercentage ? '%' : ''}), sebanyak <strong>{tercapaiCount} dari {count} wilayah</strong> telah mencapai target yang ditetapkan.
+                </span>
+              );
+            })()}
           </div>
         </div>
       </div>

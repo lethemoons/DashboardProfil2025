@@ -3,8 +3,9 @@ import ChoroplethMap from '../components/ChoroplethMap';
 import RiskClusteringMap from '../components/RiskClusteringMap';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  CartesianGrid, Legend, Cell, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis
+  CartesianGrid, Legend, Cell, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ReferenceLine
 } from 'recharts'
+import { evaluateTarget, TARGETS } from '../utils/targets'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
 import FilterBar from '../components/FilterBar'
@@ -57,11 +58,11 @@ export default function KesehatanLingkungan() {
 
 
       <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
-        <KPICard title="Air Minum Memenuhi Syarat" value="69.6%" sub="Rumah tangga dengan air minum yang memenuhi syarat 35%" icon="💧" color="#0F8F8B" />
+        <KPICard title="Air Minum Memenuhi Syarat" value="69.6%" sub="Rumah tangga dengan air minum yang memenuhi syarat 35%" icon="💧" color="#0F8F8B" targetData={evaluateTarget(69.6, 'sam_memenuhi_syarat_pct')} />
         <KPICard title="Sanitasi Aman" value="6.75%" sub="Akses sanitasi layak sendiri 83.49%" icon="🚿" color="#0F8F8B" />
         <KPICard title="Desa/Kel 5 Pilar STBM" value={totalSTBM.toLocaleString('id-ID')} sub="Desa/Kelurahan" icon="🌿" color="#0F8F8B" />
-        <KPICard title="TFU Pengawasan Standar" value="72.7%" sub="Fasilitas Umum" icon="🏢" color="#0F8F8B" />
-        <KPICard title="TPP Memenuhi Syarat" value="79.7%" sub="Pengelolaan Pangan" icon="🍽️" color="#0F8F8B" />
+        <KPICard title="TFU Pengawasan Standar" value="72.7%" sub="Fasilitas Umum" icon="🏢" color="#0F8F8B" targetData={evaluateTarget(72.7, 'tfu_memenuhi_syarat_pct')} />
+        <KPICard title="TPP Memenuhi Syarat" value="79.7%" sub="Pengelolaan Pangan" icon="🍽️" color="#0F8F8B" targetData={evaluateTarget(79.7, 'tpp_memenuhi_syarat_pct')} />
         <KPICard title="Kualitas Udara" value="47.3%" sub="Memenuhi Syarat" icon="💨" color="#0F8F8B" />
       </div>
 
@@ -119,6 +120,24 @@ export default function KesehatanLingkungan() {
                   ]} 
                   contentStyle={{ borderRadius: 12, fontSize: 12 }} 
                 />
+                {(TARGETS[indic] || (indic === 'air_minum_memenuhi_syarat_pct' ? TARGETS['sam_memenuhi_syarat_pct'] : null)) && (() => {
+                  const tgt = TARGETS[indic] || (indic === 'air_minum_memenuhi_syarat_pct' ? TARGETS['sam_memenuhi_syarat_pct'] : null);
+                  return (
+                    <ReferenceLine 
+                      x={tgt.target_value} 
+                      stroke={tgt.target_direction === '>=' || tgt.target_direction === '>' ? '#0F8F8B' : '#ef4444'}
+                      strokeDasharray="3 3"
+                      strokeWidth={2}
+                      label={{
+                        position: 'insideTopRight',
+                        value: `${['<=', '<'].includes(tgt.target_direction) ? 'Batas Maksimum' : 'Target Minimum'}: ${tgt.target_value}${tgt.isPercentage ? '%' : ''}`,
+                        fill: '#4B5563',
+                        fontSize: 11,
+                        fontWeight: 600
+                      }}
+                    />
+                  )
+                })()}
                 <Bar dataKey={indic} fill="#0F8F8B" radius={[0, 6, 6, 0]} />
               </BarChart>
             </ResponsiveContainer>

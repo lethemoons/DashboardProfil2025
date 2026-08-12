@@ -3,8 +3,9 @@ import ChoroplethMap from '../components/ChoroplethMap';
 import RiskClusteringMap from '../components/RiskClusteringMap';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  CartesianGrid, Cell, Legend
+  CartesianGrid, Cell, Legend, ReferenceLine
 } from 'recharts'
+import { evaluateTarget, TARGETS } from '../utils/targets'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats } from '../utils/stats'
 import KPICard from '../components/KPICard'
@@ -68,13 +69,13 @@ export default function PenyakitTidakMenular() {
   return (
     <div className="flex flex-col gap-5">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <KPICard title="Kasus Hipertensi" value={totHipertensi.toLocaleString('id-ID')} sub="Penderita mendapat pelayanan 96.5%" icon="❤️" color="#0F8F8B" />
+        <KPICard title="Kasus Hipertensi" value={totHipertensi.toLocaleString('id-ID')} sub="Penderita mendapat pelayanan 96.5%" icon="❤️" color="#0F8F8B" targetData={evaluateTarget(96.5, 'hipertensi_pelayanan_pct')} />
         <KPICard title="Diabetes Melitus" value={totDM.toLocaleString('id-ID')} sub="Terdiagnosis" icon="🩸" color="#0F8F8B" />
         <KPICard title="DM Terkendali" value="342.113" sub="Persentase 37.7%" icon="✅" color="#0F8F8B" />
-        <KPICard title="HPV+ & IVA+" value="96.4%" sub="Persentase Skrining" icon="🔬" color="#0F8F8B" />
+        <KPICard title="HPV+ & IVA+" value="96.4%" sub="Persentase Skrining" icon="🔬" color="#0F8F8B" targetData={evaluateTarget(96.4, 'skrining_kanker_rahim_pct')} />
         <KPICard title="SADANIS (30-69 Thn)" value="28.2%" sub="Skrining Payudara" icon="🎗️" color="#0F8F8B" />
         <KPICard title="USG Payudara (30-69 Thn)" value="0.1%" sub="Skrining Payudara" icon="🩺" color="#0F8F8B" />
-        <KPICard title="Pelayanan Jiwa Berat" value="93.1%" sub="Persentase Pelayanan" icon="🧠" color="#0F8F8B" />
+        <KPICard title="Pelayanan Jiwa Berat" value="93.1%" sub="Persentase Pelayanan" icon="🧠" color="#0F8F8B" targetData={evaluateTarget(93.1, 'odgj_pelayanan_pct')} />
       </div>
 
       {/* CHOROPLETH MAP SECTION */}
@@ -154,6 +155,21 @@ export default function PenyakitTidakMenular() {
                 <XAxis type="number" tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 10 }} width={100} interval={0} />
                 <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12, border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} cursor={{ fill: '#f9fafb' }} />
+                {TARGETS[ptmIndic] && (
+                  <ReferenceLine 
+                    x={TARGETS[ptmIndic].target_value} 
+                    stroke={TARGETS[ptmIndic].target_direction === '>=' || TARGETS[ptmIndic].target_direction === '>' ? '#0F8F8B' : '#ef4444'}
+                    strokeDasharray="3 3"
+                    strokeWidth={2}
+                    label={{
+                      position: 'insideTopRight',
+                      value: `${['<=', '<'].includes(TARGETS[ptmIndic].target_direction) ? 'Batas Maksimum' : 'Target Minimum'}: ${TARGETS[ptmIndic].target_value}${TARGETS[ptmIndic].isPercentage ? '%' : ''}`,
+                      fill: '#4B5563',
+                      fontSize: 11,
+                      fontWeight: 600
+                    }}
+                  />
+                )}
                 <Bar dataKey={ptmIndic} name={ptmLabel} fill="#0F8F8B" radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>

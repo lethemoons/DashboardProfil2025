@@ -3,8 +3,9 @@ import ChoroplethMap from '../components/ChoroplethMap';
 import RiskClusteringMap from '../components/RiskClusteringMap';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  CartesianGrid, Cell, Legend, ScatterChart, Scatter, ComposedChart, Line
+  CartesianGrid, Cell, Legend, ScatterChart, Scatter, ComposedChart, Line, ReferenceLine
 } from 'recharts'
+import { evaluateTarget, TARGETS } from '../utils/targets'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
 import FilterBar from '../components/FilterBar'
@@ -92,7 +93,7 @@ export default function TularVektor() {
 
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
         <KPICard title="Kasus DBD" value={totDBD.toLocaleString('id-ID')} sub="Demam Berdarah Dengue" icon="🦟" color="#0F8F8B" />
-        <KPICard title="CFR DBD Rata-rata" value="0.62%" sub="Case Fatality Rate" icon="📊" color="#0F8F8B" />
+        <KPICard title="CFR DBD Rata-rata" value="0.62%" sub="Case Fatality Rate" icon="📊" color="#0F8F8B" targetData={evaluateTarget(0.62, 'dbd_cfr')} />
         <KPICard title="Malaria Positif" value={totMalaria.toLocaleString('id-ID')} sub="Pengobatan standar 96.3%" icon="🦠" color="#0F8F8B" />
         <KPICard title="Angka Kesakitan Malaria" value="0.02" sub="API per 1000 penduduk" icon="📈" color="#0F8F8B" />
         <KPICard title="Filariasis Kronis" value="129" sub="Kasus" icon="🌊" color="#0F8F8B" />
@@ -176,6 +177,21 @@ export default function TularVektor() {
                 <XAxis type="number" tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} interval={0} />
                 <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
+                {TARGETS[indic] && (
+                  <ReferenceLine 
+                    x={TARGETS[indic].target_value} 
+                    stroke={TARGETS[indic].target_direction === '>=' || TARGETS[indic].target_direction === '>' ? '#0F8F8B' : '#ef4444'}
+                    strokeDasharray="3 3"
+                    strokeWidth={2}
+                    label={{
+                      position: 'insideTopRight',
+                      value: `${['<=', '<'].includes(TARGETS[indic].target_direction) ? 'Batas Maksimum' : 'Target Minimum'}: ${TARGETS[indic].target_value}${TARGETS[indic].isPercentage ? '%' : ''}`,
+                      fill: '#4B5563',
+                      fontSize: 11,
+                      fontWeight: 600
+                    }}
+                  />
+                )}
                 <Bar dataKey={indic} name={indicLabel} fill="#0F8F8B" radius={[0, 6, 6, 0]} />
               </BarChart>
             </ResponsiveContainer>

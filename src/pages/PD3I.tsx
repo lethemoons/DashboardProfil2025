@@ -3,8 +3,9 @@ import ChoroplethMap from '../components/ChoroplethMap';
 import RiskClusteringMap from '../components/RiskClusteringMap';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  CartesianGrid, Cell, Legend
+  CartesianGrid, Cell, Legend, ReferenceLine
 } from 'recharts'
+import { evaluateTarget, TARGETS } from '../utils/targets'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
 import FilterBar from '../components/FilterBar'
@@ -63,7 +64,7 @@ export default function PD3I() {
             <KPICard title="Kasus Pertusis" value={totPertusis.toLocaleString('id-ID')} sub="CFR Tetanus Neonatorum 52.6%" icon="😮‍💨" color="#0F8F8B" />
             <KPICard title="Kasus Suspek Campak" value={totCampakSuspek.toLocaleString('id-ID')} icon="🔴" color="#0F8F8B" />
             <KPICard title="AFP Rate (Non Polio) < 15 Thn" value="6.3" sub="per 100.000 penduduk < 15 tahun" icon="👶" color="#0F8F8B" />
-            <KPICard title="KLB <24 Jam" value="100%" sub="Rata-rata penanganan" icon="🚨" color="#0F8F8B" />
+            <KPICard title="KLB <24 Jam" value="100%" sub="Rata-rata penanganan" icon="🚨" color="#0F8F8B" targetData={evaluateTarget(100, 'klb_24jam_pct')} />
           </div>
 
       {/* CHOROPLETH MAP SECTION */}
@@ -114,6 +115,21 @@ export default function PD3I() {
                     <XAxis type="number" tick={{ fontSize: 11 }} />
                     <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
                     <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
+                    {TARGETS[pd3iIndic] && (
+                      <ReferenceLine 
+                        x={TARGETS[pd3iIndic].target_value} 
+                        stroke={TARGETS[pd3iIndic].target_direction === '>=' || TARGETS[pd3iIndic].target_direction === '>' ? '#0F8F8B' : '#ef4444'}
+                        strokeDasharray="3 3"
+                        strokeWidth={2}
+                        label={{
+                          position: 'insideTopRight',
+                          value: `${['<=', '<'].includes(TARGETS[pd3iIndic].target_direction) ? 'Batas Maksimum' : 'Target Minimum'}: ${TARGETS[pd3iIndic].target_value}${TARGETS[pd3iIndic].isPercentage ? '%' : ''}`,
+                          fill: '#4B5563',
+                          fontSize: 11,
+                          fontWeight: 600
+                        }}
+                      />
+                    )}
                     <Bar dataKey={pd3iIndic} name={pd3iLabel} fill="#0F8F8B" radius={[0, 6, 6, 0]} />
                   </BarChart>
                 </ResponsiveContainer>

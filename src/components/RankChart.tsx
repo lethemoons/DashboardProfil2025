@@ -1,7 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, ReferenceLine
 } from 'recharts';
+import { evaluateTarget, TARGETS } from '../utils/targets';
 import DataTable from './DataTable';
 import { getDynamicDomain } from '../utils/stats';
 
@@ -25,6 +26,7 @@ export default function RankChart({ data, indicators, defaultIndicator, title = 
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const activeIndicator = indicators.find(i => i.key === indicator) || indicators[0];
+  const targetConfig = TARGETS[activeIndicator.key];
 
   // Process data: filter out province summary, extract values, and sort
   const processedData = useMemo(() => {
@@ -150,6 +152,21 @@ export default function RankChart({ data, indicators, defaultIndicator, title = 
                 tick={{ fontSize: 11, fill: '#4B5563', fontWeight: 500 }} 
                 width={140} 
               />
+              {targetConfig && (
+                <ReferenceLine 
+                  x={targetConfig.target_value} 
+                  stroke={targetConfig.target_direction === '>=' || targetConfig.target_direction === '>' ? '#0F8F8B' : '#ef4444'}
+                  strokeDasharray="3 3"
+                  strokeWidth={2}
+                  label={{
+                    position: 'insideTopRight',
+                    value: `${['<=', '<'].includes(targetConfig.target_direction) ? 'Batas Maksimum' : 'Target Minimum'}: ${targetConfig.target_value}${targetConfig.isPercentage ? '%' : ''}`,
+                    fill: '#4B5563',
+                    fontSize: 11,
+                    fontWeight: 600
+                  }}
+                />
+              )}
               <Tooltip 
                 cursor={{ fill: 'rgba(15, 176, 170, 0.05)' }}
                 content={({ active, payload }) => {
@@ -168,6 +185,16 @@ export default function RankChart({ data, indicators, defaultIndicator, title = 
                           <span className="text-xs text-gray-500">Peringkat</span>
                           <span className="text-xs font-bold text-gray-700">#{row.rank} dari {processedData.length}</span>
                         </div>
+                        {targetConfig && (
+                          <div className={`mt-2 pt-2 border-t flex flex-col gap-1 ${evaluateTarget(row.value, activeIndicator.key)?.status === 'tercapai' ? 'border-[#0F8F8B]/20' : 'border-[#ef4444]/20'}`}>
+                            <div className="flex items-center justify-between">
+                              <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Target</span>
+                              <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${evaluateTarget(row.value, activeIndicator.key)?.status === 'tercapai' ? 'bg-[#0F8F8B]/10 text-[#0F8F8B]' : 'bg-[#ef4444]/10 text-[#ef4444]'}`}>
+                                {evaluateTarget(row.value, activeIndicator.key)?.status === 'tercapai' ? 'Tercapai' : 'Belum Tercapai'}
+                              </span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     );
                   }
@@ -221,6 +248,14 @@ export default function RankChart({ data, indicators, defaultIndicator, title = 
             sedangkan terendah adalah <strong>{minKab}</strong> ({formatValue(minVal)}). 
             Rata-rata provinsi berada di <strong>{formatValue(avg)}</strong>, dengan selisih puncak dan dasar sebesar <strong>{formatValue(maxVal - minVal)}</strong>. 
             Secara total, terdapat <strong>{aboveAvg} kabupaten/kota</strong> di atas rata-rata dan <strong>{belowAvg}</strong> di bawahnya.
+            {targetConfig && (() => {
+              const tercapaiCount = processedData.filter(d => evaluateTarget(d.value, activeIndicator.key)?.status === 'tercapai').length;
+              return (
+                <span className="block mt-2 font-medium text-gray-800 border-t border-[#CCEEED] pt-2">
+                  Berdasarkan target yang ditetapkan ({['<=', '<'].includes(targetConfig.target_direction) ? 'maksimum' : 'minimum'} {targetConfig.target_value}{targetConfig.isPercentage ? '%' : ''}), sebanyak <strong>{tercapaiCount} dari {processedData.length} kabupaten/kota</strong> telah mencapai target tersebut.
+                </span>
+              );
+            })()}
           </div>
         </div>
       </div>
