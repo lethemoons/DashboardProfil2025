@@ -14,10 +14,7 @@ const prisma = new PrismaClient()
 const PORT = process.env.PORT || 3000
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecret_for_demo'
 
-app.use(cors({
-  origin: process.env.FRONTEND_URL || '*',
-  credentials: true,
-}))
+app.use(cors())
 app.use(express.json())
 
 const upload = multer({ dest: 'uploads/' })
