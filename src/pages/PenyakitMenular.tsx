@@ -1,11 +1,10 @@
 import { useState, useMemo } from 'react'
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  CartesianGrid, Cell, Legend, ScatterChart, Scatter
+  CartesianGrid, Legend, ScatterChart, Scatter
 } from 'recharts'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
-import FilterBar from '../components/FilterBar'
 import KPICard from '../components/KPICard'
 import InsightBox from '../components/InsightBox'
 import StatPanel from '../components/StatPanel'
@@ -25,23 +24,70 @@ const OPTIONS = [
   { key: 'kusta_mb', label: 'Kusta MB (Multi Basiler)' },
 ]
 
+const TBCTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length >= 2) {
+    const pKasus = payload.find((p: any) => p.dataKey === 'kasus')
+    const pSukses = payload.find((p: any) => p.dataKey === 'sukses_pct')
+    const pMati = payload.find((p: any) => p.dataKey === 'kematian')
+    
+    return (
+      <div className="bg-white border border-gray-100 shadow-lg rounded-xl p-4 text-sm min-w-[200px]">
+        <div className="font-bold text-gray-800 mb-3 pb-2 border-b border-gray-50">{label}</div>
+        
+        {pKasus && (
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: pKasus.color }}></div>
+              <span className="text-gray-600">Jumlah Kasus</span>
+            </div>
+            <span className="font-semibold text-gray-800">{Number(pKasus.value).toLocaleString('id-ID')}</span>
+          </div>
+        )}
+        
+        {pSukses && (
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: pSukses.color }}></div>
+              <span className="text-gray-600">Sukses Pengobatan</span>
+            </div>
+            <span className="font-semibold text-gray-800">{Number(pSukses.value).toFixed(1)}%</span>
+          </div>
+        )}
+
+        {pMati && (
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: pMati.color }}></div>
+              <span className="text-gray-600">Jumlah Kematian</span>
+            </div>
+            <span className="font-semibold text-gray-800">{Number(pMati.value).toLocaleString('id-ID')}</span>
+          </div>
+        )}
+      </div>
+    )
+  }
+  return null
+}
+
 export default function PenyakitMenular() {
   const { data: penyakitMenular, loading, error } = useDashboardData()
 
   const [indic, setIndic] = useState('tbc_kasus')
+  const [indicFilter, setIndicFilter] = useState('10')
+  const [tbcFilter, setTbcFilter] = useState('10')
   const [corrX, setCorrX] = useState('tbc_kasus')
   const [corrY, setCorrY] = useState('diare_semua_umur')
 
   const data = useMemo(() => penyakitMenular.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [penyakitMenular])
 
   const totTBC = data.reduce((s, d) => s + (d.tbc_kasus as number), 0)
-  const avgTBCSukses = data.length ? data.reduce((s, d) => s + (d.tbc_sukses_pct as number), 0) / data.length : 0
   const totODHIV = data.reduce((s, d) => s + (d.odhiv_baru as number), 0)
-  const avgARV = data.length ? data.reduce((s, d) => s + (d.arv_pct as number), 0) / data.length : 0
   const totDiare = data.reduce((s, d) => s + (d.diare_semua_umur as number), 0)
   const totKusta = data.reduce((s, d) => s + (d.kusta_pb as number) + (d.kusta_mb as number), 0)
 
-  const chartData = [...data].sort((a, b) => (b[indic] as number) - (a[indic] as number)).slice(0, 15)
+  const sortedData = [...data].sort((a, b) => (b[indic] as number) - (a[indic] as number))
+  const chartData = indicFilter === 'all' ? sortedData : sortedData.slice(0, Number(indicFilter))
+  
   const stats = descStats(data.map(d => d[indic] as number))
   const indicLabel = OPTIONS.find(o => o.key === indic)?.label ?? indic
   const maxKab = data.length ? data.reduce((a, b) => (a[indic] as number) > (b[indic] as number) ? a : b) : null
@@ -51,11 +97,19 @@ export default function PenyakitMenular() {
   const r = pearsonR(scatterData.map(d => d.x), scatterData.map(d => d.y))
 
   // TBC breakdown chart
-  const tbcChartData = [...data].sort((a, b) => (b.tbc_kasus as number) - (a.tbc_kasus as number)).slice(0, 12).map(d => ({
-    kabupaten: d.kabupaten.replace('Kota ', ''),
-    kasus: d.tbc_kasus,
-    sukses_pct: d.tbc_sukses_pct,
-  }))
+  const tbcSorted = [...data].sort((a, b) => (b.tbc_kasus as number) - (a.tbc_kasus as number))
+  const tbcChartData = (tbcFilter === 'all' ? tbcSorted : tbcSorted.slice(0, Number(tbcFilter))).map(d => {
+    if (d.kabupaten === 'Kabupaten Pacitan' || d.kabupaten === 'Pacitan' || d.kabupaten === 'KAB. PACITAN') {
+      console.log('Pacitan Raw Data:', d)
+      console.log('Kematian Value:', d['60_lakilaki_+_perempuan_jumlah_4'])
+    }
+    return {
+      kabupaten: d.kabupaten.replace('Kota ', ''),
+      kasus: d.tbc_kasus,
+      sukses_pct: d.tbc_sukses_pct,
+      kematian: d['60_lakilaki_+_perempuan_jumlah_4'] || 0,
+    }
+  })
 
   const chartInsights = maxKab && minKab ? [
     `${maxKab.kabupaten} tertinggi pada ${indicLabel}: ${(maxKab[indic] as number).toLocaleString('id-ID')}.`,
@@ -66,8 +120,8 @@ export default function PenyakitMenular() {
   ]
 
   const statInsights = [
-    `Total kasus TBC Jawa Timur: ${totTBC.toLocaleString('id-ID')} | Rata-rata sukses pengobatan: ${avgTBCSukses.toFixed(1)}% ${avgTBCSukses >= 85 ? '(≥ target 85% WHO)' : '(< target 85% WHO)'}.`,
-    `ODHIV baru ditemukan: ${totODHIV.toLocaleString('id-ID')} | Mendapat ARV rata-rata: ${avgARV.toFixed(1)}%.`,
+    `Total kasus TBC Jawa Timur: ${totTBC.toLocaleString('id-ID')}.`,
+    `ODHIV baru ditemukan: ${totODHIV.toLocaleString('id-ID')}.`,
     `Total diare semua umur: ${totDiare.toLocaleString('id-ID')} | Total kusta (PB+MB): ${totKusta.toLocaleString('id-ID')}.`,
   ]
 
@@ -77,49 +131,78 @@ export default function PenyakitMenular() {
   return (
     <div className="flex flex-col gap-5">
 
-
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <KPICard title="Kasus TBC" value={totTBC.toLocaleString('id-ID')} sub="Semua Tipe" icon="🫁" color="#ef4444" />
-        <KPICard title="Sukses Pengobatan TBC" value={avgTBCSukses.toFixed(1) + '%'} sub="Rata-rata" icon="✅" color="#0FB0AA" trend={avgTBCSukses >= 85 ? 'up' : 'down'} trendVal={avgTBCSukses >= 85 ? 'Target WHO tercapai' : 'Belum capai target 85%'} />
+        <KPICard title="Sukses Pengobatan TBC" value="88.26%" sub="Rata-rata" icon="✅" color="#0FB0AA" />
+        <KPICard title="Hepatitis Bumil Reaktif" value="1.6%" sub="7.186 orang" icon="🩸" color="#eab308" />
+        <KPICard title="ODHIV Mendapat ARV" value="75%" sub="7.969 orang" icon="💊" color="#a855f7" />
+        
         <KPICard title="ODHIV Baru" value={totODHIV.toLocaleString('id-ID')} sub="Ditemukan" icon="🔴" color="#8b5cf6" />
+        <KPICard title="Kasus Baru Kusta" value="2.225 Kasus" sub="Prevalensi 0.6 per 10.000 penduduk" icon="🦠" color="#14b8a6" />
         <KPICard title="Kasus Diare" value={totDiare.toLocaleString('id-ID')} sub="Semua Umur" icon="💧" color="#06B5D0" />
       </div>
 
-      {/* TBC dua indikator */}
+      {/* TBC */}
       <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
-        <h3 className="font-semibold text-gray-800 mb-4" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>TBC — Kasus & Sukses Pengobatan (12 Tertinggi)</h3>
-        <ResponsiveContainer width="100%" height={260}>
-          <BarChart data={tbcChartData} margin={{ bottom: 40 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-            <XAxis dataKey="kabupaten" tick={{ fontSize: 10 }} angle={-35} textAnchor="end" height={60} />
-            <YAxis yAxisId="left" tick={{ fontSize: 11 }} />
-            <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} domain={[0, 100]} unit="%" />
-            <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
-            <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-            <Bar yAxisId="left" dataKey="kasus" name="Kasus TBC" fill="#0FB0AA" radius={[3, 3, 0, 0]} />
-            <Bar yAxisId="right" dataKey="sukses_pct" name="Sukses (%)" fill="#0FB0AA" radius={[3, 3, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
+        <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
+          <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Angka Kesembuhan dan Keberhasilan Pengobatan Tuberkolosis</h3>
+          <select value={tbcFilter} onChange={e => setTbcFilter(e.target.value)}
+            className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400">
+            <option value="10">Top 10</option>
+            <option value="20">Top 20</option>
+            <option value="all">Semua</option>
+          </select>
+        </div>
+        <div className="w-full overflow-x-auto pb-4">
+          <div style={{ width: tbcFilter === 'all' ? 1800 : (tbcFilter === '20' ? 1000 : '100%'), height: 350 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={tbcChartData} margin={{ bottom: 40 }} barGap={0}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" vertical={false} />
+                <XAxis dataKey="kabupaten" tick={{ fontSize: 10 }} angle={-35} textAnchor="end" height={60} interval={0} />
+                <YAxis yAxisId="left" tick={{ fontSize: 11 }} />
+                <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} domain={[0, 100]} unit="%" />
+                <Tooltip content={<TBCTooltip />} cursor={{ fill: '#f9fafb' }} />
+                <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
+                <Bar yAxisId="left" dataKey="kasus" name="Jumlah Kasus" fill="#06B5D0" radius={[3, 3, 0, 0]} minPointSize={3} />
+                <Bar yAxisId="right" dataKey="sukses_pct" name="Sukses Pengobatan (%)" fill="#CBD92C" radius={[3, 3, 0, 0]} minPointSize={3} />
+                <Bar yAxisId="left" dataKey="kematian" name="Jumlah Kematian" fill="#0FB0AA" radius={[3, 3, 0, 0]} minPointSize={3} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </div>
 
+      {/* Indikator Penyakit Menular Langsung */}
       <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
         <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
           <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Indikator Penyakit Menular Langsung</h3>
-          <select value={indic} onChange={e => setIndic(e.target.value)}
-            className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400">
-            {OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
-          </select>
+          <div className="flex items-center gap-3">
+            <select value={indic} onChange={e => setIndic(e.target.value)}
+              className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400">
+              {OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
+            </select>
+            <select value={indicFilter} onChange={e => setIndicFilter(e.target.value)}
+              className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400">
+              <option value="10">Top 10</option>
+              <option value="20">Top 20</option>
+              <option value="all">Semua</option>
+            </select>
+          </div>
         </div>
-        <ResponsiveContainer width="100%" height={280}>
-          <BarChart data={chartData} layout="vertical" margin={{ left: 95, right: 20 }}>
-            <XAxis type="number" tick={{ fontSize: 11 }} />
-            <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
-            <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
-            <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]}>
-              {chartData.map((_, i) => <Cell key={i} fill={i === 0 ? '#ef4444' : i < 5 ? '#f97316' : '#fca5a5'} />)}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
+        
+        <div className="w-full overflow-x-auto pb-4">
+          <div style={{ minWidth: indicFilter === 'all' ? 800 : '100%', height: indicFilter === 'all' ? 800 : (indicFilter === '20' ? 600 : 400) }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={chartData} layout="vertical" margin={{ left: 110, right: 30 }}>
+                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f3f4f6" />
+                <XAxis type="number" tick={{ fontSize: 11 }} />
+                <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 10 }} width={100} interval={0} />
+                <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12, border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} cursor={{ fill: '#f9fafb' }} />
+                <Bar dataKey={indic} name={indicLabel} fill="#0FB0AA" radius={[0, 4, 4, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </div>
       {chartInsights.length > 0 && <InsightBox insights={chartInsights} />}
 
@@ -159,30 +242,26 @@ export default function PenyakitMenular() {
         label={indicLabel}
         rightElement={
           <select value={indic} onChange={e => setIndic(e.target.value)}
-            className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[250px]">
+            className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400">
             {OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
           </select>
         }
       />
 
-
-      <CrosstabSection
-        data={data}
-        variables={OPTIONS}
-        defaultRowVar="tbc_kasus"
-        defaultColVar="diare_semua_umur"
-      />
-
       <DataTable data={data} columns={[
         { key: 'kabupaten', label: 'Kabupaten/Kota' },
-        { key: 'tbc_kasus', label: 'TBC Kasus', format: v => v?.toLocaleString('id-ID') },
-        { key: 'tbc_sukses_pct', label: 'TBC Sukses (%)', format: v => v?.toFixed(1) },
+        { key: 'tbc_kasus', label: 'TBC Kasus' },
+        { key: 'tbc_sukses_pct', label: 'TBC Sukses (%)' },
+        { key: 'pneumonia_balita', label: 'Pneumonia Balita' },
         { key: 'odhiv_baru', label: 'ODHIV Baru' },
-        { key: 'arv_pct', label: 'ARV (%)', format: v => v?.toFixed(1) },
-        { key: 'diare_semua_umur', label: 'Diare', format: v => v?.toLocaleString('id-ID') },
+        { key: 'arv_pct', label: 'Mendapat ARV (%)' },
+        { key: 'diare_semua_umur', label: 'Diare Semua' },
+        { key: 'diare_balita', label: 'Diare Balita' },
         { key: 'kusta_pb', label: 'Kusta PB' },
         { key: 'kusta_mb', label: 'Kusta MB' },
       ]} />
+      
+      <CrosstabSection data={data} options={OPTIONS} />
     </div>
   )
 }

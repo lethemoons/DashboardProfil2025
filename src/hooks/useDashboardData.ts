@@ -58,7 +58,8 @@ const TABLE_METRIC_ALIASES: Record<string, string> = {
   // === TABLE 35: Kematian Neonatal / Bayi / Balita ===
   '35_jumlah_total_150':            'kematian_neonatal',
   '35_bayi_170':                    'kematian_bayi',
-  '35_jumlah_total_210':            'kematian_balita',
+  '35_jumlah_total_210':            'kematian_balita_total',
+  '35_anak_balita_180':             'kematian_balita',
 
   // === TABLE 38: Bayi Lahir Ditimbang & BBLR ===
   // l_+_p_1 = total lahir L+P, l_+_p_2 = ditimbang %, l_+_p_3 = BBLR %

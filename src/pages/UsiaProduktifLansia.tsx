@@ -10,7 +10,6 @@ import KPICard from '../components/KPICard'
 import InsightBox from '../components/InsightBox'
 import StatPanel from '../components/StatPanel'
 import DataTable from '../components/DataTable'
-import CrosstabSection from '../components/CrosstabSection'
 
 const OPTIONS = [
   { key: 'produktif_laki', label: 'Usia Produktif Laki-laki' },
@@ -18,43 +17,44 @@ const OPTIONS = [
   { key: 'lansia_dilayani', label: 'Lansia Dilayani (60+)' },
   { key: 'catin_laki', label: 'Calon Pengantin Laki-laki' },
   { key: 'catin_perempuan', label: 'Calon Pengantin Perempuan' },
-  { key: 'posyandu_lansia', label: 'Posyandu Lansia (unit)' },
 ]
 
 export default function UsiaProduktifLansia() {
   const { data: usiaProduktif, loading, error } = useDashboardData()
 
   const [indic, setIndic] = useState('lansia_dilayani')
+  const [chartFilter, setChartFilter] = useState('10')
+  const [genderFilter, setGenderFilter] = useState('10')
 
   const data = useMemo(() => usiaProduktif.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [usiaProduktif])
 
   const totLaki = data.reduce((s, d) => s + (d.produktif_laki as number), 0)
   const totPerempuan = data.reduce((s, d) => s + (d.produktif_perempuan as number), 0)
   const totLansia = data.reduce((s, d) => s + (d.lansia_dilayani as number), 0)
-  const totPosyanduLansia = data.reduce((s, d) => s + (d.posyandu_lansia as number), 0)
   const totCatin = data.reduce((s, d) => s + (d.catin_laki as number) + (d.catin_perempuan as number), 0)
 
-  const chartData = [...data].sort((a, b) => (b[indic] as number) - (a[indic] as number)).slice(0, 15)
+  const sortedData = [...data].sort((a, b) => (b[indic] as number) - (a[indic] as number))
+  const chartData = chartFilter === 'all' ? sortedData : sortedData.slice(0, Number(chartFilter))
+  
   const stats = descStats(data.map(d => d[indic] as number))
   const indicLabel = OPTIONS.find(o => o.key === indic)?.label ?? indic
-  const maxKab = data.length ? data.reduce((a, b) => (a[indic] as number) > (b[indic] as number) ? a : b) : null
-  const minKab = data.length ? data.reduce((a, b) => (a[indic] as number) < (b[indic] as number) ? a : b) : null
 
-  // Gender comparison top 10
-  const genderData = data.slice(0, 10).map(d => ({
+  // Gender comparison
+  const sortedGenderData = [...data].sort((a, b) => ((b.produktif_laki as number) + (b.produktif_perempuan as number)) - ((a.produktif_laki as number) + (a.produktif_perempuan as number)))
+  const filteredGenderData = genderFilter === 'all' ? sortedGenderData : sortedGenderData.slice(0, Number(genderFilter))
+  
+  const genderData = filteredGenderData.map(d => ({
     kabupaten: d.kabupaten.replace('Kota ', ''),
     laki: d.produktif_laki,
     perempuan: d.produktif_perempuan,
   }))
 
-  const chartInsights = maxKab && minKab ? [
-    `${maxKab.kabupaten} memiliki ${indicLabel} tertinggi (${(maxKab[indic] as number).toLocaleString('id-ID')}).`,
-  ] : []
+  const chartInsights = [
+    `Grafik pelayanan ini memotret sejauh mana program kesehatan telah menjangkau populasi usia produktif dan kelompok lanjut usia (lansia) di masing-masing kabupaten/kota. Jika sebuah wilayah menunjukkan angka cakupan yang menonjol, itu berarti sistem posbindu (pos pembinaan terpadu) serta layanan skrining kesehatannya berjalan secara optimal. Ini penting agar penyakit tidak menular seperti diabetes atau hipertensi bisa dideteksi jauh sebelum berkembang menjadi komplikasi berat.`
+  ]
 
   const statInsights = [
-    `Total usia produktif (L+P): ${(totLaki + totPerempuan).toLocaleString('id-ID')} jiwa.`,
-    `Total lansia (60+) dilayani: ${totLansia.toLocaleString('id-ID')} | Posyandu lansia: ${totPosyanduLansia.toLocaleString('id-ID')} unit.`,
-    `Total calon pengantin terlayani: ${totCatin.toLocaleString('id-ID')} orang.`,
+    `Kelompok usia produktif adalah motor penggerak ekonomi utama daerah, sehingga menjaga mereka tetap sehat dan terhindar dari penyakit kronis merupakan investasi jangka panjang yang krusial bagi pemerintah. Di sisi lain, peningkatan angka harapan hidup menyebabkan populasi lansia bertambah. Pelayanan sesuai standar bagi para lansia memastikan mereka tetap memiliki kualitas hidup yang mandiri, bermartabat, dan sehat di masa senjanya tanpa harus terus bergantung pada fasilitas medis darurat.`
   ]
 
   if (loading) return <div className="p-8 text-center text-gray-500">Loading data...</div>
@@ -64,37 +64,53 @@ export default function UsiaProduktifLansia() {
     <div className="flex flex-col gap-5">
 
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <KPICard title="Usia Produktif L" value={(totLaki / 1e6).toFixed(2) + ' jt'} sub="Jiwa" icon="👨" color="#0FB0AA" />
-        <KPICard title="Usia Produktif P" value={(totPerempuan / 1e6).toFixed(2) + ' jt'} sub="Jiwa" icon="👩" color="#06B5D0" />
-        <KPICard title="Lansia Dilayani" value={totLansia.toLocaleString('id-ID')} sub="Usia 60+" icon="👴" color="#CBD92C" />
-        <KPICard title="Posyandu Lansia" value={totPosyanduLansia.toLocaleString('id-ID')} sub="Unit" icon="🌿" color="#8b5cf6" />
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <KPICard title="Usia Produktif Laki-laki" value={(totLaki / 1e6).toFixed(2) + ' jt'} sub="Jiwa" icon="👨" color="#0FB0AA" />
+        <KPICard title="Usia Produktif Perempuan" value={(totPerempuan / 1e6).toFixed(2) + ' jt'} sub="Jiwa" icon="👩" color="#06B5D0" />
+        <KPICard title="Lansia Dilayani Sesuai Standar" value={totLansia.toLocaleString('id-ID')} sub="Usia 60+" icon="👴" color="#CBD92C" />
       </div>
+
+      <InsightBox insights={statInsights} />
 
       <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
         <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
           <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Pelayanan Usia Produktif & Lansia</h3>
-          <select value={indic} onChange={e => setIndic(e.target.value)}
-            className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400">
-            {OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
-          </select>
+          <div className="flex gap-2">
+            <select value={chartFilter} onChange={e => setChartFilter(e.target.value)}
+              className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400">
+              <option value="10">Top 10</option>
+              <option value="20">Top 20</option>
+              <option value="all">Semua</option>
+            </select>
+            <select value={indic} onChange={e => setIndic(e.target.value)}
+              className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400">
+              {OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
+            </select>
+          </div>
         </div>
         <ResponsiveContainer width="100%" height={280}>
           <BarChart data={chartData} layout="vertical" margin={{ left: 95, right: 20 }}>
             <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={v => v >= 1e6 ? (v / 1e6).toFixed(1) + 'jt' : v?.toLocaleString('id-ID')} />
             <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
             <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID')} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
-            <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]}>
-              {chartData.map((_, i) => <Cell key={i} fill={i === 0 ? '#0FB0AA' : i < 3 ? '#06B5D0' : '#93c5c3'} />)}
-            </Bar>
+            <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]} fill="#0FB0AA" />
           </BarChart>
         </ResponsiveContainer>
       </div>
-      {chartInsights.length > 0 && <InsightBox insights={chartInsights} />}
+      
+      <InsightBox insights={chartInsights} />
 
       {/* Gender comparison */}
       <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
-        <h3 className="font-semibold text-gray-800 mb-4" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Usia Produktif Laki-laki vs Perempuan (10 Kab Terbesar)</h3>
+        <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
+          <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Perbandingan Usia Produktif Laki-laki vs Perempuan</h3>
+          <select value={genderFilter} onChange={e => setGenderFilter(e.target.value)}
+            className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400">
+            <option value="10">Top 10</option>
+            <option value="20">Top 20</option>
+            <option value="all">Semua</option>
+          </select>
+        </div>
         <ResponsiveContainer width="100%" height={240}>
           <BarChart data={genderData} margin={{ bottom: 40 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
@@ -118,14 +134,6 @@ export default function UsiaProduktifLansia() {
           </select>
         }
       />
-      
-
-      <CrosstabSection
-        data={data}
-        variables={OPTIONS}
-        defaultRowVar="lansia_dilayani"
-        defaultColVar="posyandu_lansia"
-      />
 
       <DataTable data={data} columns={[
         { key: 'kabupaten', label: 'Kabupaten/Kota' },
@@ -134,7 +142,6 @@ export default function UsiaProduktifLansia() {
         { key: 'lansia_dilayani', label: 'Lansia Dilayani', format: v => v?.toLocaleString('id-ID') },
         { key: 'catin_laki', label: 'Catin L', format: v => v?.toLocaleString('id-ID') },
         { key: 'catin_perempuan', label: 'Catin P', format: v => v?.toLocaleString('id-ID') },
-        { key: 'posyandu_lansia', label: 'Posyandu Lansia', format: v => v?.toLocaleString('id-ID') },
       ]} />
     </div>
   )

@@ -12,46 +12,6 @@ import StatPanel from '../components/StatPanel'
 import DataTable from '../components/DataTable'
 import CrosstabSection from '../components/CrosstabSection'
 
-const CSV_DATA: Record<string, any> = {
-  "Pacitan": { "jumlah_kf1": 4460, "kf1_pct": 62.6, "jumlah_kf_lengkap": 4452, "kf_lengkap_pct": 62.5, "jumlah_nifas_vit_a": 4460, "nifas_vit_a_pct": 62.6, "anak_lahir_hidup": 6746, "jumlah_ibu_bersalin_nifas": 7122 },
-  "Ponorogo": { "jumlah_kf1": 7334, "kf1_pct": 59.6, "jumlah_kf_lengkap": 7230, "kf_lengkap_pct": 58.8, "jumlah_nifas_vit_a": 7334, "nifas_vit_a_pct": 59.6, "anak_lahir_hidup": 11713, "jumlah_ibu_bersalin_nifas": 12297 },
-  "Trenggalek": { "jumlah_kf1": 6411, "kf1_pct": 64.9, "jumlah_kf_lengkap": 6283, "kf_lengkap_pct": 63.6, "jumlah_nifas_vit_a": 6411, "nifas_vit_a_pct": 64.9, "anak_lahir_hidup": 9318, "jumlah_ibu_bersalin_nifas": 9880 },
-  "Tulungagung": { "jumlah_kf1": 10753, "kf1_pct": 69.4, "jumlah_kf_lengkap": 10713, "kf_lengkap_pct": 69.2, "jumlah_nifas_vit_a": 10753, "nifas_vit_a_pct": 69.4, "anak_lahir_hidup": 14684, "jumlah_ibu_bersalin_nifas": 15484 },
-  "Blitar": { "jumlah_kf1": 10287, "kf1_pct": 55.5, "jumlah_kf_lengkap": 10283, "kf_lengkap_pct": 55.5, "jumlah_nifas_vit_a": 10296, "nifas_vit_a_pct": 55.5, "anak_lahir_hidup": 17197, "jumlah_ibu_bersalin_nifas": 18536 },
-  "Kediri": { "jumlah_kf1": 15111, "kf1_pct": 56.5, "jumlah_kf_lengkap": 14832, "kf_lengkap_pct": 55.5, "jumlah_nifas_vit_a": 15091, "nifas_vit_a_pct": 56.5, "anak_lahir_hidup": 24912, "jumlah_ibu_bersalin_nifas": 26735 },
-  "Malang": { "jumlah_kf1": 30973, "kf1_pct": 74.3, "jumlah_kf_lengkap": 30140, "kf_lengkap_pct": 72.3, "jumlah_nifas_vit_a": 30140, "nifas_vit_a_pct": 72.3, "anak_lahir_hidup": 39536, "jumlah_ibu_bersalin_nifas": 41709 },
-  "Lumajang": { "jumlah_kf1": 12031, "kf1_pct": 72, "jumlah_kf_lengkap": 11594, "kf_lengkap_pct": 69.3, "jumlah_nifas_vit_a": 12031, "nifas_vit_a_pct": 72, "anak_lahir_hidup": 15921, "jumlah_ibu_bersalin_nifas": 16720 },
-  "Jember": { "jumlah_kf1": 29242, "kf1_pct": 72.6, "jumlah_kf_lengkap": 28382, "kf_lengkap_pct": 70.4, "jumlah_nifas_vit_a": 29381, "nifas_vit_a_pct": 72.9, "anak_lahir_hidup": 38289, "jumlah_ibu_bersalin_nifas": 40302 },
-  "Banyuwangi": { "jumlah_kf1": 16813, "kf1_pct": 64.4, "jumlah_kf_lengkap": 16366, "kf_lengkap_pct": 62.7, "jumlah_nifas_vit_a": 16813, "nifas_vit_a_pct": 64.4, "anak_lahir_hidup": 24722, "jumlah_ibu_bersalin_nifas": 26098 },
-  "Bondowoso": { "jumlah_kf1": 9126, "kf1_pct": 75.3, "jumlah_kf_lengkap": 8839, "kf_lengkap_pct": 72.9, "jumlah_nifas_vit_a": 9118, "nifas_vit_a_pct": 75.2, "anak_lahir_hidup": 11453, "jumlah_ibu_bersalin_nifas": 12124 },
-  "Situbondo": { "jumlah_kf1": 7907, "kf1_pct": 77.4, "jumlah_kf_lengkap": 7686, "kf_lengkap_pct": 75.2, "jumlah_nifas_vit_a": 7907, "nifas_vit_a_pct": 77.4, "anak_lahir_hidup": 9924, "jumlah_ibu_bersalin_nifas": 10214 },
-  "Probolinggo": { "jumlah_kf1": 15599, "kf1_pct": 86.4, "jumlah_kf_lengkap": 15006, "kf_lengkap_pct": 83.1, "jumlah_nifas_vit_a": 15448, "nifas_vit_a_pct": 85.6, "anak_lahir_hidup": 17332, "jumlah_ibu_bersalin_nifas": 18055 },
-  "Pasuruan": { "jumlah_kf1": 23577, "kf1_pct": 97.3, "jumlah_kf_lengkap": 23577, "kf_lengkap_pct": 97.3, "jumlah_nifas_vit_a": 22489, "nifas_vit_a_pct": 92.8, "anak_lahir_hidup": 22968, "jumlah_ibu_bersalin_nifas": 24221 },
-  "Sidoarjo": { "jumlah_kf1": 31016, "kf1_pct": 100.2, "jumlah_kf_lengkap": 31007, "kf_lengkap_pct": 100.2, "jumlah_nifas_vit_a": 31008, "nifas_vit_a_pct": 100.2, "anak_lahir_hidup": 29176, "jumlah_ibu_bersalin_nifas": 30947 },
-  "Mojokerto": { "jumlah_kf1": 13650, "kf1_pct": 82.7, "jumlah_kf_lengkap": 13358, "kf_lengkap_pct": 80.9, "jumlah_nifas_vit_a": 13650, "nifas_vit_a_pct": 82.7, "anak_lahir_hidup": 15826, "jumlah_ibu_bersalin_nifas": 16513 },
-  "Jombang": { "jumlah_kf1": 14339, "kf1_pct": 67.2, "jumlah_kf_lengkap": 14347, "kf_lengkap_pct": 67.2, "jumlah_nifas_vit_a": 14338, "nifas_vit_a_pct": 67.2, "anak_lahir_hidup": 20157, "jumlah_ibu_bersalin_nifas": 21343 },
-  "Nganjuk": { "jumlah_kf1": 10262, "kf1_pct": 62.8, "jumlah_kf_lengkap": 9848, "kf_lengkap_pct": 60.2, "jumlah_nifas_vit_a": 10354, "nifas_vit_a_pct": 63.3, "anak_lahir_hidup": 15554, "jumlah_ibu_bersalin_nifas": 16352 },
-  "Madiun": { "jumlah_kf1": 6076, "kf1_pct": 59.5, "jumlah_kf_lengkap": 6071, "kf_lengkap_pct": 59.5, "jumlah_nifas_vit_a": 6074, "nifas_vit_a_pct": 59.5, "anak_lahir_hidup": 9589, "jumlah_ibu_bersalin_nifas": 10207 },
-  "Magetan": { "jumlah_kf1": 5635, "kf1_pct": 59.9, "jumlah_kf_lengkap": 5627, "kf_lengkap_pct": 59.8, "jumlah_nifas_vit_a": 5627, "nifas_vit_a_pct": 59.8, "anak_lahir_hidup": 8727, "jumlah_ibu_bersalin_nifas": 9408 },
-  "Ngawi": { "jumlah_kf1": 7265, "kf1_pct": 62.4, "jumlah_kf_lengkap": 7265, "kf_lengkap_pct": 62.4, "jumlah_nifas_vit_a": 7265, "nifas_vit_a_pct": 62.4, "anak_lahir_hidup": 11097, "jumlah_ibu_bersalin_nifas": 11640 },
-  "Bojonegoro": { "jumlah_kf1": 12874, "kf1_pct": 76.3, "jumlah_kf_lengkap": 12449, "kf_lengkap_pct": 73.8, "jumlah_nifas_vit_a": 12169, "nifas_vit_a_pct": 72.1, "anak_lahir_hidup": 16229, "jumlah_ibu_bersalin_nifas": 16868 },
-  "Tuban": { "jumlah_kf1": 12734, "kf1_pct": 77.7, "jumlah_kf_lengkap": 12632, "kf_lengkap_pct": 77.1, "jumlah_nifas_vit_a": 12734, "nifas_vit_a_pct": 77.7, "anak_lahir_hidup": 15570, "jumlah_ibu_bersalin_nifas": 16392 },
-  "Lamongan": { "jumlah_kf1": 13119, "kf1_pct": 68.4, "jumlah_kf_lengkap": 12766, "kf_lengkap_pct": 66.5, "jumlah_nifas_vit_a": 13046, "nifas_vit_a_pct": 68, "anak_lahir_hidup": 18385, "jumlah_ibu_bersalin_nifas": 19185 },
-  "Gresik": { "jumlah_kf1": 15660, "kf1_pct": 78.6, "jumlah_kf_lengkap": 15589, "kf_lengkap_pct": 78.3, "jumlah_nifas_vit_a": 15566, "nifas_vit_a_pct": 78.2, "anak_lahir_hidup": 19218, "jumlah_ibu_bersalin_nifas": 19912 },
-  "Bangkalan": { "jumlah_kf1": 15289, "kf1_pct": 80.5, "jumlah_kf_lengkap": 15207, "kf_lengkap_pct": 80.1, "jumlah_nifas_vit_a": 16248, "nifas_vit_a_pct": 85.6, "anak_lahir_hidup": 16236, "jumlah_ibu_bersalin_nifas": 18988 },
-  "Sampang": { "jumlah_kf1": 16347, "kf1_pct": 84.9, "jumlah_kf_lengkap": 15708, "kf_lengkap_pct": 81.6, "jumlah_nifas_vit_a": 16044, "nifas_vit_a_pct": 83.3, "anak_lahir_hidup": 18777, "jumlah_ibu_bersalin_nifas": 19249 },
-  "Pamekasan": { "jumlah_kf1": 14103, "kf1_pct": 93.9, "jumlah_kf_lengkap": 13367, "kf_lengkap_pct": 89, "jumlah_nifas_vit_a": 13992, "nifas_vit_a_pct": 93.1, "anak_lahir_hidup": 14313, "jumlah_ibu_bersalin_nifas": 15026 },
-  "Sumenep": { "jumlah_kf1": 14590, "kf1_pct": 82.7, "jumlah_kf_lengkap": 14104, "kf_lengkap_pct": 80, "jumlah_nifas_vit_a": 14557, "nifas_vit_a_pct": 82.5, "anak_lahir_hidup": 16693, "jumlah_ibu_bersalin_nifas": 17641 },
-  "Kota Kediri": { "jumlah_kf1": 3290, "kf1_pct": 69.9, "jumlah_kf_lengkap": 3277, "kf_lengkap_pct": 69.7, "jumlah_nifas_vit_a": 3290, "nifas_vit_a_pct": 69.9, "anak_lahir_hidup": 4447, "jumlah_ibu_bersalin_nifas": 4704 },
-  "Kota Blitar": { "jumlah_kf1": 2326, "kf1_pct": 100, "jumlah_kf_lengkap": 2326, "kf_lengkap_pct": 100, "jumlah_nifas_vit_a": 2326, "nifas_vit_a_pct": 100, "anak_lahir_hidup": 2167, "jumlah_ibu_bersalin_nifas": 2326 },
-  "Kota Malang": { "jumlah_kf1": 10325, "kf1_pct": 85.4, "jumlah_kf_lengkap": 10243, "kf_lengkap_pct": 84.7, "jumlah_nifas_vit_a": 10328, "nifas_vit_a_pct": 85.4, "anak_lahir_hidup": 11600, "jumlah_ibu_bersalin_nifas": 12096 },
-  "Kota Probolinggo": { "jumlah_kf1": 3586, "kf1_pct": 88.5, "jumlah_kf_lengkap": 3571, "kf_lengkap_pct": 88.1, "jumlah_nifas_vit_a": 3671, "nifas_vit_a_pct": 90.6, "anak_lahir_hidup": 3820, "jumlah_ibu_bersalin_nifas": 4053 },
-  "Kota Pasuruan": { "jumlah_kf1": 3556, "kf1_pct": 94, "jumlah_kf_lengkap": 3527, "kf_lengkap_pct": 93.2, "jumlah_nifas_vit_a": 3556, "nifas_vit_a_pct": 94, "anak_lahir_hidup": 3486, "jumlah_ibu_bersalin_nifas": 3784 },
-  "Kota Mojokerto": { "jumlah_kf1": 1904, "kf1_pct": 96.7, "jumlah_kf_lengkap": 1891, "kf_lengkap_pct": 96, "jumlah_nifas_vit_a": 1904, "nifas_vit_a_pct": 96.7, "anak_lahir_hidup": 1852, "jumlah_ibu_bersalin_nifas": 1969 },
-  "Kota Madiun": { "jumlah_kf1": 2862, "kf1_pct": 100, "jumlah_kf_lengkap": 2833, "kf_lengkap_pct": 99, "jumlah_nifas_vit_a": 2862, "nifas_vit_a_pct": 100, "anak_lahir_hidup": 2703, "jumlah_ibu_bersalin_nifas": 2861 },
-  "Kota Surabaya": { "jumlah_kf1": 36948, "kf1_pct": 100.4, "jumlah_kf_lengkap": 36898, "kf_lengkap_pct": 100.2, "jumlah_nifas_vit_a": 36948, "nifas_vit_a_pct": 100.4, "anak_lahir_hidup": 35849, "jumlah_ibu_bersalin_nifas": 36818 },
-  "Kota Batu": { "jumlah_kf1": 2483, "kf1_pct": 73.4, "jumlah_kf_lengkap": 2498, "kf_lengkap_pct": 73.8, "jumlah_nifas_vit_a": 2469, "nifas_vit_a_pct": 72.9, "anak_lahir_hidup": 3124, "jumlah_ibu_bersalin_nifas": 3385 }
-};
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
@@ -89,6 +49,56 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
+const CustomPairTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length >= 2) {
+    const p1 = payload[0];
+    const p2 = payload[1];
+    
+    const isPct = p1.name.includes('%') || p1.dataKey.includes('pct');
+    const fmt = (v: number) => isPct ? v.toFixed(1) + '%' : Math.round(v).toLocaleString('id-ID');
+
+    const diff = Math.abs(p1.value - p2.value);
+
+    const getCount = (key: string, data: any) => {
+      if (key === 'kf_lengkap_pct') return data.jumlah_kf_lengkap || 0;
+      if (key === 'nifas_vit_a_pct') return data.jumlah_nifas_vit_a || 0;
+      if (key === 'k6_pct') return data.k6_jumlah || 0;
+      if (key === 'fe_tablet_pct') return data.fe_tablet_jumlah || 0;
+      return null;
+    }
+
+    const c1 = isPct ? getCount(p1.dataKey, p1.payload) : null;
+    const c2 = isPct ? getCount(p2.dataKey, p2.payload) : null;
+
+    return (
+      <div className="bg-white border border-gray-100 rounded-xl shadow-lg p-3 text-xs">
+        <div className="font-semibold mb-2">{label}</div>
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full" style={{ background: p1.fill }}></div>
+              <span className="text-gray-600">{p1.name}:</span>
+            </div>
+            <span className="font-semibold">{fmt(p1.value)}{c1 ? ` (${Number(c1).toLocaleString('id-ID')})` : ''}</span>
+          </div>
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full" style={{ background: p2.fill }}></div>
+              <span className="text-gray-600">{p2.name}:</span>
+            </div>
+            <span className="font-semibold">{fmt(p2.value)}{c2 ? ` (${Number(c2).toLocaleString('id-ID')})` : ''}</span>
+          </div>
+        </div>
+        <div className="mt-3 pt-2 border-t border-gray-100 flex justify-between items-center">
+          <span className="text-gray-500">Selisih (absolut):</span>
+          <span className="font-bold">{fmt(diff)}</span>
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
+
 const IBU_OPTIONS = [
   { key: 'k1_pct', label: 'Cakupan K1 (%)' },
   { key: 'k6_pct', label: 'Cakupan K6 (%)' },
@@ -110,17 +120,21 @@ export default function KesehatanIbu() {
 
   const data = useMemo(() => {
     return kesehatanIbu.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR').map(d => {
-      const csv = CSV_DATA[d.kabupaten] || {};
+      const ttd = d['28_suplementasi_gizi_ibu_hamil_yang_mengonsumsi_ttd_minimal_180_tablet'] || 0;
+      const mms = d['28_suplementasi_gizi_ibu_hamil_yang_mengonsumsi_mms_minimal_180_tablet'] || 0;
+      const fe_tablet_jumlah = Number(ttd) + Number(mms);
       return {
         ...d,
-        kf1_pct: csv.kf1_pct || 0,
-        jumlah_kf1: csv.jumlah_kf1 || 0,
-        kf_lengkap_pct: csv.kf_lengkap_pct || 0,
-        jumlah_kf_lengkap: csv.jumlah_kf_lengkap || 0,
-        nifas_vit_a_pct: csv.nifas_vit_a_pct || 0,
-        jumlah_nifas_vit_a: csv.jumlah_nifas_vit_a || 0,
-        anak_lahir_hidup: csv.anak_lahir_hidup || 0,
-        ibu_bersalin: csv.jumlah_ibu_bersalin_nifas || 0,
+        fe_tablet_jumlah,
+        k6_jumlah: d['26_k6_jumlah'] || 0,
+        kf1_pct: d.kf1_pct || 0,
+        jumlah_kf1: d.jumlah_kf1 || 0,
+        kf_lengkap_pct: d.kf_lengkap_pct || 0,
+        jumlah_kf_lengkap: d.jumlah_kf_lengkap || 0,
+        nifas_vit_a_pct: d.nifas_vit_a_pct || 0,
+        jumlah_nifas_vit_a: d.jumlah_nifas_vit_a || 0,
+        anak_lahir_hidup: d.anak_lahir_hidup || 0,
+        ibu_bersalin: d.jumlah_ibu_bersalin_nifas || 0,
       };
     })
   }, [kesehatanIbu])
@@ -328,7 +342,7 @@ export default function KesehatanIbu() {
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
                   <XAxis dataKey="kabupaten" tick={{ fontSize: 11 }} angle={-45} textAnchor="end" height={60} interval={0} />
                   <YAxis tick={{ fontSize: 11 }} />
-                  <Tooltip formatter={(v: any) => v?.toFixed(1) + '%'} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
+                  <Tooltip content={<CustomPairTooltip />} />
                   <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
                   <Bar dataKey="fe_tablet_pct" name="Tablet Fe (%)" fill="#0FB0AA" radius={[3, 3, 0, 0]} />
                   <Bar dataKey="k6_pct" name="Kunjungan K6 (%)" fill="#CBD92C" radius={[3, 3, 0, 0]} />
@@ -361,7 +375,7 @@ export default function KesehatanIbu() {
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
                   <XAxis dataKey="kabupaten" tick={{ fontSize: 11 }} angle={-45} textAnchor="end" height={60} interval={0} />
                   <YAxis tick={{ fontSize: 11 }} />
-                  <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID')} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
+                  <Tooltip content={<CustomPairTooltip />} />
                   <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
                   <Bar dataKey="ibu_bersalin" name="Ibu Bersalin" fill="#0FB0AA" radius={[3, 3, 0, 0]} />
                   <Bar dataKey="anak_lahir_hidup" name="Anak Lahir Hidup" fill="#CBD92C" radius={[3, 3, 0, 0]} />
@@ -394,7 +408,7 @@ export default function KesehatanIbu() {
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
                   <XAxis dataKey="kabupaten" tick={{ fontSize: 11 }} angle={-45} textAnchor="end" height={60} interval={0} />
                   <YAxis tick={{ fontSize: 11 }} />
-                  <Tooltip formatter={(v: any) => v?.toFixed(1) + '%'} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
+                  <Tooltip content={<CustomPairTooltip />} />
                   <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
                   <Bar dataKey="nifas_vit_a_pct" name="Vitamin A Nifas (%)" fill="#0FB0AA" radius={[3, 3, 0, 0]} />
                   <Bar dataKey="kf_lengkap_pct" name="KF Lengkap (%)" fill="#CBD92C" radius={[3, 3, 0, 0]} />
