@@ -58,7 +58,8 @@ export default function PembiayaanKesehatan() {
     { tahun: '2024', total: val24 },
     { tahun: '2025', total: val25 },
   ]
-  const growth = val24 > 0 ? ((val25 - val24) / val24 * 100).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : '0';
+  const growthNum = val24 > 0 ? ((val25 - val24) / val24 * 100) : 0;
+  const growth = growthNum.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
   const sortedData = [...data]
     .filter(d => d.kabupaten !== 'PROV. JAWA TIMUR')
@@ -291,12 +292,14 @@ export default function PembiayaanKesehatan() {
           </div>
         </div>
         <ResponsiveContainer width="100%" height={300}>
-          <AreaChart data={trendData} margin={{ left: 20, right: 20 }}>
+          <AreaChart data={trendData} margin={{ left: 20, right: 80, top: 30 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
             <XAxis dataKey="tahun" tick={{ fontSize: 11 }} />
             <YAxis tick={{ fontSize: 11 }} tickFormatter={v => (v / 1e12).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + 'T'} width={80} />
             <Tooltip formatter={(v: any) => fmtRp(v)} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
-            <Area type="linear" dataKey="total" stroke="#0F8F8B" fill="#0F8F8B22" strokeWidth={3} name="Total Anggaran" activeDot={{ r: 6, fill: '#0F8F8B', stroke: '#fff', strokeWidth: 2 }}  dot={{ r: 4, fill: '#0F8F8B', stroke: '#fff', strokeWidth: 2 }} label={{ position: 'top', formatter: (v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID'), fontSize: 10, fill: '#374151', fontWeight: 600 }} />
+            <Area type="linear" dataKey="total" stroke="#0F8F8B" fill="#0F8F8B22" strokeWidth={3} name="Total Anggaran" activeDot={{ r: 6, fill: '#0F8F8B', stroke: '#fff', strokeWidth: 2 }} dot={{ r: 4, fill: '#0F8F8B', stroke: '#fff', strokeWidth: 2 }}>
+              <LabelList dataKey="total" position="top" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : v >= 1e12 ? (v/1e12).toLocaleString('id-ID', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + 'T' : v >= 1e9 ? (v/1e9).toLocaleString('id-ID', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + 'M' : Math.round(v).toLocaleString('id-ID')} />
+            </Area>
           </AreaChart>
         </ResponsiveContainer>
         <div className="bg-[#F5FBFB] rounded-xl p-5 border border-[#CCEEED] text-sm text-gray-700">
@@ -307,7 +310,7 @@ export default function PembiayaanKesehatan() {
           <div className="flex items-start gap-2 ml-1">
             <div className="w-1.5 h-1.5 rounded-full bg-[#0F8F8B] mt-1.5 flex-shrink-0" />
             <div className="leading-relaxed">
-              Melihat pergerakan tiga tahun terakhir, total anggaran kesehatan wilayah ini dialokasikan sebesar <strong>{fmtRp(val25)}</strong> pada tahun 2025. Angka ini {Number(growth) > 0 ? "mengalami kenaikan" : Number(growth) < 0 ? "mengalami penurunan" : "tetap sama"} sekitar <strong>{Math.abs(Number(growth))}%</strong> jika dibandingkan dengan tahun lalu (2024). {Number(growth) > 0 ? "Tren kenaikan ini merupakan komitmen positif pemerintah; implikasinya, masyarakat semestinya bisa menikmati fasilitas puskesmas yang lebih baik, antrean JKN yang lebih terlayani, dan program gizi anak yang lebih merata." : Number(growth) < 0 ? "Penurunan anggaran ini perlu dikelola secara hati-hati agar efisiensi biaya tidak sampai memotong anggaran prioritas yang langsung menyentuh rakyat miskin, seperti subsidi BPJS Kesehatan atau ketersediaan stok obat gratis." : "Alokasi dana yang stagnan (tetap) menuntut pemerintah daerah untuk membelanjakan anggaran dengan sangat efisien agar pelayanan RS dan Puskesmas tidak menurun kualitasnya."}
+              Melihat pergerakan tiga tahun terakhir, total anggaran kesehatan wilayah ini dialokasikan sebesar <strong>{fmtRp(val25)}</strong> pada tahun 2025. Angka ini {growthNum > 0 ? "mengalami kenaikan" : growthNum < 0 ? "mengalami penurunan" : "tetap sama"} sekitar <strong>{Math.abs(growthNum).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%</strong> jika dibandingkan dengan tahun lalu (2024). {growthNum > 0 ? "Tren kenaikan ini merupakan komitmen positif pemerintah; implikasinya, masyarakat semestinya bisa menikmati fasilitas puskesmas yang lebih baik, antrean JKN yang lebih terlayani, dan program gizi anak yang lebih merata." : growthNum < 0 ? "Penurunan anggaran ini perlu dikelola secara hati-hati agar efisiensi biaya tidak sampai memotong anggaran prioritas yang langsung menyentuh rakyat miskin, seperti subsidi BPJS Kesehatan atau ketersediaan stok obat gratis." : "Alokasi dana yang stagnan (tetap) menuntut pemerintah daerah untuk membelanjakan anggaran dengan sangat efisien agar pelayanan RS dan Puskesmas tidak menurun kualitasnya."}
             </div>
           </div>
         </div>
