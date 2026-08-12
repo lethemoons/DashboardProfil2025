@@ -17,11 +17,13 @@ export function FilterProvider({ children }: { children: React.ReactNode }) {
   const refreshYears = async () => {
     try {
       const res = await api.get('/years');
-      if (res.data && res.data.length > 0) {
+      if (res.data && Array.isArray(res.data) && res.data.length > 0) {
         setAvailableYears(res.data);
         if (!res.data.includes(year)) {
           setYear(res.data[res.data.length - 1]); // Set to most recent
         }
+      } else {
+        console.warn('API /years did not return an array:', res.data);
       }
     } catch (err) {
       console.error('Failed to fetch years', err);
