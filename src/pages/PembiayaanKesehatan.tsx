@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  CartesianGrid, Legend, AreaChart, Area, PieChart, Pie, Cell
+  CartesianGrid, Legend, AreaChart, Area, PieChart, Pie, Cell, Label
 } from 'recharts'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
@@ -29,14 +29,14 @@ export default function PembiayaanKesehatan() {
     { name: 'PBI APBN', value: 15361033, percentage: 36.5 },
     { name: 'PBI APBD', value: 7507367, percentage: 17.8 }
   ]
-  const pbiColors = ['#0F8F8B', '#9EAF24']
+  const pbiColors = ['#0B6E6B', '#6B7B10']
 
   const nonPbiData = [
     { name: 'Pekerja Penerima Upah (PPU)', value: 6863643, percentage: 16.3 },
     { name: 'Pekerja Mandiri (PBPU)', value: 2681330, percentage: 6.4 },
     { name: 'Bukan Pekerja (BP)', value: 773500, percentage: 1.8 }
   ]
-  const nonPbiColors = ['#078FA5', '#0F8F8B', '#9EAF24']
+  const nonPbiColors = ['#055A6E', '#0B6E6B', '#6B7B10']
 
   const data = useMemo(() => pembiayaan.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [pembiayaan])
   const kpiData = data
@@ -119,7 +119,7 @@ export default function PembiayaanKesehatan() {
         </div>
         <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm md:col-span-2">
           <h3 className="font-semibold text-gray-800 mb-4" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Rincian Peserta JKN Berdasarkan Kategori</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-[250px]">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4" style={{ height: 280 }}>
             <div className="flex flex-col items-center h-full w-full">
               <h4 className="text-sm font-semibold text-gray-600 mb-2">Penerima Bantuan Iuran (PBI)</h4>
               <div className="flex-1 w-full relative">
@@ -129,10 +129,22 @@ export default function PembiayaanKesehatan() {
                       data={pbiData}
                       cx="50%"
                       cy="50%"
-                      innerRadius={45}
-                      outerRadius={75}
+                      innerRadius={0}
+                      outerRadius={80}
                       paddingAngle={2}
                       dataKey="value"
+                      label={({ cx, cy, midAngle, innerRadius, outerRadius, percentage, name }) => {
+                        const RADIAN = Math.PI / 180;
+                        const radius = innerRadius + (outerRadius - innerRadius) * 0.55;
+                        const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                        const y = cy + radius * Math.sin(-midAngle * RADIAN);
+                        return (
+                          <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central" fontSize={11} fontWeight="bold">
+                            {`${percentage.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%`}
+                          </text>
+                        );
+                      }}
+                      labelLine={false}
                     >
                       {pbiData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={pbiColors[index % pbiColors.length]} />
@@ -160,10 +172,22 @@ export default function PembiayaanKesehatan() {
                       data={nonPbiData}
                       cx="50%"
                       cy="50%"
-                      innerRadius={45}
-                      outerRadius={75}
+                      innerRadius={0}
+                      outerRadius={80}
                       paddingAngle={2}
                       dataKey="value"
+                      label={({ cx, cy, midAngle, innerRadius, outerRadius, percentage, name }) => {
+                        const RADIAN = Math.PI / 180;
+                        const radius = innerRadius + (outerRadius - innerRadius) * 0.55;
+                        const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                        const y = cy + radius * Math.sin(-midAngle * RADIAN);
+                        return (
+                          <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central" fontSize={11} fontWeight="bold">
+                            {`${percentage.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%`}
+                          </text>
+                        );
+                      }}
+                      labelLine={false}
                     >
                       {nonPbiData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={nonPbiColors[index % nonPbiColors.length]} />
@@ -272,7 +296,7 @@ export default function PembiayaanKesehatan() {
             <XAxis dataKey="tahun" tick={{ fontSize: 11 }} />
             <YAxis tick={{ fontSize: 11 }} tickFormatter={v => (v / 1e12).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + 'T'} width={80} />
             <Tooltip formatter={(v: any) => fmtRp(v)} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
-            <Area type="monotone" dataKey="total" stroke="#0F8F8B" fill="#0F8F8B22" strokeWidth={3} name="Total Anggaran" activeDot={{ r: 6, fill: '#0F8F8B', stroke: '#fff', strokeWidth: 2 }} />
+            <Area type="linear" dataKey="total" stroke="#0F8F8B" fill="#0F8F8B22" strokeWidth={3} name="Total Anggaran" activeDot={{ r: 6, fill: '#0F8F8B', stroke: '#fff', strokeWidth: 2 }} />
           </AreaChart>
         </ResponsiveContainer>
         <div className="bg-[#F5FBFB] rounded-xl p-5 border border-[#CCEEED] text-sm text-gray-700">

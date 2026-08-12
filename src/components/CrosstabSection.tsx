@@ -290,11 +290,11 @@ export default function CrosstabSection({
 
       if (chiSquareResult.isSignificant) {
         list.push(
-          `**Kesimpulan Uji Independensi (Chi-Square):** Terdapat hubungan/asosiasi yang **signifikan secara statistik** antara **${rowName}** dan **${colName}** (χ² = ${chiFormatted}, df = ${chiSquareResult.df}, p ${pFormatted} < 0.05).`
+          `**Kesimpulan Uji Independensi (Chi-Square):** Terdapat hubungan/asosiasi yang **signifikan secara statistik** antara **${rowName}** dan **${colName}** (χ² = ${chiFormatted}, df = ${chiSquareResult.df}, p ${pFormatted} < 0,05).`
         )
       } else {
         list.push(
-          `**Kesimpulan Uji Independensi (Chi-Square):** **Tidak terdapat hubungan yang signifikan secara statistik** antara **${rowName}** dan **${colName}** (χ² = ${chiFormatted}, df = ${chiSquareResult.df}, p ${pFormatted} ≥ 0.05). Kedua variabel cenderung saling independen.`
+          `**Kesimpulan Uji Independensi (Chi-Square):** **Tidak terdapat hubungan yang signifikan secara statistik** antara **${rowName}** dan **${colName}** (χ² = ${chiFormatted}, df = ${chiSquareResult.df}, p ${pFormatted} ≥ 0,05). Kedua variabel cenderung saling independen.`
         )
       }
     }
@@ -333,7 +333,7 @@ export default function CrosstabSection({
                   crosstabResult.chiSquareResult.isSignificant ? 'bg-emerald-500' : 'bg-gray-400'
                 }`}
               />
-              {crosstabResult.chiSquareResult.isSignificant ? 'Asosiasi Signifikan (p < 0.05)' : 'Independen (p ≥ 0.05)'}
+              {crosstabResult.chiSquareResult.isSignificant ? 'Asosiasi Signifikan (p < 0,05)' : 'Independen (p ≥ 0,05)'}
             </span>
           </div>
         )}
@@ -603,7 +603,7 @@ export default function CrosstabSection({
               <span className="text-xs font-bold text-teal-800 uppercase tracking-wide">Uji Independensi Chi-Square</span>
               <span className="text-[10px] text-gray-400">|</span>
               <span className="text-[11px] text-gray-600">
-                Tingkat Signifikansi α = 0.05
+                Tingkat Signifikansi α = 0,05
               </span>
             </div>
 

@@ -77,8 +77,8 @@ export default function RankChart({ data, indicators, defaultIndicator, title = 
 
   const formatValue = (v: number) => {
     return activeIndicator.isPercentage 
-      ? `${v.toLocaleString('id-ID', { maximumFractionDigits: 1 })}%`
-      : v.toLocaleString('id-ID');
+      ? `${v.toLocaleString('id-ID', { maximumFractionDigits: 2 })}%`
+      : Math.round(v).toLocaleString('id-ID');
   };
 
   const chartHeight = limit === 'all' ? processedData.length * 40 + 60 : (limit * 40) + 60;

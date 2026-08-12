@@ -1,4 +1,3 @@
-import RiskClusteringMap from '../components/RiskClusteringMap';
 import { useState, useMemo } from 'react'
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
@@ -36,8 +35,6 @@ export default function UKBM() {
     }))
   }, [data])
 
-
-
   const stats = descStats(data.map(d => Number(d[statIndic] || 0)))
 
   const indicatorOptions = [
@@ -61,7 +58,6 @@ export default function UKBM() {
   return (
     <div className="flex flex-col gap-6">
 
-
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <KPICard title="Total Posyandu" value="46.414" sub="Unit" icon="🌿" color="#0F8F8B" />
         <KPICard title="Posyandu Aktif" value={totAktif.toLocaleString('id-ID')} sub={pctAktif.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '% dari total'} icon="✅" color="#22c55e" />
@@ -75,8 +71,8 @@ export default function UKBM() {
           <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Peta Sebaran UKBM Provinsi Jawa Timur</h3>
           <div className="flex items-center gap-3">
             <span className="text-xs text-gray-500 font-medium">Indikator:</span>
-            <select 
-              value={mapIndicator} 
+            <select
+              value={mapIndicator}
               onChange={e => setMapIndicator(e.target.value)}
               className="text-xs font-medium border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-[#0F8F8B] bg-gray-50 text-gray-700"
             >
@@ -86,26 +82,26 @@ export default function UKBM() {
             </select>
           </div>
         </div>
-        
-        <ChoroplethMap 
-          data={data} 
-          indicatorKey={mapIndicator} 
-          indicatorLabel={indicatorOptions.find(o => o.key === mapIndicator)?.label || ''} 
+
+        <ChoroplethMap
+          data={data}
+          indicatorKey={mapIndicator}
+          indicatorLabel={indicatorOptions.find(o => o.key === mapIndicator)?.label || ''}
         />
       </div>
 
       <div className="flex flex-col gap-4">
-        <RankChart 
-          data={dataWithPct} 
-          indicators={rankIndicators} 
-          defaultIndicator="jumlah_posyandu_siklus_hidup_aktif" 
+        <RankChart
+          data={dataWithPct}
+          indicators={rankIndicators}
+          defaultIndicator="jumlah_posyandu_siklus_hidup_aktif"
           title="Ranking Data Posyandu per Kabupaten/Kota"
         />
       </div>
 
-      <StatPanel 
-        stats={stats} 
-        label={statIndicLabel} 
+      <StatPanel
+        stats={stats}
+        label={statIndicLabel}
         rightElement={
           <select value={statIndic} onChange={e => setStatIndic(e.target.value)}
             className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[250px]">
@@ -125,16 +121,7 @@ export default function UKBM() {
         <h3 className="font-semibold text-gray-800 mb-4" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
           Daftar Lengkap Jumlah Posyandu Siklus Hidup
         </h3>
-        
-      <RiskClusteringMap 
-        title="Analisis Klasterisasi Pemetaan Risiko Keaktifan Posyandu"
-        data={data} 
-        variables={['pct_aktif']} 
-        directions={[-1]} 
-        variableLabels={['Posyandu Aktif (%)']} 
-      />
-
-      <DataTable data={data} columns={[
+        <DataTable data={data} columns={[
           { key: 'kabupaten', label: 'Kabupaten/Kota' },
           { key: 'jumlah_posyandu_siklus_hidup', label: 'Total Posyandu', format: v => v?.toLocaleString('id-ID') },
           { key: 'jumlah_posyandu_siklus_hidup_aktif', label: 'Posyandu Aktif', format: v => v?.toLocaleString('id-ID') },
