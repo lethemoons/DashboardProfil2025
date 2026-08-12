@@ -208,8 +208,8 @@ export default function Beranda({ onNavigate }: BerandaProps) {
           <div className="lg:col-span-5 relative">
             <div className="relative rounded-2xl overflow-hidden shadow-lg border border-gray-100 group">
               <img
-                src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80"
-                alt="Tenaga Kesehatan Jawa Timur"
+                src="/bromo.jpg"
+                alt="Gunung Bromo Jawa Timur"
                 className="w-full h-80 sm:h-96 object-cover object-center group-hover:scale-105 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent" />
