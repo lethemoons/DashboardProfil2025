@@ -190,7 +190,7 @@ export function calculateChiSquare(observedMatrix: number[][]): ChiSquareResult 
 
   let warning: string | undefined = undefined
   if (hasLowExpectedCounts) {
-    warning = `${lowExpectedCountPct.toFixed(0)}% sel memiliki frekuensi harapan (expected count) < 5. Asumsi uji Chi-Square tidak terpenuhi secara ideal, interpretasikan hasil dengan hati-hati.`
+    warning = `${lowExpectedCountPct.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}% sel memiliki frekuensi harapan (expected count) < 5. Asumsi uji Chi-Square tidak terpenuhi secara ideal, interpretasikan hasil dengan hati-hati.`
   }
 
   // Cramér's V for effect size
@@ -225,10 +225,10 @@ export interface BinnedCategory {
 }
 
 function formatNum(v: number): string {
-  if (Math.abs(v) >= 1e6) return (v / 1e6).toFixed(1) + 'jt'
+  if (Math.abs(v) >= 1e6) return (v / 1e6).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' juta'
   if (Math.abs(v) >= 1e3 && Number.isInteger(v)) return v.toLocaleString('id-ID')
   if (Number.isInteger(v)) return v.toString()
-  return v >= 100 ? v.toFixed(0) : v >= 10 ? v.toFixed(1) : v.toFixed(2)
+  return v >= 100 ? v.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) : v >= 10 ? v.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : v.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 }
 
 export function categorizeVariable(
@@ -373,3 +373,40 @@ export function categorizeVariable(
     categorize
   }
 }
+
+/**
+ * Calculates a dynamic domain max value with proportional padding.
+ * @param dataMax The maximum value found in the data.
+ * @param isPercentage Whether the indicator is explicitly a percentage.
+ * @returns A nicely rounded maximum value with 5-10% padding.
+ */
+export const getDynamicDomain = (dataMax, isPercentage = false) => {
+  if (dataMax == null || !isFinite(dataMax) || dataMax <= 0) return isPercentage ? 100 : 10;
+  
+  if (isPercentage) {
+    if (dataMax <= 20) return 25;
+    if (dataMax <= 45) return 50;
+    if (dataMax <= 70) return 75;
+    if (dataMax <= 90) return 95;
+    return 100;
+  }
+  
+  const magnitude = Math.pow(10, Math.floor(Math.log10(dataMax)));
+  const padded = dataMax * 1.1; // 10% padding
+  const normalized = padded / magnitude;
+  
+  let rounded = 10;
+  if (normalized <= 1.2) rounded = 1.2;
+  else if (normalized <= 1.5) rounded = 1.5;
+  else if (normalized <= 2) rounded = 2;
+  else if (normalized <= 2.5) rounded = 2.5;
+  else if (normalized <= 3) rounded = 3;
+  else if (normalized <= 4) rounded = 4;
+  else if (normalized <= 5) rounded = 5;
+  else if (normalized <= 6) rounded = 6;
+  else if (normalized <= 8) rounded = 8;
+  else rounded = 10;
+  
+  const result = rounded * magnitude;
+  return result >= 10 ? Math.ceil(result) : Number(result.toFixed(2));
+};

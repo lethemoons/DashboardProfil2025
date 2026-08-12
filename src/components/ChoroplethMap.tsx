@@ -16,7 +16,7 @@ interface ChoroplethMapProps {
   indicatorLabel: string;
 }
 
-const colorRange = ['#EAF8F7', '#BEEBE8', '#7ED7D2', '#0FB0AA', '#0A8C87'];
+const colorRange = ['#F0FAF9', '#B2EBF2', '#0F8F8B', '#095c5a', '#032625'];
 
 export default function ChoroplethMap({ data, indicatorKey, indicatorLabel }: ChoroplethMapProps) {
   const [tooltip, setTooltip] = useState<{ text: string, x: number, y: number } | null>(null);
@@ -80,7 +80,7 @@ export default function ChoroplethMap({ data, indicatorKey, indicatorLabel }: Ch
           >
             <div className="text-xs font-semibold text-gray-800 mb-1">{tooltip.text.split('|')[0]}</div>
             <div className="text-xs text-gray-500">{indicatorLabel}</div>
-            <div className="text-sm font-bold text-[#0FB0AA] mt-1">{tooltip.text.split('|')[1]}</div>
+            <div className="text-sm font-bold text-[#0F8F8B] mt-1">{tooltip.text.split('|')[1]}</div>
           </div>
         )}
 
@@ -97,7 +97,7 @@ export default function ChoroplethMap({ data, indicatorKey, indicatorLabel }: Ch
                 <path
                   key={feature.id || i}
                   d={pathGenerator(feature) || ''}
-                  fill={isHovered ? '#06B5D0' : fill}
+                  fill={isHovered ? '#078FA5' : fill}
                   stroke="#FFFFFF"
                   strokeWidth={isHovered ? 1.5 : 0.5}
                   style={{ transition: 'fill 150ms ease-out', cursor: 'pointer', outline: 'none' }}
@@ -149,13 +149,13 @@ export default function ChoroplethMap({ data, indicatorKey, indicatorLabel }: Ch
       {/* Auto Insight Box */}
       <div className="bg-[#F5FBFB] rounded-xl p-5 border border-[#CCEEED] text-sm text-gray-700">
         <div className="flex items-center gap-2 mb-3">
-          <div className="w-6 h-6 rounded-full bg-[#0FB0AA] text-white flex items-center justify-center font-serif text-[13px] font-bold">
+          <div className="w-6 h-6 rounded-full bg-[#0F8F8B] text-white flex items-center justify-center font-serif text-[13px] font-bold">
             i
           </div>
-          <span className="text-[#0FB0AA] font-bold text-sm tracking-wide">WAWASAN GEOGRAFIS</span>
+          <span className="text-[#0F8F8B] font-bold text-sm tracking-wide">WAWASAN GEOGRAFIS</span>
         </div>
         <div className="flex items-start gap-2 ml-1">
-          <div className="w-1.5 h-1.5 rounded-full bg-[#0FB0AA] mt-1.5 flex-shrink-0" />
+          <div className="w-1.5 h-1.5 rounded-full bg-[#0F8F8B] mt-1.5 flex-shrink-0" />
           <div className="leading-relaxed">
             Berdasarkan pemetaan di Jawa Timur untuk indikator <strong>{indicatorLabel}</strong>, nilai tertinggi berada di <strong>{highKab}</strong> ({max.toLocaleString('id-ID', { maximumFractionDigits: 1 })}) dan terendah di <strong>{lowKab}</strong> ({min.toLocaleString('id-ID', { maximumFractionDigits: 1 })}). 
             Rata-rata provinsi adalah <strong>{avg.toLocaleString('id-ID', {maximumFractionDigits: 1})}</strong>. Terdapat <strong>{countAbove}</strong> kabupaten/kota yang berada di atas rata-rata provinsi.

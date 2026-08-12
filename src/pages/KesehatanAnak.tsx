@@ -1,4 +1,6 @@
 import { useState, useMemo } from 'react'
+import ChoroplethMap from '../components/ChoroplethMap';
+import RiskClusteringMap from '../components/RiskClusteringMap';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   CartesianGrid, Cell, Legend, ScatterChart, Scatter
@@ -76,6 +78,7 @@ const CustomCompareTooltip = ({ active, payload, label, data }: any) => {
 };
 
 export default function KesehatanAnak() {
+  const [mapIndicator, setMapIndicator] = useState('gizi_kurang_pct');
   const { data: kesehatanAnak, loading, error } = useDashboardData()
 
   const [indic, setIndic] = useState('gizi_kurang_pct')
@@ -177,9 +180,34 @@ export default function KesehatanAnak() {
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         <KPICard title="Kematian Neonatal" value="3.159" sub="Kasus" icon="💔" color="#ef4444" />
         <KPICard title="Kematian Bayi" value="3.695" sub="Kasus" icon="👶" color="#f97316" />
-        <KPICard title="Balita Gizi Kurang" value="4,7%" icon="📏" color="#0FB0AA" />
+        <KPICard title="Balita Gizi Kurang" value="4,7%" icon="📏" color="#0F8F8B" />
         <KPICard title="Balita Gizi Buruk" value="0,6%" icon="⚠️" color="#f97316" />
-        <KPICard title="Imunisasi Bayi Lengkap" value="84,8%" icon="💉" color="#0FB0AA" />
+        <KPICard title="Imunisasi Bayi Lengkap" value="84,8%" icon="💉" color="#0F8F8B" />
+      </div>
+
+      {/* CHOROPLETH MAP SECTION */}
+      <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm mt-2 mb-2">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+          <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Peta Sebaran Provinsi Jawa Timur</h3>
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="text-xs text-gray-500 font-medium">Indikator:</span>
+            <select 
+              value={mapIndicator} 
+              onChange={e => setMapIndicator(e.target.value)}
+              className="text-xs font-medium border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-[#0F8F8B] bg-gray-50 text-gray-700 max-w-[200px] truncate"
+            >
+              {ANAK_OPTIONS.map(opt => (
+                <option key={opt.key} value={opt.key}>{opt.label}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+        
+        <ChoroplethMap 
+          data={data} 
+          indicatorKey={mapIndicator} 
+          indicatorLabel={ANAK_OPTIONS.find(o => o.key === mapIndicator)?.label || ''} 
+        />
       </div>
       
       <InsightBox insights={statInsights} />
@@ -207,9 +235,9 @@ export default function KesehatanAnak() {
             <YAxis tick={{ fontSize: 11 }} allowDecimals={false} />
             <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
             <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-            <Bar dataKey="neonatal" name="Neonatal" stackId="a" fill="#06B5D0" />
-            <Bar dataKey="bayi" name="Bayi" stackId="a" fill="#CBD92C" />
-            <Bar dataKey="balita" name="Balita" stackId="a" fill="#0FB0AA" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="neonatal" name="Neonatal" stackId="a" fill="#078FA5" />
+            <Bar dataKey="bayi" name="Bayi" stackId="a" fill="#9EAF24" />
+            <Bar dataKey="balita" name="Balita" stackId="a" fill="#0F8F8B" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -235,7 +263,7 @@ export default function KesehatanAnak() {
             <XAxis type="number" tick={{ fontSize: 11 }} domain={[0, 100]} />
             <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
             <Tooltip formatter={(v: any) => v?.toFixed(1) + '%'} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
-            <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]} fill="#0FB0AA" />
+            <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]} fill="#0F8F8B" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -265,8 +293,8 @@ export default function KesehatanAnak() {
             <YAxis tick={{ fontSize: 11 }} />
             <Tooltip content={<CustomCompareTooltip />} />
             <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-            <Bar dataKey={`${compareIndic}_a`} name={COMPARE_OPTIONS.find(o => o.key === compareIndic)?.label.split(' vs ')[0]} fill="#06B5D0" radius={[4, 4, 0, 0]} />
-            <Bar dataKey={`${compareIndic}_b`} name={COMPARE_OPTIONS.find(o => o.key === compareIndic)?.label.split(' vs ')[1]} fill="#CBD92C" radius={[4, 4, 0, 0]} />
+            <Bar dataKey={`${compareIndic}_a`} name={COMPARE_OPTIONS.find(o => o.key === compareIndic)?.label.split(' vs ')[0]} fill="#078FA5" radius={[4, 4, 0, 0]} />
+            <Bar dataKey={`${compareIndic}_b`} name={COMPARE_OPTIONS.find(o => o.key === compareIndic)?.label.split(' vs ')[1]} fill="#9EAF24" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -285,7 +313,7 @@ export default function KesehatanAnak() {
             className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400">
             {ANAK_OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
           </select>
-          <span className="ml-auto text-xs font-mono px-3 py-1 rounded-full" style={{ background: '#F0FAF9', color: '#0FB0AA' }}>r = {r.toFixed(3)} — {Math.abs(r) > 0.7 ? 'kuat' : Math.abs(r) > 0.4 ? 'sedang' : 'lemah'}</span>
+          <span className="ml-auto text-xs font-mono px-3 py-1 rounded-full" style={{ background: '#F0FAF9', color: '#0F8F8B' }}>r = {r.toFixed(3)} — {Math.abs(r) > 0.7 ? 'kuat' : Math.abs(r) > 0.4 ? 'sedang' : 'lemah'}</span>
         </div>
         <ResponsiveContainer width="100%" height={200}>
           <ScatterChart margin={{ top: 5, right: 20, bottom: 5, left: 5 }}>
@@ -297,7 +325,7 @@ export default function KesehatanAnak() {
               const p = payload[0].payload
               return <div className="bg-white border border-gray-100 rounded-xl shadow p-3 text-xs"><div className="font-semibold mb-1">{p.name}</div><div>X: {p.x?.toFixed(1)}%</div><div>Y: {p.y?.toFixed(1)}%</div></div>
             }} />
-            <Scatter data={scatterData} fill="#06B5D0" fillOpacity={0.75} />
+            <Scatter data={scatterData} fill="#078FA5" fillOpacity={0.75} />
           </ScatterChart>
         </ResponsiveContainer>
       </div>
@@ -308,6 +336,14 @@ export default function KesehatanAnak() {
         variables={ANAK_OPTIONS}
         defaultRowVar="gizi_kurang_pct"
         defaultColVar="gizi_buruk_pct"
+      />
+
+      
+      <RiskClusteringMap 
+        data={data} 
+        variables={['kematian_bayi', 'gizi_buruk_pct', 'imunisasi_dasar_lengkap_pct']} 
+        directions={[1, 1, -1]} 
+        variableLabels={['Kematian Bayi', 'Gizi Buruk (%)', 'Imunisasi Dasar Lengkap (%)']} 
       />
 
       <DataTable data={data} columns={[

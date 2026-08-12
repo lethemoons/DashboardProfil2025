@@ -65,7 +65,7 @@ const NAV: NavItem[] = [
       { id: 'penyakit_menular', label: '6.1 Penyakit Menular Langsung' },
       { id: 'pd3i', label: '6.2 PD3I' },
       { id: 'tular_vektor', label: '6.3 Tular Vektor & Zoonotik' },
-      { id: 'ptm', label: '6.4 Penyakit Tidak Menular (PTM)' },
+      { id: 'ptm', label: '6.4 Penyakit Tidak Menular' },
     ],
   },
   { id: 'lingkungan', label: 'Kesehatan Lingkungan', icon: Droplets },
@@ -126,6 +126,7 @@ function MainApp() {
     if (groupId && groupId !== id) {
       setExpanded(prev => new Set([...prev, groupId]))
     }
+    document.getElementById('main-scroll-container')?.scrollTo(0, 0)
   }
 
   const toggleExpand = (id: PageId) => {
@@ -269,22 +270,22 @@ function MainApp() {
             <select
               value={year}
               onChange={(e) => setYear(Number(e.target.value))}
-              className="px-3 py-1.5 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[#0FB0AA] text-sm font-medium text-gray-700 bg-white"
+              className="px-3 py-1.5 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[#0F8F8B] text-sm font-medium text-gray-700 bg-white"
             >
               {availableYears.map(y => (
                 <option key={y} value={y}>Tahun {y}</option>
               ))}
             </select>
-            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: '#F0FAF9', color: '#0FB0AA' }}>
-              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#0FB0AA' }} />
+            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: '#F0FAF9', color: '#0F8F8B' }}>
+              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#0F8F8B' }} />
               38 Kabupaten/Kota
             </div>
-            <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ background: '#0FB0AA' }}>G</div>
+            <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ background: '#0F8F8B' }}>G</div>
           </div>
         </header>
 
         {/* Page */}
-        <main className="flex-1 overflow-y-auto p-5">
+        <main id="main-scroll-container" className="flex-1 overflow-y-auto p-5">
           {page === 'beranda' && <Beranda onNavigate={navigate} />}
           {page === 'gambaran' && <GambaranUmum />}
           {page === 'sarana' && <SaranaKesehatan />}

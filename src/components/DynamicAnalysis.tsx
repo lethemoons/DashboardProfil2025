@@ -1,8 +1,7 @@
 import { useState, useMemo } from 'react'
 import {
   ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  ComposedChart, Line
-} from 'recharts'
+  ComposedChart, Line, LabelList } from 'recharts'
 import { descStats, pearsonR } from '../utils/stats'
 import StatPanel from './StatPanel'
 import InsightBox from './InsightBox'
@@ -189,7 +188,7 @@ export default function DynamicAnalysis({ data, indicators }: Props) {
                           onClick={() => { setVarX(i); setVarY(j); }}
                           title="Klik untuk melihat Scatter Plot"
                         >
-                          {val.toFixed(2)}
+                          {val.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </td>
                       )
                     })}
@@ -218,7 +217,7 @@ export default function DynamicAnalysis({ data, indicators }: Props) {
 
             <div className="h-[400px] w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart data={scatterData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+                <ComposedChart data={scatterData} margin={{ top: 40, right: 30, bottom: 20, left: 20 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
                   <XAxis type="number" dataKey="x" name={cleanLabel(varX)} tick={{ fontSize: 11 }} />
                   <YAxis type="number" dataKey="y" name={cleanLabel(varY)} tick={{ fontSize: 11 }} />
@@ -228,15 +227,17 @@ export default function DynamicAnalysis({ data, indicators }: Props) {
                     formatter={(val: any, name: any) => [val.toLocaleString('id-ID'), name === 'x' ? cleanLabel(varX) : name === 'y' ? cleanLabel(varY) : 'Trend']}
                     labelFormatter={(label, payload) => payload?.[0]?.payload?.kabupaten || label}
                   />
-                  <Scatter name="Kabupaten/Kota" dataKey="y" fill="#0FB0AA" />
-                  <Line type="monotone" dataKey="trendY" stroke="#f97316" dot={false} activeDot={false} strokeWidth={2} name="Garis Regresi (Trend)" />
+                  <Scatter name="Kabupaten/Kota" dataKey="y" fill="#0F8F8B" />
+                  <Line type="monotone" dataKey="trendY" stroke="#f97316" dot={false} activeDot={false} strokeWidth={2} name="Garis Regresi (Trend)">
+                                    <LabelList dataKey="trendY" position="top" offset={8} formatter={(v: any) => typeof v === 'number' ? (v >= 1e6 ? (v/1e6).toLocaleString('id-ID', {minimumFractionDigits:1, maximumFractionDigits:1}) + ' juta' : v % 1 !== 0 ? v.toLocaleString('id-ID', {minimumFractionDigits: 1, maximumFractionDigits: 1}) : v.toLocaleString('id-ID')) : v} style={{ fontSize: 11, fill: '#1f2937', fontWeight: 600, stroke: '#ffffff', strokeWidth: 2, paintOrder: 'stroke' }} />
+                                  </Line>
                 </ComposedChart>
               </ResponsiveContainer>
             </div>
 
             {varX && varY && (
               <InsightBox>
-                Korelasi Pearson antara <strong>{varX.replace(/_/g, ' ')}</strong> dan <strong>{varY.replace(/_/g, ' ')}</strong> adalah sebesar <strong>{pearsonR(data.map(d => Number(d[varX]||0)), data.map(d => Number(d[varY]||0))).toFixed(2)}</strong>. 
+                Korelasi Pearson antara <strong>{varX.replace(/_/g, ' ')}</strong> dan <strong>{varY.replace(/_/g, ' ')}</strong> adalah sebesar <strong>{pearsonR(data.map(d => Number(d[varX]||0)), data.map(d => Number(d[varY]||0))).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>. 
                 Nilai ini merepresentasikan tingkat dan arah hubungan linier antar kedua variabel SDM di Jawa Timur. Garis regresi oranye memperlihatkan kecenderungan (_trend_) data.
               </InsightBox>
             )}

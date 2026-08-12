@@ -1,4 +1,6 @@
 import { useState, useMemo } from 'react'
+import ChoroplethMap from '../components/ChoroplethMap';
+import RiskClusteringMap from '../components/RiskClusteringMap';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   CartesianGrid, Cell, Legend
@@ -22,6 +24,7 @@ const PD3I_OPTIONS = [
 
 
 export default function PD3I() {
+  const [mapIndicator, setMapIndicator] = useState('difteri_kasus');
   const { data: penyakitPD3I, loading, error } = useDashboardData()
 
   const [pd3iIndic, setPd3iIndic] = useState('difteri_kasus')
@@ -56,12 +59,37 @@ export default function PD3I() {
   return (
     <div className="flex flex-col gap-5">
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <KPICard title="Kasus Difteri" value={totDifteri.toLocaleString('id-ID')} sub="CFR Difteri 2.2%" icon="⚠️" color="#0FB0AA" />
-            <KPICard title="Kasus Pertusis" value={totPertusis.toLocaleString('id-ID')} sub="CFR Tetanus Neonatorum 52.6%" icon="😮‍💨" color="#0FB0AA" />
-            <KPICard title="Kasus Suspek Campak" value={totCampakSuspek.toLocaleString('id-ID')} icon="🔴" color="#0FB0AA" />
-            <KPICard title="AFP Rate (Non Polio) < 15 Thn" value="6.3" sub="per 100.000 penduduk < 15 tahun" icon="👶" color="#0FB0AA" />
-            <KPICard title="KLB <24 Jam" value="100%" sub="Rata-rata penanganan" icon="🚨" color="#0FB0AA" />
+            <KPICard title="Kasus Difteri" value={totDifteri.toLocaleString('id-ID')} sub="CFR Difteri 2.2%" icon="⚠️" color="#0F8F8B" />
+            <KPICard title="Kasus Pertusis" value={totPertusis.toLocaleString('id-ID')} sub="CFR Tetanus Neonatorum 52.6%" icon="😮‍💨" color="#0F8F8B" />
+            <KPICard title="Kasus Suspek Campak" value={totCampakSuspek.toLocaleString('id-ID')} icon="🔴" color="#0F8F8B" />
+            <KPICard title="AFP Rate (Non Polio) < 15 Thn" value="6.3" sub="per 100.000 penduduk < 15 tahun" icon="👶" color="#0F8F8B" />
+            <KPICard title="KLB <24 Jam" value="100%" sub="Rata-rata penanganan" icon="🚨" color="#0F8F8B" />
           </div>
+
+      {/* CHOROPLETH MAP SECTION */}
+      <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm mt-2 mb-2">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+          <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Peta Sebaran Provinsi Jawa Timur</h3>
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="text-xs text-gray-500 font-medium">Indikator:</span>
+            <select 
+              value={mapIndicator} 
+              onChange={e => setMapIndicator(e.target.value)}
+              className="text-xs font-medium border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-[#0F8F8B] bg-gray-50 text-gray-700 max-w-[200px] truncate"
+            >
+              {PD3I_OPTIONS.map(opt => (
+                <option key={opt.key} value={opt.key}>{opt.label}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+        
+        <ChoroplethMap 
+          data={pd3iData} 
+          indicatorKey={mapIndicator} 
+          indicatorLabel={PD3I_OPTIONS.find(o => o.key === mapIndicator)?.label || ''} 
+        />
+      </div>
 
           <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
             <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
@@ -86,7 +114,7 @@ export default function PD3I() {
                     <XAxis type="number" tick={{ fontSize: 11 }} />
                     <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
                     <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
-                    <Bar dataKey={pd3iIndic} name={pd3iLabel} fill="#0FB0AA" radius={[0, 6, 6, 0]} />
+                    <Bar dataKey={pd3iIndic} name={pd3iLabel} fill="#0F8F8B" radius={[0, 6, 6, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -104,7 +132,15 @@ export default function PD3I() {
           />
           <InsightBox insights={pd3iInsights} />
 
-          <DataTable data={pd3iData} columns={[
+          
+      <RiskClusteringMap 
+        data={pd3iData} 
+        variables={['difteri_kasus', 'campak_suspek_kasus', 'klb_24jam_pct']} 
+        directions={[1, 1, -1]} 
+        variableLabels={['Kasus Difteri', 'Suspek Campak', 'KLB Ditangani <24 Jam (%)']} 
+      />
+
+      <DataTable data={pd3iData} columns={[
             { key: 'kabupaten', label: 'Kabupaten/Kota' },
             { key: 'difteri_kasus', label: 'Difteri' },
             { key: 'campak_suspek_kasus', label: 'Suspek Campak' },

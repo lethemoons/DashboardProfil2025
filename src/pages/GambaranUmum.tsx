@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import ChoroplethMap from '../components/ChoroplethMap';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   ScatterChart, Scatter, LineChart, Line, CartesianGrid, Legend, Cell
@@ -14,7 +15,7 @@ import DataTable from '../components/DataTable'
 import RankChart from '../components/RankChart'
 import CrosstabSection from '../components/CrosstabSection'
 
-const COLORS = ['#0FB0AA', '#CBD92C', '#06B5D0', '#f97316', '#8b5cf6']
+const COLORS = ['#0F8F8B', '#9EAF24', '#078FA5', '#f97316', '#8b5cf6']
 const fmt = (v: number) => v >= 1e6 ? (v / 1e6).toFixed(2) + ' jt' : v.toLocaleString('id-ID')
 
 const INDICATOR_OPTIONS = [
@@ -26,6 +27,7 @@ const INDICATOR_OPTIONS = [
 ]
 
 export default function GambaranUmum() {
+  const [mapIndicator, setMapIndicator] = useState('jumlah_penduduk_desa_+_kelurahan');
   const { data: demografi, loading, error } = useDashboardData()
   const [indicator, setIndicator] = useState('jumlah_penduduk_desa_+_kelurahan')
   const [corrX, setCorrX] = useState('jumlah_penduduk_desa_+_kelurahan')
@@ -69,10 +71,35 @@ export default function GambaranUmum() {
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
         <KPICard title="Jumlah Kab/Kota" value={data.length.toString()} sub="Wilayah" color="#8b5cf6" />
-        <KPICard title="Total Penduduk" value={fmt(totalPenduduk)} sub="Jiwa" color="#0FB0AA" />
-        <KPICard title="Jumlah Rumah Tangga" value={fmt(totalRumahTangga)} sub="KK" color="#CBD92C" />
-        <KPICard title="Luas Wilayah" value={fmt(Math.round(totalLuas))} sub="km²" color="#06B5D0" />
+        <KPICard title="Total Penduduk" value={fmt(totalPenduduk)} sub="Jiwa" color="#0F8F8B" />
+        <KPICard title="Jumlah Rumah Tangga" value={fmt(totalRumahTangga)} sub="KK" color="#9EAF24" />
+        <KPICard title="Luas Wilayah" value={fmt(Math.round(totalLuas))} sub="km²" color="#078FA5" />
         <KPICard title="JUMLAH DESA & KELURAHAN" value={fmt(totalDesaKelurahan)} sub="Total" color="#f97316" />
+      </div>
+
+      {/* CHOROPLETH MAP SECTION */}
+      <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm mt-2 mb-2">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+          <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Peta Sebaran Provinsi Jawa Timur</h3>
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="text-xs text-gray-500 font-medium">Indikator:</span>
+            <select 
+              value={mapIndicator} 
+              onChange={e => setMapIndicator(e.target.value)}
+              className="text-xs font-medium border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-[#0F8F8B] bg-gray-50 text-gray-700 max-w-[200px] truncate"
+            >
+              {INDICATOR_OPTIONS.map(opt => (
+                <option key={opt.key} value={opt.key}>{opt.label}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+        
+        <ChoroplethMap 
+          data={data} 
+          indicatorKey={mapIndicator} 
+          indicatorLabel={INDICATOR_OPTIONS.find(o => o.key === mapIndicator)?.label || ''} 
+        />
       </div>
 
       {/* Charts */}
@@ -114,7 +141,7 @@ export default function GambaranUmum() {
                 </div>
               )
             }} />
-            <Scatter data={scatterData} fill="#0FB0AA" fillOpacity={0.7} />
+            <Scatter data={scatterData} fill="#0F8F8B" fillOpacity={0.7} />
           </ScatterChart>
         </ResponsiveContainer>
       </div>

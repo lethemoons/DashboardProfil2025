@@ -1,4 +1,6 @@
 import { useState, useMemo } from 'react'
+import ChoroplethMap from '../components/ChoroplethMap';
+import RiskClusteringMap from '../components/RiskClusteringMap';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   CartesianGrid, Legend, Cell
@@ -20,6 +22,7 @@ const OPTIONS = [
 ]
 
 export default function UsiaProduktifLansia() {
+  const [mapIndicator, setMapIndicator] = useState('produktif_laki');
   const { data: usiaProduktif, loading, error } = useDashboardData()
 
   const [indic, setIndic] = useState('lansia_dilayani')
@@ -65,9 +68,34 @@ export default function UsiaProduktifLansia() {
 
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-        <KPICard title="Usia Produktif Laki-laki" value={(totLaki / 1e6).toFixed(2) + ' jt'} sub="Jiwa" icon="👨" color="#0FB0AA" />
-        <KPICard title="Usia Produktif Perempuan" value={(totPerempuan / 1e6).toFixed(2) + ' jt'} sub="Jiwa" icon="👩" color="#06B5D0" />
-        <KPICard title="Lansia Dilayani Sesuai Standar" value={totLansia.toLocaleString('id-ID')} sub="Usia 60+" icon="👴" color="#CBD92C" />
+        <KPICard title="Usia Produktif Laki-laki" value={(totLaki / 1e6).toFixed(2) + ' jt'} sub="Jiwa" icon="👨" color="#0F8F8B" />
+        <KPICard title="Usia Produktif Perempuan" value={(totPerempuan / 1e6).toFixed(2) + ' jt'} sub="Jiwa" icon="👩" color="#078FA5" />
+        <KPICard title="Lansia Dilayani Sesuai Standar" value={totLansia.toLocaleString('id-ID')} sub="Usia 60+" icon="👴" color="#9EAF24" />
+      </div>
+
+      {/* CHOROPLETH MAP SECTION */}
+      <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm mt-2 mb-2">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+          <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Peta Sebaran Provinsi Jawa Timur</h3>
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="text-xs text-gray-500 font-medium">Indikator:</span>
+            <select 
+              value={mapIndicator} 
+              onChange={e => setMapIndicator(e.target.value)}
+              className="text-xs font-medium border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-[#0F8F8B] bg-gray-50 text-gray-700 max-w-[200px] truncate"
+            >
+              {OPTIONS.map(opt => (
+                <option key={opt.key} value={opt.key}>{opt.label}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+        
+        <ChoroplethMap 
+          data={data} 
+          indicatorKey={mapIndicator} 
+          indicatorLabel={OPTIONS.find(o => o.key === mapIndicator)?.label || ''} 
+        />
       </div>
 
       <InsightBox insights={statInsights} />
@@ -93,7 +121,7 @@ export default function UsiaProduktifLansia() {
             <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={v => v >= 1e6 ? (v / 1e6).toFixed(1) + 'jt' : v?.toLocaleString('id-ID')} />
             <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
             <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID')} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
-            <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]} fill="#0FB0AA" />
+            <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]} fill="#0F8F8B" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -118,8 +146,8 @@ export default function UsiaProduktifLansia() {
             <YAxis tick={{ fontSize: 11 }} tickFormatter={v => (v / 1e3).toFixed(0) + 'rb'} />
             <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID')} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
             <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-            <Bar dataKey="laki" name="Laki-laki" fill="#0FB0AA" radius={[3, 3, 0, 0]} />
-            <Bar dataKey="perempuan" name="Perempuan" fill="#CBD92C" radius={[3, 3, 0, 0]} />
+            <Bar dataKey="laki" name="Laki-laki" fill="#0F8F8B" radius={[3, 3, 0, 0]} />
+            <Bar dataKey="perempuan" name="Perempuan" fill="#9EAF24" radius={[3, 3, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -133,6 +161,14 @@ export default function UsiaProduktifLansia() {
             {OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
           </select>
         }
+      />
+
+      
+      <RiskClusteringMap 
+        data={data} 
+        variables={['produktif_laki', 'lansia_dilayani']} 
+        directions={[-1, -1]} 
+        variableLabels={['Usia Produktif Laki-laki', 'Lansia Dilayani']} 
       />
 
       <DataTable data={data} columns={[

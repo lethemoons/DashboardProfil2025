@@ -1,4 +1,6 @@
 import { useState, useMemo } from 'react'
+import ChoroplethMap from '../components/ChoroplethMap';
+import RiskClusteringMap from '../components/RiskClusteringMap';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   CartesianGrid, Legend, ScatterChart, Scatter
@@ -159,6 +161,7 @@ const DiareTooltip = ({ active, payload, label }: any) => {
 }
 
 export default function PenyakitMenular() {
+  const [mapIndicator, setMapIndicator] = useState('tbc_kasus');
   const { data: penyakitMenular, loading, error } = useDashboardData()
 
   const [indic, setIndic] = useState('tbc_kasus')
@@ -248,14 +251,39 @@ export default function PenyakitMenular() {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <KPICard title="Kasus TBC" value={totTBC.toLocaleString('id-ID')} sub="Semua Tipe" icon="🫁" color="#ef4444" />
-        <KPICard title="Sukses Pengobatan TBC" value="88.26%" sub="Rata-rata" icon="✅" color="#0FB0AA" />
+        <KPICard title="Sukses Pengobatan TBC" value="88.26%" sub="Rata-rata" icon="✅" color="#0F8F8B" />
         <KPICard title="Hepatitis Bumil Reaktif" value="1.6%" sub="7.186 orang" icon="🩸" color="#eab308" />
         <KPICard title="ODHIV Mendapat ARV" value="75%" sub="7.969 orang" icon="💊" color="#a855f7" />
         
         <KPICard title="ODHIV Baru" value={totODHIV.toLocaleString('id-ID')} sub="Ditemukan" icon="🔴" color="#8b5cf6" />
         <KPICard title="Kasus Baru Kusta" value="2.225 Kasus" sub="Prevalensi 0.6 per 10.000 penduduk" icon="🦠" color="#14b8a6" />
-        <KPICard title="Kasus Diare" value={totDiare.toLocaleString('id-ID')} sub="Semua Umur" icon="💧" color="#06B5D0" />
+        <KPICard title="Kasus Diare" value={totDiare.toLocaleString('id-ID')} sub="Semua Umur" icon="💧" color="#078FA5" />
         <KPICard title="Pneumonia Balita" value="96.492" sub="Orang Ditemukan" icon="👶" color="#f97316" />
+      </div>
+
+      {/* CHOROPLETH MAP SECTION */}
+      <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm mt-2 mb-2">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+          <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Peta Sebaran Provinsi Jawa Timur</h3>
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="text-xs text-gray-500 font-medium">Indikator:</span>
+            <select 
+              value={mapIndicator} 
+              onChange={e => setMapIndicator(e.target.value)}
+              className="text-xs font-medium border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-[#0F8F8B] bg-gray-50 text-gray-700 max-w-[200px] truncate"
+            >
+              {OPTIONS.map(opt => (
+                <option key={opt.key} value={opt.key}>{opt.label}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+        
+        <ChoroplethMap 
+          data={data} 
+          indicatorKey={mapIndicator} 
+          indicatorLabel={OPTIONS.find(o => o.key === mapIndicator)?.label || ''} 
+        />
       </div>
 
       {/* TBC */}
@@ -279,9 +307,9 @@ export default function PenyakitMenular() {
                 <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} domain={[0, 100]} unit="%" />
                 <Tooltip content={<TBCTooltip />} cursor={{ fill: '#f9fafb' }} />
                 <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-                <Bar yAxisId="left" dataKey="kasus" name="Jumlah Kasus" fill="#06B5D0" radius={[3, 3, 0, 0]} minPointSize={3} />
-                <Bar yAxisId="right" dataKey="sukses_pct" name="Sukses Pengobatan (%)" fill="#CBD92C" radius={[3, 3, 0, 0]} minPointSize={3} />
-                <Bar yAxisId="right" dataKey="pengobatan_lengkap" name="Pengobatan Lengkap (%)" fill="#0FB0AA" radius={[3, 3, 0, 0]} minPointSize={3} />
+                <Bar yAxisId="left" dataKey="kasus" name="Jumlah Kasus" fill="#078FA5" radius={[3, 3, 0, 0]} minPointSize={3} />
+                <Bar yAxisId="right" dataKey="sukses_pct" name="Sukses Pengobatan (%)" fill="#9EAF24" radius={[3, 3, 0, 0]} minPointSize={3} />
+                <Bar yAxisId="right" dataKey="pengobatan_lengkap" name="Pengobatan Lengkap (%)" fill="#0F8F8B" radius={[3, 3, 0, 0]} minPointSize={3} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -314,7 +342,7 @@ export default function PenyakitMenular() {
                 <XAxis type="number" tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 10 }} width={100} interval={0} />
                 <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12, border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} cursor={{ fill: '#f9fafb' }} />
-                <Bar dataKey={indic} name={indicLabel} fill="#0FB0AA" radius={[0, 4, 4, 0]} />
+                <Bar dataKey={indic} name={indicLabel} fill="#0F8F8B" radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -343,9 +371,9 @@ export default function PenyakitMenular() {
                 <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} domain={[0, 100]} unit="%" />
                 <Tooltip content={<ODHIVTooltip />} cursor={{ fill: '#f9fafb' }} />
                 <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-                <Bar yAxisId="left" dataKey="baru" name="ODHIV Baru Ditemukan" fill="#06B5D0" radius={[3, 3, 0, 0]} minPointSize={3} />
-                <Bar yAxisId="left" dataKey="arv" name="Mendapat Pengobatan ARV" fill="#CBD92C" radius={[3, 3, 0, 0]} minPointSize={3} />
-                <Bar yAxisId="right" dataKey="arv_pct" name="Persentase ARV (%)" fill="#0FB0AA" radius={[3, 3, 0, 0]} minPointSize={3} />
+                <Bar yAxisId="left" dataKey="baru" name="ODHIV Baru Ditemukan" fill="#078FA5" radius={[3, 3, 0, 0]} minPointSize={3} />
+                <Bar yAxisId="left" dataKey="arv" name="Mendapat Pengobatan ARV" fill="#9EAF24" radius={[3, 3, 0, 0]} minPointSize={3} />
+                <Bar yAxisId="right" dataKey="arv_pct" name="Persentase ARV (%)" fill="#0F8F8B" radius={[3, 3, 0, 0]} minPointSize={3} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -379,9 +407,9 @@ export default function PenyakitMenular() {
                 <YAxis tick={{ fontSize: 11 }} />
                 <Tooltip content={<DiareTooltip />} cursor={{ fill: '#f9fafb' }} />
                 <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-                <Bar dataKey="dilayani" name="Dilayani" fill="#06B5D0" radius={[3, 3, 0, 0]} minPointSize={3} />
-                <Bar dataKey="oralit" name="Mendapat Oralit" fill="#0FB0AA" radius={[3, 3, 0, 0]} minPointSize={3} />
-                {isBalita && <Bar dataKey="zinc" name="Mendapat Zinc" fill="#CBD92C" radius={[3, 3, 0, 0]} minPointSize={3} />}
+                <Bar dataKey="dilayani" name="Dilayani" fill="#078FA5" radius={[3, 3, 0, 0]} minPointSize={3} />
+                <Bar dataKey="oralit" name="Mendapat Oralit" fill="#0F8F8B" radius={[3, 3, 0, 0]} minPointSize={3} />
+                {isBalita && <Bar dataKey="zinc" name="Mendapat Zinc" fill="#9EAF24" radius={[3, 3, 0, 0]} minPointSize={3} />}
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -401,7 +429,7 @@ export default function PenyakitMenular() {
             className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400">
             {OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
           </select>
-          <span className="ml-auto text-xs font-mono px-3 py-1 rounded-full" style={{ background: '#F0FAF9', color: '#0FB0AA' }}>r = {r.toFixed(3)}</span>
+          <span className="ml-auto text-xs font-mono px-3 py-1 rounded-full" style={{ background: '#F0FAF9', color: '#0F8F8B' }}>r = {r.toFixed(3)}</span>
         </div>
         <ResponsiveContainer width="100%" height={200}>
           <ScatterChart margin={{ top: 5, right: 20, bottom: 5, left: 5 }}>
@@ -413,7 +441,7 @@ export default function PenyakitMenular() {
               const p = payload[0].payload
               return <div className="bg-white border border-gray-100 rounded-xl shadow p-3 text-xs"><div className="font-semibold mb-1">{p.name}</div><div>X: {p.x?.toLocaleString('id-ID')}</div><div>Y: {p.y?.toLocaleString('id-ID')}</div></div>
             }} />
-            <Scatter data={scatterData} fill="#0FB0AA" fillOpacity={0.75} />
+            <Scatter data={scatterData} fill="#0F8F8B" fillOpacity={0.75} />
           </ScatterChart>
         </ResponsiveContainer>
       </div>
@@ -428,6 +456,14 @@ export default function PenyakitMenular() {
             {OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
           </select>
         }
+      />
+
+      
+      <RiskClusteringMap 
+        data={data} 
+        variables={['tbc_kasus', 'tbc_sukses_pct', 'arv_pct', 'diare_semua_umur', 'kusta_mb']} 
+        directions={[1, -1, -1, 1, 1]} 
+        variableLabels={['TBC Kasus', 'TBC Sukses (%)', 'Mendapat ARV (%)', 'Diare', 'Kusta MB']} 
       />
 
       <DataTable data={data} columns={[

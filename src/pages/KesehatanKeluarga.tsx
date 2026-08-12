@@ -92,8 +92,8 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
         <>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <KPICard title="Kematian Ibu" value={totKematianIbu} sub="Total (hamil+bersalin+nifas)" icon="💔" color="#ef4444" />
-            <KPICard title="Cakupan K1" value={avgK1.toFixed(1) + '%'} sub="Rata-rata" icon="🤰" color="#0FB0AA" />
-            <KPICard title="KB Aktif" value={(ibuData.reduce((s, d) => s + (d.kb_aktif_pct as number), 0) / Math.max(ibuData.length, 1)).toFixed(1) + '%'} sub="Rata-rata" icon="🔵" color="#06B5D0" />
+            <KPICard title="Cakupan K1" value={avgK1.toFixed(1) + '%'} sub="Rata-rata" icon="🤰" color="#0F8F8B" />
+            <KPICard title="KB Aktif" value={(ibuData.reduce((s, d) => s + (d.kb_aktif_pct as number), 0) / Math.max(ibuData.length, 1)).toFixed(1) + '%'} sub="Rata-rata" icon="🔵" color="#078FA5" />
             <KPICard title="Bumil KEK" value={(ibuData.reduce((s, d) => s + (d.bumil_kek_pct as number), 0) / Math.max(ibuData.length, 1)).toFixed(1) + '%'} sub="Rata-rata" icon="⚠️" color="#f97316" />
           </div>
           <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
@@ -110,7 +110,7 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
                 <Tooltip formatter={(v: any) => v?.toFixed(1) + '%'} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
                 <Bar dataKey={ibuIndic} radius={[0, 6, 6, 0]}>
-                  {ibuChartData.map((_, i) => <Cell key={i} fill={i === 0 ? '#0FB0AA' : '#93c5c3'} />)}
+                  {ibuChartData.map((_, i) => <Cell key={i} fill={i === 0 ? '#0F8F8B' : '#93c5c3'} />)}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
@@ -151,8 +151,8 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <KPICard title="Kematian Neonatal+Bayi" value={totKematianAnak} icon="💔" color="#ef4444" />
             <KPICard title="Prevalensi Stunting" value={avgStunting.toFixed(1) + '%'} sub="Rata-rata" icon="📏" color="#f97316" />
-            <KPICard title="Imunisasi Dasar" value={(anakData.reduce((s, d) => s + (d.imunisasi_dasar_lengkap_pct as number), 0) / Math.max(anakData.length, 1)).toFixed(1) + '%'} sub="Rata-rata" icon="💉" color="#0FB0AA" />
-            <KPICard title="ASI Eksklusif" value={(anakData.reduce((s, d) => s + (d.asi_eksklusif_pct as number), 0) / Math.max(anakData.length, 1)).toFixed(1) + '%'} sub="Rata-rata" icon="🍼" color="#CBD92C" />
+            <KPICard title="Imunisasi Dasar" value={(anakData.reduce((s, d) => s + (d.imunisasi_dasar_lengkap_pct as number), 0) / Math.max(anakData.length, 1)).toFixed(1) + '%'} sub="Rata-rata" icon="💉" color="#0F8F8B" />
+            <KPICard title="ASI Eksklusif" value={(anakData.reduce((s, d) => s + (d.asi_eksklusif_pct as number), 0) / Math.max(anakData.length, 1)).toFixed(1) + '%'} sub="Rata-rata" icon="🍼" color="#9EAF24" />
           </div>
           <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
             <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
@@ -209,9 +209,9 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
       {tab === 'lansia' && (
         <>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <KPICard title="Usia Produktif Laki-laki" value={lansiaData.reduce((s, d) => s + (d.produktif_laki as number), 0).toLocaleString('id-ID')} icon="👨" color="#0FB0AA" />
-            <KPICard title="Usia Produktif Perempuan" value={lansiaData.reduce((s, d) => s + (d.produktif_perempuan as number), 0).toLocaleString('id-ID')} icon="👩" color="#06B5D0" />
-            <KPICard title="Lansia Dilayani" value={lansiaData.reduce((s, d) => s + (d.lansia_dilayani as number), 0).toLocaleString('id-ID')} icon="👴" color="#CBD92C" />
+            <KPICard title="Usia Produktif Laki-laki" value={lansiaData.reduce((s, d) => s + (d.produktif_laki as number), 0).toLocaleString('id-ID')} icon="👨" color="#0F8F8B" />
+            <KPICard title="Usia Produktif Perempuan" value={lansiaData.reduce((s, d) => s + (d.produktif_perempuan as number), 0).toLocaleString('id-ID')} icon="👩" color="#078FA5" />
+            <KPICard title="Lansia Dilayani" value={lansiaData.reduce((s, d) => s + (d.lansia_dilayani as number), 0).toLocaleString('id-ID')} icon="👴" color="#9EAF24" />
           </div>
           <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
             <h3 className="font-semibold text-gray-800 mb-4" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Pelayanan Usia Produktif & Lansia</h3>
@@ -222,8 +222,8 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
                 <YAxis tick={{ fontSize: 11 }} tickFormatter={v => (v / 1e3).toFixed(0) + 'rb'} />
                 <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID')} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
                 <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-                <Bar dataKey="lansia" name="Lansia Dilayani" fill="#0FB0AA" radius={[3, 3, 0, 0]} />
-                <Bar dataKey="posyandu" name="Posyandu Lansia" fill="#CBD92C" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="lansia" name="Lansia Dilayani" fill="#0F8F8B" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="posyandu" name="Posyandu Lansia" fill="#9EAF24" radius={[3, 3, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>

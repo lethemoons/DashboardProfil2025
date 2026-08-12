@@ -28,14 +28,14 @@ export default function PembiayaanKesehatan() {
     { name: 'PBI APBN', value: 15361033, percentage: 36.5 },
     { name: 'PBI APBD', value: 7507367, percentage: 17.8 }
   ]
-  const pbiColors = ['#0FB0AA', '#CBD92C']
+  const pbiColors = ['#0F8F8B', '#9EAF24']
 
   const nonPbiData = [
     { name: 'Pekerja Penerima Upah (PPU)', value: 6863643, percentage: 16.3 },
     { name: 'Pekerja Mandiri (PBPU)', value: 2681330, percentage: 6.4 },
     { name: 'Bukan Pekerja (BP)', value: 773500, percentage: 1.8 }
   ]
-  const nonPbiColors = ['#06B5D0', '#0FB0AA', '#CBD92C']
+  const nonPbiColors = ['#078FA5', '#0F8F8B', '#9EAF24']
 
   const data = useMemo(() => pembiayaan.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [pembiayaan])
   const kpiData = data
@@ -76,22 +76,22 @@ export default function PembiayaanKesehatan() {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <KPICard title="Total Anggaran Kesehatan" value="Rp 6.461.825.519.944" icon="💰" color="#0FB0AA" />
-        <KPICard title="Rata-rata Pembiayaan" value={fmtRp(avgAngg)} sub="Per Kab/Kota" icon="📊" color="#CBD92C" />
-        <KPICard title="Pembiayaan Tertinggi" value={maxKab ? maxKab.kabupaten : '-'} sub={maxKab ? fmtRp(Number(maxKab["2025"])) : ''} icon="🏆" color="#06B5D0" />
+        <KPICard title="Total Anggaran Kesehatan" value="Rp 6.461.825.519.944" icon="💰" color="#0F8F8B" />
+        <KPICard title="Rata-rata Pembiayaan" value={fmtRp(avgAngg)} sub="Per Kab/Kota" icon="📊" color="#9EAF24" />
+        <KPICard title="Pembiayaan Tertinggi" value={maxKab ? maxKab.kabupaten : '-'} sub={maxKab ? fmtRp(Number(maxKab["2025"])) : ''} icon="🏆" color="#078FA5" />
         <KPICard title="Pembiayaan Terendah" value={minKab ? minKab.kabupaten : '-'} sub={minKab ? fmtRp(Number(minKab["2025"])) : ''} icon="⚠️" color="#f97316" />
       </div>
 
       {/* JKN Container */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col justify-center items-center text-center">
-          <div className="w-16 h-16 rounded-full bg-teal-50 text-[#0FB0AA] flex items-center justify-center text-3xl mb-4">
+          <div className="w-16 h-16 rounded-full bg-teal-50 text-[#0F8F8B] flex items-center justify-center text-3xl mb-4">
             🛡️
           </div>
           <h3 className="font-semibold text-gray-800 text-lg mb-1" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
             Cakupan JKN
           </h3>
-          <div className="text-4xl font-bold text-[#0FB0AA] mb-2">33.186.873</div>
+          <div className="text-4xl font-bold text-[#0F8F8B] mb-2">33.186.873</div>
           <div className="text-sm font-medium px-3 py-1 bg-teal-50 text-teal-700 rounded-full">
             78,8% dari total populasi
           </div>
@@ -176,7 +176,7 @@ export default function PembiayaanKesehatan() {
             <select
               value={mapYear}
               onChange={e => setMapYear(e.target.value)}
-              className="text-xs font-medium border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-[#0FB0AA] bg-gray-50 text-gray-700"
+              className="text-xs font-medium border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-[#0F8F8B] bg-gray-50 text-gray-700"
             >
               <option value="2023">2023</option>
               <option value="2024">2024</option>
@@ -200,7 +200,7 @@ export default function PembiayaanKesehatan() {
             <select
               value={chartFilter}
               onChange={e => setChartFilter(e.target.value)}
-              className="text-xs font-medium border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-[#0FB0AA] bg-gray-50 text-gray-700"
+              className="text-xs font-medium border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-[#0F8F8B] bg-gray-50 text-gray-700"
             >
               <option value="10">Top 10</option>
               <option value="20">Top 20</option>
@@ -213,16 +213,16 @@ export default function PembiayaanKesehatan() {
             <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={v => v >= 1e12 ? (v / 1e12).toFixed(1) + 'T' : v >= 1e9 ? (v / 1e9).toFixed(0) + 'M' : (v / 1e6).toFixed(0) + 'jt'} />
             <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={98} interval={0} />
             <Tooltip formatter={(v: any) => fmtRp(v)} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
-            <Bar dataKey="2025" name="Anggaran 2025" radius={[0, 6, 6, 0]} fill="#0FB0AA" />
+            <Bar dataKey="2025" name="Anggaran 2025" radius={[0, 6, 6, 0]} fill="#0F8F8B" />
           </BarChart>
         </ResponsiveContainer>
         <div className="bg-[#F5FBFB] rounded-xl p-5 border border-[#CCEEED] text-sm text-gray-700 mt-4">
           <div className="flex items-center gap-2 mb-3">
-            <div className="w-6 h-6 rounded-full bg-[#0FB0AA] text-white flex items-center justify-center font-serif text-[13px] font-bold">i</div>
-            <span className="text-[#0FB0AA] font-bold text-sm tracking-wide">INFO RINGKAS</span>
+            <div className="w-6 h-6 rounded-full bg-[#0F8F8B] text-white flex items-center justify-center font-serif text-[13px] font-bold">i</div>
+            <span className="text-[#0F8F8B] font-bold text-sm tracking-wide">INFO RINGKAS</span>
           </div>
           <div className="flex items-start gap-2 ml-1">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#0FB0AA] mt-1.5 flex-shrink-0" />
+            <div className="w-1.5 h-1.5 rounded-full bg-[#0F8F8B] mt-1.5 flex-shrink-0" />
             <div className="leading-relaxed">
               Setiap daerah memiliki jumlah anggaran yang berbeda-beda untuk membiayai layanan kesehatan. Saat ini, <strong>{maxKab?.kabupaten}</strong> memiliki anggaran paling banyak (<strong>{fmtRp(Number(maxKab?.["2025"]))}</strong>), sementara <strong>{minKab?.kabupaten}</strong> mengalokasikan anggaran paling sedikit (<strong>{fmtRp(Number(minKab?.["2025"]))}</strong>).
             </div>
@@ -239,7 +239,7 @@ export default function PembiayaanKesehatan() {
             <select
               value={trendKab}
               onChange={e => setTrendKab(e.target.value)}
-              className="text-xs font-medium border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-[#0FB0AA] bg-gray-50 text-gray-700"
+              className="text-xs font-medium border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-[#0F8F8B] bg-gray-50 text-gray-700"
             >
               <option value="all">Total Semua Kabupaten/Kota</option>
               {KABUPATEN_LIST.map(k => (
@@ -254,16 +254,16 @@ export default function PembiayaanKesehatan() {
             <XAxis dataKey="tahun" tick={{ fontSize: 11 }} />
             <YAxis tick={{ fontSize: 11 }} tickFormatter={v => (v / 1e12).toFixed(1) + 'T'} width={80} />
             <Tooltip formatter={(v: any) => fmtRp(v)} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
-            <Area type="monotone" dataKey="total" stroke="#0FB0AA" fill="#0FB0AA22" strokeWidth={3} name="Total Anggaran" activeDot={{ r: 6, fill: '#0FB0AA', stroke: '#fff', strokeWidth: 2 }} />
+            <Area type="monotone" dataKey="total" stroke="#0F8F8B" fill="#0F8F8B22" strokeWidth={3} name="Total Anggaran" activeDot={{ r: 6, fill: '#0F8F8B', stroke: '#fff', strokeWidth: 2 }} />
           </AreaChart>
         </ResponsiveContainer>
         <div className="bg-[#F5FBFB] rounded-xl p-5 border border-[#CCEEED] text-sm text-gray-700">
           <div className="flex items-center gap-2 mb-3">
-            <div className="w-6 h-6 rounded-full bg-[#0FB0AA] text-white flex items-center justify-center font-serif text-[13px] font-bold">i</div>
-            <span className="text-[#0FB0AA] font-bold text-sm tracking-wide">INFO RINGKAS</span>
+            <div className="w-6 h-6 rounded-full bg-[#0F8F8B] text-white flex items-center justify-center font-serif text-[13px] font-bold">i</div>
+            <span className="text-[#0F8F8B] font-bold text-sm tracking-wide">INFO RINGKAS</span>
           </div>
           <div className="flex items-start gap-2 ml-1">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#0FB0AA] mt-1.5 flex-shrink-0" />
+            <div className="w-1.5 h-1.5 rounded-full bg-[#0F8F8B] mt-1.5 flex-shrink-0" />
             <div className="leading-relaxed">
               Jika kita melihat tiga tahun ke belakang, total dana kesehatan di wilayah ini sebesar <strong>{fmtRp(val25)}</strong> pada tahun 2025. Angka ini {Number(growth) > 0 ? "naik" : Number(growth) < 0 ? "turun" : "tetap sama"} sekitar <strong>{Math.abs(Number(growth))}%</strong> jika dibandingkan dengan tahun lalu (2024).
             </div>

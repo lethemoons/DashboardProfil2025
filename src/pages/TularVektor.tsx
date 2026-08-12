@@ -1,4 +1,6 @@
 import { useState, useMemo } from 'react'
+import ChoroplethMap from '../components/ChoroplethMap';
+import RiskClusteringMap from '../components/RiskClusteringMap';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   CartesianGrid, Cell, Legend, ScatterChart, Scatter, ComposedChart, Line
@@ -20,6 +22,7 @@ const OPTIONS = [
 ]
 
 export default function TularVektor() {
+  const [mapIndicator, setMapIndicator] = useState('dbd_kasus');
   const { data: penyakitPD3I, loading, error } = useDashboardData()
 
   const [indic, setIndic] = useState('dbd_kasus')
@@ -88,11 +91,36 @@ export default function TularVektor() {
 
 
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-        <KPICard title="Kasus DBD" value={totDBD.toLocaleString('id-ID')} sub="Demam Berdarah Dengue" icon="🦟" color="#0FB0AA" />
-        <KPICard title="CFR DBD Rata-rata" value="0.62%" sub="Case Fatality Rate" icon="📊" color="#0FB0AA" />
-        <KPICard title="Malaria Positif" value={totMalaria.toLocaleString('id-ID')} sub="Pengobatan standar 96.3%" icon="🦠" color="#0FB0AA" />
-        <KPICard title="Angka Kesakitan Malaria" value="0.02" sub="API per 1000 penduduk" icon="📈" color="#0FB0AA" />
-        <KPICard title="Filariasis Kronis" value="129" sub="Kasus" icon="🌊" color="#0FB0AA" />
+        <KPICard title="Kasus DBD" value={totDBD.toLocaleString('id-ID')} sub="Demam Berdarah Dengue" icon="🦟" color="#0F8F8B" />
+        <KPICard title="CFR DBD Rata-rata" value="0.62%" sub="Case Fatality Rate" icon="📊" color="#0F8F8B" />
+        <KPICard title="Malaria Positif" value={totMalaria.toLocaleString('id-ID')} sub="Pengobatan standar 96.3%" icon="🦠" color="#0F8F8B" />
+        <KPICard title="Angka Kesakitan Malaria" value="0.02" sub="API per 1000 penduduk" icon="📈" color="#0F8F8B" />
+        <KPICard title="Filariasis Kronis" value="129" sub="Kasus" icon="🌊" color="#0F8F8B" />
+      </div>
+
+      {/* CHOROPLETH MAP SECTION */}
+      <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm mt-2 mb-2">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+          <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Peta Sebaran Provinsi Jawa Timur</h3>
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="text-xs text-gray-500 font-medium">Indikator:</span>
+            <select 
+              value={mapIndicator} 
+              onChange={e => setMapIndicator(e.target.value)}
+              className="text-xs font-medium border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-[#0F8F8B] bg-gray-50 text-gray-700 max-w-[200px] truncate"
+            >
+              {OPTIONS.map(opt => (
+                <option key={opt.key} value={opt.key}>{opt.label}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+        
+        <ChoroplethMap 
+          data={data} 
+          indicatorKey={mapIndicator} 
+          indicatorLabel={OPTIONS.find(o => o.key === mapIndicator)?.label || ''} 
+        />
       </div>
 
       {/* DBD dual axis */}
@@ -116,8 +144,8 @@ export default function TularVektor() {
                 <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} />
                 <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
                 <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-                <Bar yAxisId="left" dataKey="kasus" name="Kasus DBD" fill="#06B5D0" radius={[3, 3, 0, 0]} />
-                <Line yAxisId="right" type="monotone" dataKey="cfr" name="CFR (%)" stroke="#CBD92C" strokeWidth={2} dot={{ r: 3 }} />
+                <Bar yAxisId="left" dataKey="kasus" name="Kasus DBD" fill="#078FA5" radius={[3, 3, 0, 0]} />
+                <Line yAxisId="right" type="monotone" dataKey="cfr" name="CFR (%)" stroke="#9EAF24" strokeWidth={2} dot={{ r: 3 }} />
               </ComposedChart>
             </ResponsiveContainer>
           </div>
@@ -148,7 +176,7 @@ export default function TularVektor() {
                 <XAxis type="number" tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} interval={0} />
                 <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
-                <Bar dataKey={indic} name={indicLabel} fill="#0FB0AA" radius={[0, 6, 6, 0]} />
+                <Bar dataKey={indic} name={indicLabel} fill="#0F8F8B" radius={[0, 6, 6, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -179,7 +207,7 @@ export default function TularVektor() {
                 <XAxis type="number" tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} interval={0} />
                 <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
-                <Bar dataKey={malariaIndic} name={malariaLabel} fill="#0FB0AA" radius={[0, 6, 6, 0]} />
+                <Bar dataKey={malariaIndic} name={malariaLabel} fill="#0F8F8B" radius={[0, 6, 6, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -191,7 +219,7 @@ export default function TularVektor() {
       <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
         <div className="flex items-center gap-3 mb-4">
           <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Korelasi Kasus DBD vs CFR</h3>
-          <span className="ml-auto text-xs font-mono px-3 py-1 rounded-full" style={{ background: '#F0FAF9', color: '#0FB0AA' }}>r = {r.toFixed(3)}</span>
+          <span className="ml-auto text-xs font-mono px-3 py-1 rounded-full" style={{ background: '#F0FAF9', color: '#0F8F8B' }}>r = {r.toFixed(3)}</span>
         </div>
         <ResponsiveContainer width="100%" height={200}>
           <ScatterChart margin={{ top: 5, right: 20, bottom: 5, left: 5 }}>
@@ -203,7 +231,7 @@ export default function TularVektor() {
               const p = payload[0].payload
               return <div className="bg-white border border-gray-100 rounded-xl shadow p-3 text-xs"><div className="font-semibold mb-1">{p.name}</div><div>Kasus: {p.x?.toLocaleString('id-ID')}</div><div>CFR: {p.y?.toFixed(2)}%</div></div>
             }} />
-            <Scatter data={scatterData} fill="#0FB0AA" fillOpacity={0.75} />
+            <Scatter data={scatterData} fill="#0F8F8B" fillOpacity={0.75} />
           </ScatterChart>
         </ResponsiveContainer>
       </div>
@@ -226,6 +254,14 @@ export default function TularVektor() {
         variables={OPTIONS}
         defaultRowVar="dbd_kasus"
         defaultColVar="dbd_cfr"
+      />
+
+      
+      <RiskClusteringMap 
+        data={data} 
+        variables={['dbd_kasus', 'dbd_cfr', 'malaria_positif']} 
+        directions={[1, 1, 1]} 
+        variableLabels={['Kasus DBD', 'CFR DBD (%)', 'Malaria Positif']} 
       />
 
       <DataTable data={data} columns={[

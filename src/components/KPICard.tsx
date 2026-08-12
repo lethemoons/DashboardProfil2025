@@ -10,7 +10,7 @@ interface Props {
   color?: string
 }
 
-export default function KPICard({ title, value, sub, icon, trend, trendVal, color = '#0FB0AA' }: Props) {
+export default function KPICard({ title, value, sub, icon, trend, trendVal, color = '#0F8F8B' }: Props) {
   const trendColor = trend === 'up' ? '#22c55e' : trend === 'down' ? '#ef4444' : '#6b7280'
   const trendIcon = trend === 'up' ? '↑' : trend === 'down' ? '↓' : '→'
 

@@ -3,6 +3,7 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell
 } from 'recharts';
 import DataTable from './DataTable';
+import { getDynamicDomain } from '../utils/stats';
 
 interface Indicator {
   key: string;
@@ -140,7 +141,7 @@ export default function RankChart({ data, indicators, defaultIndicator, title = 
               }}
               onMouseLeave={() => setHoveredIndex(null)}
             >
-              <XAxis type="number" hide />
+              <XAxis type="number" hide domain={[0, (dataMax: any) => getDynamicDomain(dataMax, activeIndicator?.isPercentage)]} />
               <YAxis 
                 type="category" 
                 dataKey="kabupaten" 
@@ -161,7 +162,7 @@ export default function RankChart({ data, indicators, defaultIndicator, title = 
                         
                         <div className="flex items-center justify-between">
                           <span className="text-xs text-gray-500">Nilai</span>
-                          <span className="text-sm font-bold text-[#0FB0AA]">{formatValue(row.value)}</span>
+                          <span className="text-sm font-bold text-[#0F8F8B]">{formatValue(row.value)}</span>
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="text-xs text-gray-500">Peringkat</span>
@@ -186,9 +187,9 @@ export default function RankChart({ data, indicators, defaultIndicator, title = 
                 animationDuration={600}
               >
                 {displayedData.map((entry, index) => {
-                  let fillColor = '#0FB0AA';
+                  let fillColor = '#0F8F8B';
                   if (hoveredIndex === index) {
-                    fillColor = '#06B5D0'; // Hover color
+                    fillColor = '#078FA5'; // Hover color
                   }
                   
                   return (
@@ -208,13 +209,13 @@ export default function RankChart({ data, indicators, defaultIndicator, title = 
       {/* Auto Insight Box */}
       <div className="bg-[#F5FBFB] rounded-xl p-5 border border-[#CCEEED] text-sm text-gray-700">
         <div className="flex items-center gap-2 mb-3">
-          <div className="w-6 h-6 rounded-full bg-[#0FB0AA] text-white flex items-center justify-center font-serif text-[13px] font-bold">
+          <div className="w-6 h-6 rounded-full bg-[#0F8F8B] text-white flex items-center justify-center font-serif text-[13px] font-bold">
             i
           </div>
-          <span className="text-[#0FB0AA] font-bold text-sm tracking-wide">INSIGHT OTOMATIS</span>
+          <span className="text-[#0F8F8B] font-bold text-sm tracking-wide">INSIGHT OTOMATIS</span>
         </div>
         <div className="flex items-start gap-2 ml-1">
-          <div className="w-1.5 h-1.5 rounded-full bg-[#0FB0AA] mt-1.5 flex-shrink-0" />
+          <div className="w-1.5 h-1.5 rounded-full bg-[#0F8F8B] mt-1.5 flex-shrink-0" />
           <div className="leading-relaxed">
             Kabupaten/kota dengan nilai tertinggi adalah <strong>{maxKab}</strong> ({formatValue(maxVal)}), 
             sedangkan terendah adalah <strong>{minKab}</strong> ({formatValue(minVal)}). 

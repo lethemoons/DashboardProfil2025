@@ -123,11 +123,11 @@ export default function Beranda({ onNavigate }: BerandaProps) {
         {/* Subtle background decoration */}
         <div
           className="absolute -top-32 -right-32 w-96 h-96 rounded-full blur-3xl pointer-events-none opacity-40"
-          style={{ background: 'radial-gradient(circle, #0FB0AA 0%, #06B5D0 50%, transparent 70%)' }}
+          style={{ background: 'radial-gradient(circle, #0F8F8B 0%, #078FA5 50%, transparent 70%)' }}
         />
         <div
           className="absolute -bottom-32 -left-32 w-80 h-80 rounded-full blur-3xl pointer-events-none opacity-20"
-          style={{ background: 'radial-gradient(circle, #CBD92C 0%, #0FB0AA 60%, transparent 80%)' }}
+          style={{ background: 'radial-gradient(circle, #9EAF24 0%, #0F8F8B 60%, transparent 80%)' }}
         />
 
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
@@ -136,9 +136,9 @@ export default function Beranda({ onNavigate }: BerandaProps) {
             {/* Government Badge */}
             <div
               className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider mb-5"
-              style={{ background: 'rgba(15, 176, 170, 0.08)', color: '#0FB0AA', border: '1px solid rgba(15, 176, 170, 0.2)' }}
+              style={{ background: 'rgba(15, 176, 170, 0.08)', color: '#0F8F8B', border: '1px solid rgba(15, 176, 170, 0.2)' }}
             >
-              <span className="w-2 h-2 rounded-full animate-ping" style={{ background: '#0FB0AA' }} />
+              <span className="w-2 h-2 rounded-full animate-ping" style={{ background: '#0F8F8B' }} />
               Dinas Kesehatan Provinsi Jawa Timur
             </div>
 
@@ -147,7 +147,7 @@ export default function Beranda({ onNavigate }: BerandaProps) {
               Dashboard Profil Kesehatan <br className="hidden sm:inline" />
               <span
                 style={{
-                  background: 'linear-gradient(135deg, #0FB0AA 0%, #06B5D0 100%)',
+                  background: 'linear-gradient(135deg, #0F8F8B 0%, #078FA5 100%)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                 }}
@@ -166,7 +166,7 @@ export default function Beranda({ onNavigate }: BerandaProps) {
               <button
                 onClick={() => onNavigate('gambaran')}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl font-semibold text-white transition-all duration-200 shadow-md hover:shadow-lg active:scale-[0.98] cursor-pointer"
-                style={{ background: 'linear-gradient(135deg, #0FB0AA 0%, #0d9b96 100%)' }}
+                style={{ background: 'linear-gradient(135deg, #0F8F8B 0%, #0d9b96 100%)' }}
               >
                 <span>Mulai Eksplorasi Dashboard</span>
                 <ArrowRight size={18} strokeWidth={2.2} />
@@ -219,7 +219,7 @@ export default function Beranda({ onNavigate }: BerandaProps) {
             <div
               className="absolute -top-4 -left-4 bg-white/95 backdrop-blur-md px-4 py-2.5 rounded-xl shadow-lg border border-gray-100 flex items-center gap-3 hidden sm:flex"
             >
-              <div className="w-9 h-9 rounded-lg flex items-center justify-center text-white" style={{ background: '#0FB0AA' }}>
+              <div className="w-9 h-9 rounded-lg flex items-center justify-center text-white" style={{ background: '#0F8F8B' }}>
                 <HeartPulse size={18} />
               </div>
               <div>
@@ -231,7 +231,7 @@ export default function Beranda({ onNavigate }: BerandaProps) {
             <div
               className="absolute -bottom-4 -right-4 bg-white/95 backdrop-blur-md px-4 py-2.5 rounded-xl shadow-lg border border-gray-100 flex items-center gap-3 hidden sm:flex"
             >
-              <div className="w-9 h-9 rounded-lg flex items-center justify-center text-white" style={{ background: '#06B5D0' }}>
+              <div className="w-9 h-9 rounded-lg flex items-center justify-center text-white" style={{ background: '#078FA5' }}>
                 <ShieldCheck size={18} />
               </div>
               <div>

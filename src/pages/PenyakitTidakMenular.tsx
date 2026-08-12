@@ -1,4 +1,6 @@
 import { useState, useMemo } from 'react'
+import ChoroplethMap from '../components/ChoroplethMap';
+import RiskClusteringMap from '../components/RiskClusteringMap';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   CartesianGrid, Cell, Legend
@@ -21,6 +23,7 @@ const PTM_OPTIONS = [
 ]
 
 export default function PenyakitTidakMenular() {
+  const [mapIndicator, setMapIndicator] = useState('hipertensi_laki');
   const { data: ptm, loading, error } = useDashboardData()
 
   const [ptmIndic, setPtmIndic] = useState('hipertensi_laki')
@@ -61,13 +64,38 @@ export default function PenyakitTidakMenular() {
   return (
     <div className="flex flex-col gap-5">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <KPICard title="Kasus Hipertensi" value={totHipertensi.toLocaleString('id-ID')} sub="Penderita mendapat pelayanan 96.5%" icon="❤️" color="#0FB0AA" />
-        <KPICard title="Diabetes Melitus" value={totDM.toLocaleString('id-ID')} sub="Terdiagnosis" icon="🩸" color="#0FB0AA" />
-        <KPICard title="DM Terkendali" value="342.113" sub="Persentase 37.7%" icon="✅" color="#0FB0AA" />
-        <KPICard title="HPV+ & IVA+" value="96.4%" sub="Persentase Skrining" icon="🔬" color="#0FB0AA" />
-        <KPICard title="SADANIS (30-69 Thn)" value="28.2%" sub="Skrining Payudara" icon="🎗️" color="#0FB0AA" />
-        <KPICard title="USG Payudara (30-69 Thn)" value="0.1%" sub="Skrining Payudara" icon="🩺" color="#0FB0AA" />
-        <KPICard title="Pelayanan Jiwa Berat" value="93.1%" sub="Persentase Pelayanan" icon="🧠" color="#0FB0AA" />
+        <KPICard title="Kasus Hipertensi" value={totHipertensi.toLocaleString('id-ID')} sub="Penderita mendapat pelayanan 96.5%" icon="❤️" color="#0F8F8B" />
+        <KPICard title="Diabetes Melitus" value={totDM.toLocaleString('id-ID')} sub="Terdiagnosis" icon="🩸" color="#0F8F8B" />
+        <KPICard title="DM Terkendali" value="342.113" sub="Persentase 37.7%" icon="✅" color="#0F8F8B" />
+        <KPICard title="HPV+ & IVA+" value="96.4%" sub="Persentase Skrining" icon="🔬" color="#0F8F8B" />
+        <KPICard title="SADANIS (30-69 Thn)" value="28.2%" sub="Skrining Payudara" icon="🎗️" color="#0F8F8B" />
+        <KPICard title="USG Payudara (30-69 Thn)" value="0.1%" sub="Skrining Payudara" icon="🩺" color="#0F8F8B" />
+        <KPICard title="Pelayanan Jiwa Berat" value="93.1%" sub="Persentase Pelayanan" icon="🧠" color="#0F8F8B" />
+      </div>
+
+      {/* CHOROPLETH MAP SECTION */}
+      <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm mt-2 mb-2">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+          <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Peta Sebaran Provinsi Jawa Timur</h3>
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="text-xs text-gray-500 font-medium">Indikator:</span>
+            <select 
+              value={mapIndicator} 
+              onChange={e => setMapIndicator(e.target.value)}
+              className="text-xs font-medium border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-[#0F8F8B] bg-gray-50 text-gray-700 max-w-[200px] truncate"
+            >
+              {PTM_OPTIONS.map(opt => (
+                <option key={opt.key} value={opt.key}>{opt.label}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+        
+        <ChoroplethMap 
+          data={ptmData} 
+          indicatorKey={mapIndicator} 
+          indicatorLabel={PTM_OPTIONS.find(o => o.key === mapIndicator)?.label || ''} 
+        />
       </div>
 
       <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
@@ -89,8 +117,8 @@ export default function PenyakitTidakMenular() {
                 <YAxis tick={{ fontSize: 11 }} tickFormatter={v => (v / 1e3).toFixed(0) + 'rb'} />
                 <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID')} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
                 <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-                <Bar dataKey="laki" name="Hipertensi Laki-laki" fill="#06B5D0" radius={[3, 3, 0, 0]} />
-                <Bar dataKey="perempuan" name="Hipertensi Perempuan" fill="#CBD92C" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="laki" name="Hipertensi Laki-laki" fill="#078FA5" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="perempuan" name="Hipertensi Perempuan" fill="#9EAF24" radius={[3, 3, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -121,7 +149,7 @@ export default function PenyakitTidakMenular() {
                 <XAxis type="number" tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 10 }} width={100} interval={0} />
                 <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12, border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} cursor={{ fill: '#f9fafb' }} />
-                <Bar dataKey={ptmIndic} name={ptmLabel} fill="#0FB0AA" radius={[0, 4, 4, 0]} />
+                <Bar dataKey={ptmIndic} name={ptmLabel} fill="#0F8F8B" radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -145,6 +173,14 @@ export default function PenyakitTidakMenular() {
         defaultColVar="dm_terdiagnosis"
         title="Analisis Crosstab PTM"
       />
+      
+      <RiskClusteringMap 
+        data={ptmData} 
+        variables={['hipertensi_laki', 'dm_terkendali_pct']} 
+        directions={[-1, -1]} 
+        variableLabels={['Pelayanan Hipertensi Laki-laki', 'DM Terkendali (%)']} 
+      />
+
       <DataTable data={ptmData} columns={[
         { key: 'kabupaten', label: 'Kabupaten/Kota' },
         { key: 'hipertensi_laki', label: 'Hipertensi L', format: v => v?.toLocaleString('id-ID') },

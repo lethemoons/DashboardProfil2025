@@ -12,6 +12,7 @@ import StatPanel from '../components/StatPanel'
 import DataTable from '../components/DataTable'
 import RankChart from '../components/RankChart'
 import CrosstabSection from '../components/CrosstabSection'
+import RiskClusteringMap from '../components/RiskClusteringMap'
 
 const RS_OPTIONS = [
   { key: 'bor', label: 'BOR — Bed Occupancy Rate (%)' },
@@ -157,6 +158,13 @@ export default function AksesMutu() {
         variables={RS_OPTIONS}
         defaultRowVar="bor"
         defaultColVar="alos"
+      />
+
+      <RiskClusteringMap 
+        data={data} 
+        variables={['bor', 'gdr', 'ndr']} 
+        directions={[1, 1, 1]} 
+        variableLabels={['BOR (%)', 'GDR (‰)', 'NDR (‰)']} 
       />
 
       <DataTable data={data} columns={[

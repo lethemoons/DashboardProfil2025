@@ -1,4 +1,6 @@
 import { useState, useMemo } from 'react'
+import ChoroplethMap from '../components/ChoroplethMap';
+import RiskClusteringMap from '../components/RiskClusteringMap';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   CartesianGrid, Legend, Cell, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis
@@ -25,6 +27,7 @@ const KESLING_OPTIONS = [
 ]
 
 export default function KesehatanLingkungan() {
+  const [mapIndicator, setMapIndicator] = useState('air_minum_memenuhi_syarat_pct');
   const { data: kesling, loading, error } = useDashboardData()
 
   const [indic, setIndic] = useState('air_minum_memenuhi_syarat_pct')
@@ -53,12 +56,37 @@ export default function KesehatanLingkungan() {
 
 
       <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
-        <KPICard title="Air Minum Memenuhi Syarat" value="69.6%" sub="Rumah tangga dengan air minum yang memenuhi syarat 35%" icon="💧" color="#0FB0AA" />
-        <KPICard title="Sanitasi Aman" value="6.75%" sub="Akses sanitasi layak sendiri 83.49%" icon="🚿" color="#0FB0AA" />
-        <KPICard title="Desa/Kel 5 Pilar STBM" value="25.3%" sub="Cakupan" icon="🌿" color="#0FB0AA" />
-        <KPICard title="TFU Pengawasan Standar" value="72.7%" sub="Fasilitas Umum" icon="🏢" color="#0FB0AA" />
-        <KPICard title="TPP Memenuhi Syarat" value="79.7%" sub="Pengelolaan Pangan" icon="🍽️" color="#0FB0AA" />
-        <KPICard title="Kualitas Udara" value="47.3%" sub="Memenuhi Syarat" icon="💨" color="#0FB0AA" />
+        <KPICard title="Air Minum Memenuhi Syarat" value="69.6%" sub="Rumah tangga dengan air minum yang memenuhi syarat 35%" icon="💧" color="#0F8F8B" />
+        <KPICard title="Sanitasi Aman" value="6.75%" sub="Akses sanitasi layak sendiri 83.49%" icon="🚿" color="#0F8F8B" />
+        <KPICard title="Desa/Kel 5 Pilar STBM" value="25.3%" sub="Cakupan" icon="🌿" color="#0F8F8B" />
+        <KPICard title="TFU Pengawasan Standar" value="72.7%" sub="Fasilitas Umum" icon="🏢" color="#0F8F8B" />
+        <KPICard title="TPP Memenuhi Syarat" value="79.7%" sub="Pengelolaan Pangan" icon="🍽️" color="#0F8F8B" />
+        <KPICard title="Kualitas Udara" value="47.3%" sub="Memenuhi Syarat" icon="💨" color="#0F8F8B" />
+      </div>
+
+      {/* CHOROPLETH MAP SECTION */}
+      <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm mt-2 mb-2">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+          <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Peta Sebaran Provinsi Jawa Timur</h3>
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="text-xs text-gray-500 font-medium">Indikator:</span>
+            <select 
+              value={mapIndicator} 
+              onChange={e => setMapIndicator(e.target.value)}
+              className="text-xs font-medium border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-[#0F8F8B] bg-gray-50 text-gray-700 max-w-[200px] truncate"
+            >
+              {KESLING_OPTIONS.map(opt => (
+                <option key={opt.key} value={opt.key}>{opt.label}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+        
+        <ChoroplethMap 
+          data={data} 
+          indicatorKey={mapIndicator} 
+          indicatorLabel={KESLING_OPTIONS.find(o => o.key === mapIndicator)?.label || ''} 
+        />
       </div>
 
       <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
@@ -84,7 +112,7 @@ export default function KesehatanLingkungan() {
                 <XAxis type="number" tick={{ fontSize: 11 }} domain={[0, 100]} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} interval={0} />
                 <Tooltip formatter={(v: any) => v?.toFixed(1) + '%'} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
-                <Bar dataKey={indic} fill="#0FB0AA" radius={[0, 6, 6, 0]} />
+                <Bar dataKey={indic} fill="#0F8F8B" radius={[0, 6, 6, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -110,6 +138,14 @@ export default function KesehatanLingkungan() {
         variables={KESLING_OPTIONS}
         defaultRowVar="air_minum_memenuhi_syarat_pct"
         defaultColVar="sanitasi_aman_pct"
+      />
+
+      
+      <RiskClusteringMap 
+        data={data} 
+        variables={['air_minum_memenuhi_syarat_pct', 'sanitasi_aman_pct', 'kualitas_udara_ms_pct', 'babs_pct']} 
+        directions={[-1, -1, -1, 1]} 
+        variableLabels={['Air Minum MS (%)', 'Sanitasi Aman (%)', 'Kualitas Udara MS (%)', 'BABS (%)']} 
       />
 
       <DataTable data={data} columns={[

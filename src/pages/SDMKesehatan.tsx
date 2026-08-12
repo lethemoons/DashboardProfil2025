@@ -13,6 +13,7 @@ import CrosstabSection from '../components/CrosstabSection'
 
 export default function SDMKesehatan() {
   const { data: rawData, indicators, loading, error } = useSdmData()
+  const [mapIndicator, setMapIndicator] = useState(indicators[0] || '');
   const [selectedInd, setSelectedInd] = useState('')
   const [statIndic, setStatIndic] = useState('')
 
@@ -97,9 +98,32 @@ export default function SDMKesehatan() {
 
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <KPICard title="Total SDM Kesehatan" value={totalSDM.toLocaleString('id-ID')} icon="👥" color="#0FB0AA" />
-        <KPICard title="Jenis SDM Terbanyak" value={topSdmType.name.replace(/_/g, ' ').toUpperCase()} sub={`${topSdmType.value.toLocaleString('id-ID')} orang`} icon="🏅" color="#06B5D0" />
-        <KPICard title="Kabupaten SDM Terbanyak" value={topSdmKab.name.replace('Kota ', '')} sub={`${topSdmKab.value.toLocaleString('id-ID')} SDM`} icon="🏥" color="#CBD92C" />
+        <KPICard title="Total SDM Kesehatan" value={totalSDM.toLocaleString('id-ID')} icon="👥" color="#0F8F8B" />
+        <KPICard title="Jenis SDM Terbanyak" value={topSdmType.name.replace(/_/g, ' ').toUpperCase()} sub={`${topSdmType.value.toLocaleString('id-ID')} orang`} icon="🏅" color="#078FA5" />
+        <KPICard title="Kabupaten SDM Terbanyak" value={topSdmKab.name.replace('Kota ', '')} sub={`${topSdmKab.value.toLocaleString('id-ID')} SDM`} icon="🏥" color="#9EAF24" />
+      </div>
+
+      {/* CHOROPLETH MAP SECTION */}
+      <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm mt-2 mb-2">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+          <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Peta Sebaran Provinsi Jawa Timur</h3>
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="text-xs text-gray-500 font-medium">Indikator:</span>
+            <select 
+              value={mapIndicator} 
+              onChange={e => setMapIndicator(e.target.value)}
+              className="text-xs font-medium border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-[#0F8F8B] bg-gray-50 text-gray-700 max-w-[200px] truncate"
+            >
+              {indicators.map(ind => <option key={ind} value={ind}>{ind.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</option>)}
+            </select>
+          </div>
+        </div>
+        
+        <ChoroplethMap 
+          data={data} 
+          indicatorKey={mapIndicator} 
+          indicatorLabel={mapIndicator ? mapIndicator.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : ''} 
+        />
       </div>
 
       <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
@@ -135,7 +159,7 @@ export default function SDMKesehatan() {
                   labelFormatter={(l) => `Kabupaten ${l}`}
                   contentStyle={{ borderRadius: 12, fontSize: 12 }}
                 />
-                <Bar dataKey="value" name={selectedInd.replace(/_/g, ' ').toUpperCase()} radius={[0, 6, 6, 0]} fill="#0FB0AA" />
+                <Bar dataKey="value" name={selectedInd.replace(/_/g, ' ').toUpperCase()} radius={[0, 6, 6, 0]} fill="#0F8F8B" />
               </BarChart>
             </ResponsiveContainer>
           </div>

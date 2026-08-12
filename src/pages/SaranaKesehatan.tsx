@@ -60,7 +60,7 @@ const CustomTooltip = ({ active, payload, totalFaskes }: any) => {
     return (
       <div className="bg-white p-3 rounded-xl border border-gray-100 shadow-lg">
         <p className="font-semibold text-gray-800 mb-1" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{data.name}</p>
-        <p className="text-sm text-gray-600">Jumlah: <span className="font-bold text-[#0FB0AA]">{data.value.toLocaleString('id-ID')}</span></p>
+        <p className="text-sm text-gray-600">Jumlah: <span className="font-bold text-[#0F8F8B]">{data.value.toLocaleString('id-ID')}</span></p>
         {percentage && (
           <p className="text-sm text-gray-500 mt-1">{percentage}% dari total faskes pada kategori ini</p>
         )}
@@ -98,6 +98,7 @@ export default function SaranaKesehatan() {
 
   const chartDataRaw = useMemo(() => {
     return ALL_FASILITAS
+      .filter(opt => opt.key !== 'jumlah_tempat_tidur')
       .filter(opt => kategori === 'Semua' || opt.cat === kategori)
       .map(opt => ({
         name: opt.label,
@@ -159,9 +160,9 @@ export default function SaranaKesehatan() {
     <div className="flex flex-col gap-5">
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <KPICard title="Rumah Sakit" value={totRS.toLocaleString('id-ID')} sub="Umum + Khusus" icon="🏨" color="#06B5D0" />
-        <KPICard title="Puskesmas" value={totPuskesmas.toLocaleString('id-ID')} sub="Rawat Inap + Non" icon="🏥" color="#0FB0AA" />
-        <KPICard title="Klinik" value={totKlinik.toLocaleString('id-ID')} sub="Pratama + Utama" icon="🩺" color="#CBD92C" />
+        <KPICard title="Rumah Sakit" value={totRS.toLocaleString('id-ID')} sub="Umum + Khusus" icon="🏨" color="#078FA5" />
+        <KPICard title="Puskesmas" value={totPuskesmas.toLocaleString('id-ID')} sub="Rawat Inap + Non" icon="🏥" color="#0F8F8B" />
+        <KPICard title="Klinik" value={totKlinik.toLocaleString('id-ID')} sub="Pratama + Utama" icon="🩺" color="#9EAF24" />
         <KPICard title="Praktik Mandiri" value={totTPM.toLocaleString('id-ID')} sub="Dokter, Bidan, Perawat" icon="👨‍⚕️" color="#f97316" />
         <KPICard title="Apotek" value={totApotek.toLocaleString('id-ID')} sub="Unit" icon="💊" color="#8b5cf6" />
       </div>
@@ -190,7 +191,7 @@ export default function SaranaKesehatan() {
                 <YAxis type="category" dataKey="name" tick={<CustomYAxisTick />} width={calculatedLeftMargin} interval={0} />
                 <Tooltip content={<CustomTooltip totalFaskes={totalFaskes} />} cursor={{ fill: '#f3f4f6' }} />
                 <Bar dataKey="value" name="Jumlah" radius={[0, 6, 6, 0]}>
-                  {chartData.map((d, i) => <Cell key={i} fill={i === 0 ? '#0FB0AA' : '#3dbfb9'} />)}
+                  {chartData.map((d, i) => <Cell key={i} fill="#0F8F8B" />)}
                   <LabelList dataKey="value" position="right" formatter={(v: any) => v.toLocaleString('id-ID')} style={{ fontSize: 11, fill: '#4b5563', fontWeight: 500 }} />
                 </Bar>
               </BarChart>
@@ -214,7 +215,7 @@ export default function SaranaKesehatan() {
 
       <CrosstabSection
         data={saranaKesehatan.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR')}
-        variables={ALL_FASILITAS.map(f => ({ key: f.key, label: f.label }))}
+        variables={ALL_FASILITAS.filter(f => f.key !== 'jumlah_tempat_tidur').map(f => ({ key: f.key, label: f.label }))}
         defaultRowVar="rs_umum"
         defaultColVar="puskesmas_rawat_inap"
       />

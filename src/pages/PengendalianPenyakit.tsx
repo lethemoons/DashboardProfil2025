@@ -98,9 +98,9 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
         <>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <KPICard title="Kasus TBC" value={totTBC.toLocaleString('id-ID')} icon="🫁" color="#f97316" />
-            <KPICard title="Sukses Pengobatan TBC" value={avgTBCSukses.toFixed(1) + '%'} sub="Rata-rata" icon="✅" color="#0FB0AA" />
+            <KPICard title="Sukses Pengobatan TBC" value={avgTBCSukses.toFixed(1) + '%'} sub="Rata-rata" icon="✅" color="#0F8F8B" />
             <KPICard title="ODHIV Baru" value={menularData.reduce((s, d) => s + (d.odhiv_baru as number), 0).toLocaleString('id-ID')} icon="🔴" color="#ef4444" />
-            <KPICard title="Diare Semua Umur" value={menularData.reduce((s, d) => s + (d.diare_semua_umur as number), 0).toLocaleString('id-ID')} icon="💧" color="#06B5D0" />
+            <KPICard title="Diare Semua Umur" value={menularData.reduce((s, d) => s + (d.diare_semua_umur as number), 0).toLocaleString('id-ID')} icon="💧" color="#078FA5" />
           </div>
           <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
             <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
@@ -156,7 +156,7 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             <KPICard title="Total Kasus Difteri" value={pd3iData.reduce((s, d) => s + (d.difteri_kasus as number), 0)} icon="⚠️" color="#f97316" />
             <KPICard title="Kasus Campak" value={pd3iData.reduce((s, d) => s + (d.campak_kasus as number), 0)} icon="🔴" color="#ef4444" />
-            <KPICard title="KLB <24 Jam" value={(pd3iData.reduce((s, d) => s + (d.klb_24jam_pct as number), 0) / Math.max(pd3iData.length, 1)).toFixed(1) + '%'} sub="Rata-rata" icon="🚨" color="#0FB0AA" />
+            <KPICard title="KLB <24 Jam" value={(pd3iData.reduce((s, d) => s + (d.klb_24jam_pct as number), 0) / Math.max(pd3iData.length, 1)).toFixed(1) + '%'} sub="Rata-rata" icon="🚨" color="#0F8F8B" />
           </div>
           <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
             <h3 className="font-semibold text-gray-800 mb-4" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>DBD — Top Kabupaten</h3>
@@ -196,8 +196,8 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <KPICard title="Kasus DBD" value={totDBD.toLocaleString('id-ID')} icon="🦟" color="#ef4444" />
             <KPICard title="Malaria Positif" value={pd3iData.reduce((s, d) => s + (d.malaria_positif as number), 0).toLocaleString('id-ID')} icon="🦠" color="#f97316" />
-            <KPICard title="Filariasis Kronis" value={pd3iData.reduce((s, d) => s + (d.filariasis_kronis as number), 0).toLocaleString('id-ID')} icon="🌊" color="#06B5D0" />
-            <KPICard title="DBD CFR Rata-rata" value={(pd3iData.reduce((s, d) => s + (d.dbd_cfr as number), 0) / Math.max(pd3iData.length, 1)).toFixed(2) + '%'} icon="📊" color="#CBD92C" />
+            <KPICard title="Filariasis Kronis" value={pd3iData.reduce((s, d) => s + (d.filariasis_kronis as number), 0).toLocaleString('id-ID')} icon="🌊" color="#078FA5" />
+            <KPICard title="DBD CFR Rata-rata" value={(pd3iData.reduce((s, d) => s + (d.dbd_cfr as number), 0) / Math.max(pd3iData.length, 1)).toFixed(2) + '%'} icon="📊" color="#9EAF24" />
           </div>
           <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
             <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
@@ -232,7 +232,7 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <KPICard title="Hipertensi Total" value={totHipertensi.toLocaleString('id-ID')} icon="❤️" color="#ef4444" />
             <KPICard title="DM Terdiagnosis" value={ptmData.reduce((s, d) => s + (d.dm_terdiagnosis as number), 0).toLocaleString('id-ID')} icon="🩸" color="#f97316" />
-            <KPICard title="DM Terkendali" value={(ptmData.reduce((s, d) => s + (d.dm_terkendali_pct as number), 0) / Math.max(ptmData.length, 1)).toFixed(1) + '%'} sub="Rata-rata" icon="✅" color="#0FB0AA" />
+            <KPICard title="DM Terkendali" value={(ptmData.reduce((s, d) => s + (d.dm_terkendali_pct as number), 0) / Math.max(ptmData.length, 1)).toFixed(1) + '%'} sub="Rata-rata" icon="✅" color="#0F8F8B" />
             <KPICard title="Skizofrenia" value={ptmData.reduce((s, d) => s + (d.jiwa_skizofrenia as number), 0).toLocaleString('id-ID')} icon="🧠" color="#8b5cf6" />
           </div>
           <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">

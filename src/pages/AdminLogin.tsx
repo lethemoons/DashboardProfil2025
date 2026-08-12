@@ -31,7 +31,7 @@ export default function AdminLogin({ onLogin, onBack }: { onLogin: () => void, o
               type="text"
               value={username}
               onChange={e => setUsername(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0FB0AA]"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0F8F8B]"
               required
             />
           </div>
@@ -41,13 +41,13 @@ export default function AdminLogin({ onLogin, onBack }: { onLogin: () => void, o
               type="password"
               value={password}
               onChange={e => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0FB0AA]"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0F8F8B]"
               required
             />
           </div>
           <button
             type="submit"
-            className="w-full bg-[#0FB0AA] hover:bg-[#0da09a] text-white font-medium py-2 px-4 rounded-lg transition-colors"
+            className="w-full bg-[#0F8F8B] hover:bg-[#0da09a] text-white font-medium py-2 px-4 rounded-lg transition-colors"
           >
             Login
           </button>

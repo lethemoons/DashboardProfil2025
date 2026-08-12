@@ -256,16 +256,16 @@ export default function CrosstabSection({
     const highestCol = colCategories.reduce((maxJ, _, j) => colTotals[j] > colTotals[maxJ] ? j : maxJ, 0)
 
     list.push(
-      `Dari total **${totalCount} wilayah/entitas** yang dianalisis, mayoritas baris (${rowName}) berada pada kategori **${rowCategories[highestRow]?.shortLabel ?? rowCategories[highestRow]?.label}** (${rowTotals[highestRow]} wilayah / ${((rowTotals[highestRow] / totalCount) * 100).toFixed(1)}%), sedangkan kolom (${colName}) didominasi kategori **${colCategories[highestCol]?.shortLabel ?? colCategories[highestCol]?.label}** (${colTotals[highestCol]} wilayah / ${((colTotals[highestCol] / totalCount) * 100).toFixed(1)}%).`
+      `Dari total **${totalCount} wilayah/entitas** yang dianalisis, mayoritas baris (${rowName}) berada pada kategori **${rowCategories[highestRow]?.shortLabel ?? rowCategories[highestRow]?.label}** (${rowTotals[highestRow]} wilayah / ${((rowTotals[highestRow] / totalCount) * 100).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%), sedangkan kolom (${colName}) didominasi kategori **${colCategories[highestCol]?.shortLabel ?? colCategories[highestCol]?.label}** (${colTotals[highestCol]} wilayah / ${((colTotals[highestCol] / totalCount) * 100).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%).`
     )
 
     // 2. Highest frequency combination
     if (maxCell && maxVal > 0) {
       const rLabel = rowCategories[maxCell.rIdx]?.label
       const cLabel = colCategories[maxCell.cIdx]?.label
-      const pctOfTotal = ((maxVal / totalCount) * 100).toFixed(1)
+      const pctOfTotal = ((maxVal / totalCount) * 100).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
       const rTotal = rowTotals[maxCell.rIdx]
-      const pctOfRow = rTotal > 0 ? ((maxVal / rTotal) * 100).toFixed(1) : '0'
+      const pctOfRow = rTotal > 0 ? ((maxVal / rTotal) * 100).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : '0'
 
       list.push(
         `**Kombinasi Tertinggi:** Kategori **${rLabel}** bertemu dengan **${cLabel}** memiliki frekuensi terbanyak, yaitu **${maxVal} wilayah** (${pctOfTotal}% dari total, atau ${pctOfRow}% dari kategori barisnya).`
@@ -276,7 +276,7 @@ export default function CrosstabSection({
     if (minCell) {
       const rMinLabel = rowCategories[minCell.rIdx]?.shortLabel ?? rowCategories[minCell.rIdx]?.label
       const cMinLabel = colCategories[minCell.cIdx]?.shortLabel ?? colCategories[minCell.cIdx]?.label
-      const pctMin = ((minVal / totalCount) * 100).toFixed(1)
+      const pctMin = ((minVal / totalCount) * 100).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
 
       list.push(
         `**Kombinasi Terendah:** Pasangan **${rMinLabel}** dan **${cMinLabel}** memiliki frekuensi paling sedikit (**${minVal} wilayah** / ${pctMin}%).`
@@ -285,8 +285,8 @@ export default function CrosstabSection({
 
     // 4. Statistical significance verdict
     if (chiSquareResult && chiSquareResult.df > 0) {
-      const pFormatted = chiSquareResult.pValue < 0.001 ? '< 0.001' : `= ${chiSquareResult.pValue.toFixed(3)}`
-      const chiFormatted = chiSquareResult.chiSquare.toFixed(2)
+      const pFormatted = chiSquareResult.pValue < 0.001 ? '< 0.001' : `= ${chiSquareResult.pValue.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}`
+      const chiFormatted = chiSquareResult.chiSquare.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 
       if (chiSquareResult.isSignificant) {
         list.push(
@@ -344,7 +344,7 @@ export default function CrosstabSection({
         {/* Dropdown Variabel Baris */}
         <div className="flex flex-col gap-1">
           <label className="text-[11px] font-semibold text-gray-600 flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-[#0FB0AA]" />
+            <span className="w-2 h-2 rounded-full bg-[#0F8F8B]" />
             Variabel Baris:
           </label>
           <select
@@ -363,7 +363,7 @@ export default function CrosstabSection({
         {/* Dropdown Variabel Kolom */}
         <div className="flex flex-col gap-1">
           <label className="text-[11px] font-semibold text-gray-600 flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-[#06B5D0]" />
+            <span className="w-2 h-2 rounded-full bg-[#078FA5]" />
             Variabel Kolom:
           </label>
           <select
@@ -405,7 +405,7 @@ export default function CrosstabSection({
               type="checkbox"
               checked={showPercentage}
               onChange={e => setShowPercentage(e.target.checked)}
-              className="accent-[#0FB0AA] w-3.5 h-3.5 rounded cursor-pointer"
+              className="accent-[#0F8F8B] w-3.5 h-3.5 rounded cursor-pointer"
             />
             <span className="text-xs font-semibold text-gray-700">Tampilkan Persentase</span>
           </label>
@@ -441,7 +441,7 @@ export default function CrosstabSection({
           <table className="w-full text-xs text-center border-collapse">
             <thead>
               {/* Top header row */}
-              <tr style={{ backgroundColor: '#0FB0AA', color: '#FFFFFF' }}>
+              <tr style={{ backgroundColor: '#0F8F8B', color: '#FFFFFF' }}>
                 <th
                   rowSpan={2}
                   className="px-4 py-3 text-left font-semibold border-r border-teal-600/30 whitespace-nowrap align-middle"
@@ -457,14 +457,14 @@ export default function CrosstabSection({
                 </th>
                 <th
                   rowSpan={2}
-                  className="px-4 py-3 font-bold border-l border-teal-600/30 bg-[#0d9b96] text-white whitespace-nowrap align-middle"
+                  className="px-4 py-3 font-bold border-l border-teal-600/30 bg-[#0B7773] text-white whitespace-nowrap align-middle"
                 >
                   Total Baris
                 </th>
               </tr>
 
               {/* Sub-header row for column categories */}
-              <tr style={{ backgroundColor: '#0D9B96', color: '#FFFFFF' }}>
+              <tr style={{ backgroundColor: '#0B7773', color: '#FFFFFF' }}>
                 {crosstabResult.colCategories.map((colCat, j) => (
                   <th
                     key={j}
@@ -515,7 +515,7 @@ export default function CrosstabSection({
                         <td
                           key={j}
                           className={`px-3 py-2.5 text-gray-800 border-r border-gray-100 transition-colors relative group ${
-                            isMax ? 'bg-[#CBD92C]/20 font-bold ring-1 ring-inset ring-[#CBD92C]/50' : ''
+                            isMax ? 'bg-[#9EAF24]/20 font-bold ring-1 ring-inset ring-[#9EAF24]/50' : ''
                           }`}
                         >
                           <div className="flex flex-col items-center justify-center">
@@ -524,7 +524,7 @@ export default function CrosstabSection({
                             </span>
                             {showPercentage && (
                               <span className="text-[10px] text-gray-500 font-mono mt-0.5">
-                                {pctValue.toFixed(1)}%
+                                {pctValue.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%
                               </span>
                             )}
                           </div>
@@ -549,7 +549,7 @@ export default function CrosstabSection({
                         {showPercentage && (
                           <span className="text-[10px] text-gray-500 font-mono">
                             {crosstabResult.totalCount > 0
-                              ? ((rTotal / crosstabResult.totalCount) * 100).toFixed(1)
+                              ? ((rTotal / crosstabResult.totalCount) * 100).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
                               : 0}
                             %
                           </span>
@@ -574,7 +574,7 @@ export default function CrosstabSection({
                         {showPercentage && (
                           <span className="text-[10px] text-gray-500 font-mono">
                             {crosstabResult.totalCount > 0
-                              ? ((cTot / crosstabResult.totalCount) * 100).toFixed(1)
+                              ? ((cTot / crosstabResult.totalCount) * 100).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
                               : 0}
                             %
                           </span>
@@ -586,7 +586,7 @@ export default function CrosstabSection({
                 <td className="px-4 py-3 bg-teal-50 text-teal-800 font-extrabold border-l border-gray-200">
                   <div className="flex flex-col items-center">
                     <span>{crosstabResult.totalCount}</span>
-                    {showPercentage && <span className="text-[10px] text-teal-600 font-mono">100.0%</span>}
+                    {showPercentage && <span className="text-[10px] text-teal-600 font-mono">100,0%</span>}
                   </div>
                 </td>
               </tr>
@@ -609,7 +609,7 @@ export default function CrosstabSection({
 
             <div className="flex items-center gap-3 text-xs flex-wrap">
               <span className="px-2.5 py-0.5 rounded-md bg-white border border-teal-200 font-mono text-teal-900 font-semibold shadow-2xs">
-                χ² = {crosstabResult.chiSquareResult.chiSquare.toFixed(2)}
+                χ² = {crosstabResult.chiSquareResult.chiSquare.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </span>
               <span className="px-2.5 py-0.5 rounded-md bg-white border border-gray-200 font-mono text-gray-700 shadow-2xs">
                 df = {crosstabResult.chiSquareResult.df}
@@ -621,10 +621,10 @@ export default function CrosstabSection({
                     : 'bg-gray-100 text-gray-700 border-gray-300'
                 }`}
               >
-                p-value = {crosstabResult.chiSquareResult.pValue < 0.001 ? '< 0.001' : crosstabResult.chiSquareResult.pValue.toFixed(3)}
+                p-value = {crosstabResult.chiSquareResult.pValue < 0.001 ? '< 0.001' : crosstabResult.chiSquareResult.pValue.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
               </span>
               <span className="px-2.5 py-0.5 rounded-md bg-white border border-gray-200 font-mono text-gray-600 text-[11px] shadow-2xs" title="Cramér's V (Ukuran Pengaruh)">
-                V = {crosstabResult.chiSquareResult.cramerV.toFixed(2)}
+                V = {crosstabResult.chiSquareResult.cramerV.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </span>
             </div>
           </div>

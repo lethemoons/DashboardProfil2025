@@ -90,7 +90,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
         {!showUploadForm ? (
           <button 
             onClick={() => setShowUploadForm(true)}
-            className="px-4 py-2 bg-[#0FB0AA] hover:bg-[#0da09a] text-white rounded-lg text-sm font-medium shadow-sm transition-colors"
+            className="px-4 py-2 bg-[#0F8F8B] hover:bg-[#0da09a] text-white rounded-lg text-sm font-medium shadow-sm transition-colors"
           >
             Unggah Data
           </button>
@@ -103,14 +103,14 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                 type="number"
                 value={importYear}
                 onChange={e => setImportYear(Number(e.target.value))}
-                className="w-20 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#0FB0AA] bg-white"
+                className="w-20 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#0F8F8B] bg-white"
                 title="Tahun data yang akan diunggah"
               />
             </div>
             <button 
               onClick={() => fileInput.current?.click()} 
               disabled={isUploading}
-              className="px-3 py-1.5 bg-[#0FB0AA] hover:bg-[#0da09a] text-white rounded text-sm font-medium disabled:opacity-50 transition-colors"
+              className="px-3 py-1.5 bg-[#0F8F8B] hover:bg-[#0da09a] text-white rounded text-sm font-medium disabled:opacity-50 transition-colors"
               title={`Akan menimpa (overwrite) data tahun ${importYear}`}
             >
               {isUploading ? 'Mengunggah...' : 'Pilih & Unggah File'}
@@ -142,7 +142,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
               placeholder="Search kabupaten or metric..."
               value={search}
               onChange={handleSearch}
-              className="w-full max-w-sm px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0FB0AA]"
+              className="w-full max-w-sm px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0F8F8B]"
             />
           </div>
           

@@ -1,4 +1,6 @@
 import { useState, useMemo } from 'react'
+import ChoroplethMap from '../components/ChoroplethMap';
+import RiskClusteringMap from '../components/RiskClusteringMap';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   CartesianGrid, Cell, Legend, ScatterChart, Scatter
@@ -109,6 +111,7 @@ const IBU_OPTIONS = [
 ]
 
 export default function KesehatanIbu() {
+  const [mapIndicator, setMapIndicator] = useState('k1_pct');
   const { data: kesehatanIbu, loading, error } = useDashboardData()
 
   const [indic, setIndic] = useState('k1_pct')
@@ -188,9 +191,34 @@ export default function KesehatanIbu() {
       {/* Kematian ibu cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <KPICard title="Total Kematian Ibu" value={totKematianIbu} sub="Hamil + Bersalin + Nifas" icon="❤️" color="#ef4444" />
-        <KPICard title="Persentase K1" value={avgK1.toFixed(1) + '%'} sub="Cakupan Kunjungan Pertama" icon="🤰" color="#0FB0AA" />
-        <KPICard title="Persentase K6" value={avgK6.toFixed(1) + '%'} sub="Kunjungan Lengkap" icon="📋" color="#06B5D0" />
-        <KPICard title="Persentase Persalinan di Fasyankes" value="80,2%" sub="Rata-rata" icon="🏥" color="#CBD92C" />
+        <KPICard title="Persentase K1" value={avgK1.toFixed(1) + '%'} sub="Cakupan Kunjungan Pertama" icon="🤰" color="#0F8F8B" />
+        <KPICard title="Persentase K6" value={avgK6.toFixed(1) + '%'} sub="Kunjungan Lengkap" icon="📋" color="#078FA5" />
+        <KPICard title="Persentase Persalinan di Fasyankes" value="80,2%" sub="Rata-rata" icon="🏥" color="#9EAF24" />
+      </div>
+
+      {/* CHOROPLETH MAP SECTION */}
+      <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm mt-2 mb-2">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+          <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Peta Sebaran Provinsi Jawa Timur</h3>
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="text-xs text-gray-500 font-medium">Indikator:</span>
+            <select 
+              value={mapIndicator} 
+              onChange={e => setMapIndicator(e.target.value)}
+              className="text-xs font-medium border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-[#0F8F8B] bg-gray-50 text-gray-700 max-w-[200px] truncate"
+            >
+              {IBU_OPTIONS.map(opt => (
+                <option key={opt.key} value={opt.key}>{opt.label}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+        
+        <ChoroplethMap 
+          data={data} 
+          indicatorKey={mapIndicator} 
+          indicatorLabel={IBU_OPTIONS.find(o => o.key === mapIndicator)?.label || ''} 
+        />
       </div>
 
       {/* Kematian ibu breakdown */}
@@ -219,18 +247,18 @@ export default function KesehatanIbu() {
             <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={80} interval={0} />
             <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
             <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-            <Bar dataKey="bersalin" name="Saat Bersalin" stackId="a" fill="#06B5D0" />
-            <Bar dataKey="hamil" name="Saat Hamil" stackId="a" fill="#CBD92C" />
-            <Bar dataKey="nifas" name="Saat Nifas" stackId="a" fill="#0FB0AA" radius={[0, 4, 4, 0]} />
+            <Bar dataKey="bersalin" name="Saat Bersalin" stackId="a" fill="#078FA5" />
+            <Bar dataKey="hamil" name="Saat Hamil" stackId="a" fill="#9EAF24" />
+            <Bar dataKey="nifas" name="Saat Nifas" stackId="a" fill="#0F8F8B" radius={[0, 4, 4, 0]} />
           </BarChart>
         </ResponsiveContainer>
         <div className="bg-[#F5FBFB] rounded-xl p-5 border border-[#CCEEED] text-sm text-gray-700 mt-4">
           <div className="flex items-center gap-2 mb-3">
-            <div className="w-6 h-6 rounded-full bg-[#0FB0AA] text-white flex items-center justify-center font-serif text-[13px] font-bold">i</div>
-            <span className="text-[#0FB0AA] font-bold text-sm tracking-wide">INFO RINGKAS</span>
+            <div className="w-6 h-6 rounded-full bg-[#0F8F8B] text-white flex items-center justify-center font-serif text-[13px] font-bold">i</div>
+            <span className="text-[#0F8F8B] font-bold text-sm tracking-wide">INFO RINGKAS</span>
           </div>
           <div className="flex items-start gap-2 ml-1">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#0FB0AA] mt-1.5 flex-shrink-0" />
+            <div className="w-1.5 h-1.5 rounded-full bg-[#0F8F8B] mt-1.5 flex-shrink-0" />
             <div className="leading-relaxed">
               Grafik di atas menunjukkan sebaran kasus kematian ibu di setiap wilayah. Hal ini menjadi peringatan akan pentingnya pemantauan kondisi ibu secara terus-menerus mulai dari masa kehamilan, saat proses melahirkan, hingga masa nifas.
             </div>
@@ -260,16 +288,16 @@ export default function KesehatanIbu() {
             <XAxis type="number" tick={{ fontSize: 11 }} domain={[0, 100]} />
             <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} interval={0} />
             <Tooltip content={<CustomTooltip />} />
-            <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]} fill="#0FB0AA" />
+            <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]} fill="#0F8F8B" />
           </BarChart>
         </ResponsiveContainer>
         <div className="bg-[#F5FBFB] rounded-xl p-5 border border-[#CCEEED] text-sm text-gray-700 mt-4">
           <div className="flex items-center gap-2 mb-3">
-            <div className="w-6 h-6 rounded-full bg-[#0FB0AA] text-white flex items-center justify-center font-serif text-[13px] font-bold">i</div>
-            <span className="text-[#0FB0AA] font-bold text-sm tracking-wide">INFO RINGKAS</span>
+            <div className="w-6 h-6 rounded-full bg-[#0F8F8B] text-white flex items-center justify-center font-serif text-[13px] font-bold">i</div>
+            <span className="text-[#0F8F8B] font-bold text-sm tracking-wide">INFO RINGKAS</span>
           </div>
           <div className="flex items-start gap-2 ml-1">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#0FB0AA] mt-1.5 flex-shrink-0" />
+            <div className="w-1.5 h-1.5 rounded-full bg-[#0F8F8B] mt-1.5 flex-shrink-0" />
             <div className="leading-relaxed">
               Pencapaian layanan ibu hamil dan bersalin (seperti kunjungan pertama/K1, hingga persalinan di fasilitas medis) bervariasi di setiap kabupaten/kota. Angka di atas 80% (berwarna hijau) menunjukkan bahwa mayoritas ibu di wilayah tersebut sudah menerima pelayanan yang memadai. Sebaliknya, baris berwarna oranye menandakan area yang membutuhkan penguatan ekstra.
             </div>
@@ -290,7 +318,7 @@ export default function KesehatanIbu() {
             className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400">
             {IBU_OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
           </select>
-          <span className="ml-auto text-xs font-mono px-3 py-1 rounded-full" style={{ background: '#F0FAF9', color: '#0FB0AA' }}>r = {r.toFixed(3)}</span>
+          <span className="ml-auto text-xs font-mono px-3 py-1 rounded-full" style={{ background: '#F0FAF9', color: '#0F8F8B' }}>r = {r.toFixed(3)}</span>
         </div>
         <ResponsiveContainer width="100%" height={200}>
           <ScatterChart margin={{ top: 5, right: 20, bottom: 5, left: 5 }}>
@@ -302,7 +330,7 @@ export default function KesehatanIbu() {
               const p = payload[0].payload
               return <div className="bg-white border border-gray-100 rounded-xl shadow p-3 text-xs"><div className="font-semibold mb-1">{p.name}</div><div>X: {p.x?.toFixed(1)}%</div><div>Y: {p.y?.toFixed(1)}%</div></div>
             }} />
-            <Scatter data={scatterData} fill="#0FB0AA" fillOpacity={0.75} />
+            <Scatter data={scatterData} fill="#0F8F8B" fillOpacity={0.75} />
           </ScatterChart>
         </ResponsiveContainer>
       </div>
@@ -344,19 +372,19 @@ export default function KesehatanIbu() {
                   <YAxis tick={{ fontSize: 11 }} />
                   <Tooltip content={<CustomPairTooltip />} />
                   <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-                  <Bar dataKey="fe_tablet_pct" name="Tablet Fe (%)" fill="#0FB0AA" radius={[3, 3, 0, 0]} />
-                  <Bar dataKey="k6_pct" name="Kunjungan K6 (%)" fill="#CBD92C" radius={[3, 3, 0, 0]} />
+                  <Bar dataKey="fe_tablet_pct" name="Tablet Fe (%)" fill="#0F8F8B" radius={[3, 3, 0, 0]} />
+                  <Bar dataKey="k6_pct" name="Kunjungan K6 (%)" fill="#9EAF24" radius={[3, 3, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
           </div>
           <div className="bg-[#F5FBFB] rounded-xl p-5 border border-[#CCEEED] text-sm text-gray-700 mt-2">
             <div className="flex items-center gap-2 mb-3">
-              <div className="w-6 h-6 rounded-full bg-[#0FB0AA] text-white flex items-center justify-center font-serif text-[13px] font-bold">i</div>
-              <span className="text-[#0FB0AA] font-bold text-sm tracking-wide">INFO RINGKAS</span>
+              <div className="w-6 h-6 rounded-full bg-[#0F8F8B] text-white flex items-center justify-center font-serif text-[13px] font-bold">i</div>
+              <span className="text-[#0F8F8B] font-bold text-sm tracking-wide">INFO RINGKAS</span>
             </div>
             <div className="flex items-start gap-2 ml-1">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#0FB0AA] mt-1.5 flex-shrink-0" />
+              <div className="w-1.5 h-1.5 rounded-full bg-[#0F8F8B] mt-1.5 flex-shrink-0" />
               <div className="leading-relaxed">
                 Grafik ini menyoroti perbandingan ibu hamil yang menerima suplemen zat besi (Fe) dengan mereka yang melengkapi minimal kunjungan K6. Semakin dekat jarak antara kedua garis (selisih di bawah 10%), semakin terintegrasi layanan kehamilan di daerah tersebut.<br /><br />
                 <em>* Apabila selisih perbedaannya absolut berada pada rentang -10% hingga 10%, wilayah tersebut diberi skor 1.</em>
@@ -377,19 +405,19 @@ export default function KesehatanIbu() {
                   <YAxis tick={{ fontSize: 11 }} />
                   <Tooltip content={<CustomPairTooltip />} />
                   <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-                  <Bar dataKey="ibu_bersalin" name="Ibu Bersalin" fill="#0FB0AA" radius={[3, 3, 0, 0]} />
-                  <Bar dataKey="anak_lahir_hidup" name="Anak Lahir Hidup" fill="#CBD92C" radius={[3, 3, 0, 0]} />
+                  <Bar dataKey="ibu_bersalin" name="Ibu Bersalin" fill="#0F8F8B" radius={[3, 3, 0, 0]} />
+                  <Bar dataKey="anak_lahir_hidup" name="Anak Lahir Hidup" fill="#9EAF24" radius={[3, 3, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
           </div>
           <div className="bg-[#F5FBFB] rounded-xl p-5 border border-[#CCEEED] text-sm text-gray-700 mt-2">
             <div className="flex items-center gap-2 mb-3">
-              <div className="w-6 h-6 rounded-full bg-[#0FB0AA] text-white flex items-center justify-center font-serif text-[13px] font-bold">i</div>
-              <span className="text-[#0FB0AA] font-bold text-sm tracking-wide">INFO RINGKAS</span>
+              <div className="w-6 h-6 rounded-full bg-[#0F8F8B] text-white flex items-center justify-center font-serif text-[13px] font-bold">i</div>
+              <span className="text-[#0F8F8B] font-bold text-sm tracking-wide">INFO RINGKAS</span>
             </div>
             <div className="flex items-start gap-2 ml-1">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#0FB0AA] mt-1.5 flex-shrink-0" />
+              <div className="w-1.5 h-1.5 rounded-full bg-[#0F8F8B] mt-1.5 flex-shrink-0" />
               <div className="leading-relaxed">
                 Secara logika, jumlah ibu yang melahirkan idealnya sangat mendekati atau sama dengan jumlah bayi yang lahir dalam kondisi hidup (kecuali jika ada bayi kembar). Jika selisih terlalu jauh, hal itu mengindikasikan kemungkinan masalah pencatatan atau pelaporan yang tidak akurat.<br /><br />
                 <em>* Apabila selisih perbedaannya absolut berada pada rentang -10% hingga 10%, wilayah tersebut diberi skor 1.</em>
@@ -410,19 +438,19 @@ export default function KesehatanIbu() {
                   <YAxis tick={{ fontSize: 11 }} />
                   <Tooltip content={<CustomPairTooltip />} />
                   <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-                  <Bar dataKey="nifas_vit_a_pct" name="Vitamin A Nifas (%)" fill="#0FB0AA" radius={[3, 3, 0, 0]} />
-                  <Bar dataKey="kf_lengkap_pct" name="KF Lengkap (%)" fill="#CBD92C" radius={[3, 3, 0, 0]} />
+                  <Bar dataKey="nifas_vit_a_pct" name="Vitamin A Nifas (%)" fill="#0F8F8B" radius={[3, 3, 0, 0]} />
+                  <Bar dataKey="kf_lengkap_pct" name="KF Lengkap (%)" fill="#9EAF24" radius={[3, 3, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
           </div>
           <div className="bg-[#F5FBFB] rounded-xl p-5 border border-[#CCEEED] text-sm text-gray-700 mt-2">
             <div className="flex items-center gap-2 mb-3">
-              <div className="w-6 h-6 rounded-full bg-[#0FB0AA] text-white flex items-center justify-center font-serif text-[13px] font-bold">i</div>
-              <span className="text-[#0FB0AA] font-bold text-sm tracking-wide">INFO RINGKAS</span>
+              <div className="w-6 h-6 rounded-full bg-[#0F8F8B] text-white flex items-center justify-center font-serif text-[13px] font-bold">i</div>
+              <span className="text-[#0F8F8B] font-bold text-sm tracking-wide">INFO RINGKAS</span>
             </div>
             <div className="flex items-start gap-2 ml-1">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#0FB0AA] mt-1.5 flex-shrink-0" />
+              <div className="w-1.5 h-1.5 rounded-full bg-[#0F8F8B] mt-1.5 flex-shrink-0" />
               <div className="leading-relaxed">
                 Pemeriksaan lengkap paska melahirkan (KF) sepatutnya dibarengi dengan pemberian Vitamin A untuk kesehatan dan kekebalan tubuh sang ibu. Keselarasan kedua data ini mencerminkan apakah standar penanganan pasien benar-benar berjalan satu paket.<br /><br />
                 <em>* Apabila selisih perbedaannya absolut berada pada rentang -10% hingga 10%, wilayah tersebut diberi skor 1.</em>
@@ -438,6 +466,14 @@ export default function KesehatanIbu() {
         variables={IBU_OPTIONS}
         defaultRowVar="k1_pct"
         defaultColVar="persalinan_fasyankes_pct"
+      />
+
+      
+      <RiskClusteringMap 
+        data={data} 
+        variables={['kematian_ibu_hamil', 'k6_pct', 'persalinan_fasyankes_pct', 'kf_lengkap_pct']} 
+        directions={[1, -1, -1, -1]} 
+        variableLabels={['Kematian Ibu Hamil', 'K6 (%)', 'Persalinan Fasyankes (%)', 'KF Lengkap (%)']} 
       />
 
       <DataTable data={data} columns={[
