@@ -69,13 +69,13 @@ export default function PenyakitTidakMenular() {
   return (
     <div className="flex flex-col gap-5">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <KPICard title="Kasus Hipertensi" value={totHipertensi.toLocaleString('id-ID')} sub="Penderita mendapat pelayanan 96.5%" icon="❤️" color="#0F8F8B" targetData={evaluateTarget(96.5, 'hipertensi_pelayanan_pct')} />
-        <KPICard title="Diabetes Melitus" value={totDM.toLocaleString('id-ID')} sub="Terdiagnosis" icon="🩸" color="#0F8F8B" />
-        <KPICard title="DM Terkendali" value="342.113" sub="Persentase 37.7%" icon="✅" color="#0F8F8B" />
-        <KPICard title="HPV+ & IVA+" value="96.4%" sub="Persentase Skrining" icon="🔬" color="#0F8F8B" targetData={evaluateTarget(96.4, 'skrining_kanker_rahim_pct')} />
-        <KPICard title="SADANIS (30-69 Thn)" value="28.2%" sub="Skrining Payudara" icon="🎗️" color="#0F8F8B" />
-        <KPICard title="USG Payudara (30-69 Thn)" value="0.1%" sub="Skrining Payudara" icon="🩺" color="#0F8F8B" />
-        <KPICard title="Pelayanan Jiwa Berat" value="93.1%" sub="Persentase Pelayanan" icon="🧠" color="#0F8F8B" targetData={evaluateTarget(93.1, 'odgj_pelayanan_pct')} />
+        <KPICard title="Kasus Hipertensi" value={totHipertensi.toLocaleString('id-ID')} sub="Penderita mendapat pelayanan 96,5%" icon="❤️" color="#0F8F8B" targetData={evaluateTarget(96.5, 'hipertensi_pelayanan_pct')} />
+        <KPICard title="Kasus DM" value={totDM.toLocaleString('id-ID')} sub="Penderita mendapat pelayanan 100%" icon="🩸" color="#0F8F8B" targetData={evaluateTarget(100, 'dm_pelayanan_pct')} />
+        <KPICard title="DM Terkendali" value="342.113" sub="Persentase 37,7%" icon="✅" color="#0F8F8B" />
+        <KPICard title="HPV+ & IVA+" value="96,4%" sub="Persentase Skrining" icon="🔬" color="#0F8F8B" targetData={evaluateTarget(96.4, 'skrining_kanker_rahim_pct')} />
+        <KPICard title="SADANIS (30-69 Thn)" value="28,2%" sub="Skrining Payudara" icon="🎗️" color="#0F8F8B" />
+        <KPICard title="USG Payudara (30-69 Thn)" value="0,1%" sub="Skrining Payudara" icon="🩺" color="#0F8F8B" />
+        <KPICard title="Pelayanan Jiwa Berat" value="93,1%" sub="Persentase Pelayanan" icon="🧠" color="#0F8F8B" targetData={evaluateTarget(93.1, 'odgj_pelayanan_pct')} />
       </div>
 
       {/* CHOROPLETH MAP SECTION */}

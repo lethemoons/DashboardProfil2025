@@ -93,9 +93,9 @@ export default function TularVektor() {
 
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
         <KPICard title="Kasus DBD" value={totDBD.toLocaleString('id-ID')} sub="Demam Berdarah Dengue" icon="🦟" color="#0F8F8B" />
-        <KPICard title="CFR DBD Rata-rata" value="0.62%" sub="Case Fatality Rate" icon="📊" color="#0F8F8B" targetData={evaluateTarget(0.62, 'dbd_cfr')} />
-        <KPICard title="Malaria Positif" value={totMalaria.toLocaleString('id-ID')} sub="Pengobatan standar 96.3%" icon="🦠" color="#0F8F8B" />
-        <KPICard title="Angka Kesakitan Malaria" value="0.02" sub="API per 1000 penduduk" icon="📈" color="#0F8F8B" />
+        <KPICard title="CFR DBD Rata-rata" value="0,62%" sub="Case Fatality Rate" icon="📊" color="#0F8F8B" targetData={evaluateTarget(0.62, 'dbd_cfr')} />
+        <KPICard title="Malaria Positif" value={totMalaria.toLocaleString('id-ID')} sub="Pengobatan standar 96,3%" icon="🦠" color="#0F8F8B" />
+        <KPICard title="Angka Kesakitan Malaria" value="0,02" sub="API per 1000 penduduk" icon="📈" color="#0F8F8B" />
         <KPICard title="Filariasis Kronis" value="129" sub="Kasus" icon="🌊" color="#0F8F8B" />
       </div>
 

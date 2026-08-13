@@ -252,8 +252,8 @@ export default function PenyakitMenular() {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <KPICard title="Kasus TBC" value={totTBC.toLocaleString('id-ID')} sub="Semua Tipe" icon="🫁" color="#ef4444" />
-        <KPICard title="Sukses Pengobatan TBC" value="88.26%" sub="Rata-rata" icon="✅" color="#0F8F8B" targetData={evaluateTarget(88.26, 'tbc_tsr_pct')} />
-        <KPICard title="Hepatitis Bumil Reaktif" value="1.6%" sub="7.186 orang" icon="🩸" color="#eab308" />
+        <KPICard title="Sukses Pengobatan TBC" value="88,26%" sub="Rata-rata" icon="✅" color="#0F8F8B" targetData={evaluateTarget(88.26, 'tbc_tsr_pct')} />
+        <KPICard title="Hepatitis Bumil Reaktif" value="1,6%" sub="7.186 orang" icon="🩸" color="#eab308" />
         <KPICard title="ODHIV Mendapat ARV" value="75%" sub="7.969 orang" icon="💊" color="#a855f7" targetData={evaluateTarget(75, 'odhiv_arv_pct')} />
         
         <KPICard title="ODHIV Baru" value={totODHIV.toLocaleString('id-ID')} sub="Ditemukan" icon="🔴" color="#8b5cf6" />

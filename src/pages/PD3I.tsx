@@ -60,8 +60,8 @@ export default function PD3I() {
   return (
     <div className="flex flex-col gap-5">
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <KPICard title="Kasus Difteri" value={totDifteri.toLocaleString('id-ID')} sub="CFR Difteri 2.2%" icon="⚠️" color="#0F8F8B" />
-            <KPICard title="Kasus Pertusis" value={totPertusis.toLocaleString('id-ID')} sub="CFR Tetanus Neonatorum 52.6%" icon="😮‍💨" color="#0F8F8B" />
+            <KPICard title="Kasus Difteri" value={totDifteri.toLocaleString('id-ID')} sub="CFR Difteri 2,2%" icon="⚠️" color="#0F8F8B" />
+            <KPICard title="Kasus Pertusis" value={totPertusis.toLocaleString('id-ID')} sub="CFR Tetanus Neonatorum 52,6%" icon="😮‍💨" color="#0F8F8B" />
             <KPICard title="Kasus Suspek Campak" value={totCampakSuspek.toLocaleString('id-ID')} icon="🔴" color="#0F8F8B" />
             <KPICard title="AFP Rate (Non Polio) < 15 Thn" value="6.3" sub="per 100.000 penduduk < 15 tahun" icon="👶" color="#0F8F8B" />
             <KPICard title="KLB <24 Jam" value="100%" sub="Rata-rata penanganan" icon="🚨" color="#0F8F8B" targetData={evaluateTarget(100, 'klb_24jam_pct')} />
