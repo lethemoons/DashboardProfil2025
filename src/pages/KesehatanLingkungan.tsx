@@ -15,6 +15,7 @@ import InsightBox from '../components/InsightBox'
 import StatPanel from '../components/StatPanel'
 import DataTable from '../components/DataTable'
 import CrosstabSection from '../components/CrosstabSection'
+import { useAuth } from '../contexts/AuthContext'
 
 const KESLING_OPTIONS = [
   { key: 'air_minum_memenuhi_syarat_pct', label: 'Air Minum Memenuhi Syarat (%)' },
@@ -28,11 +29,11 @@ const KESLING_OPTIONS = [
 ]
 
 export default function KesehatanLingkungan() {
-  const [mapIndicator, setMapIndicator] = useState('air_minum_memenuhi_syarat_pct');
   const { data: kesling, loading, error } = useDashboardData()
+  const { isAdmin } = useAuth()
 
+  const [mapIndicator, setMapIndicator] = useState('air_minum_memenuhi_syarat_pct');
   const [indic, setIndic] = useState('air_minum_memenuhi_syarat_pct')
-
   const [keslingFilter, setKeslingFilter] = useState('10')
 
   const data = useMemo(() => kesling.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [kesling])
@@ -164,21 +165,25 @@ export default function KesehatanLingkungan() {
       />
       
 
-      <CrosstabSection
-        data={data}
-        variables={KESLING_OPTIONS}
-        defaultRowVar="air_minum_memenuhi_syarat_pct"
-        defaultColVar="sanitasi_aman_pct"
-      />
+      {isAdmin && (
+        <CrosstabSection
+          data={data}
+          variables={KESLING_OPTIONS}
+          defaultRowVar="air_minum_memenuhi_syarat_pct"
+          defaultColVar="sanitasi_aman_pct"
+        />
+      )}
 
       
-      <RiskClusteringMap 
-        title="Analisis Klasterisasi Pemetaan Risiko Kesehatan Lingkungan"
-        data={data} 
-        variables={['air_minum_memenuhi_syarat_pct', 'sanitasi_aman_pct', 'kualitas_udara_ms_pct', 'stbm_5pilar_jumlah']} 
-        directions={[-1, -1, -1, -1]} 
-        variableLabels={['Air Minum MS (%)', 'Sanitasi Aman (%)', 'Kualitas Udara MS (%)', 'STBM 5 Pilar']} 
-      />
+      {isAdmin && (
+        <RiskClusteringMap 
+          title="Analisis Klasterisasi Pemetaan Risiko Kesehatan Lingkungan"
+          data={data} 
+          variables={['air_minum_memenuhi_syarat_pct', 'sanitasi_aman_pct', 'kualitas_udara_ms_pct', 'stbm_5pilar_jumlah']} 
+          directions={[-1, -1, -1, -1]} 
+          variableLabels={['Air Minum MS (%)', 'Sanitasi Aman (%)', 'Kualitas Udara MS (%)', 'STBM 5 Pilar']} 
+        />
+      )}
 
       <DataTable data={data} columns={[
         { key: 'kabupaten', label: 'Kabupaten/Kota' },

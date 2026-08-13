@@ -14,6 +14,7 @@ import DataTable from '../components/DataTable'
 import RankChart from '../components/RankChart'
 import CrosstabSection from '../components/CrosstabSection'
 import RiskClusteringMap from '../components/RiskClusteringMap'
+import { useAuth } from '../contexts/AuthContext'
 
 const RS_OPTIONS = [
   { key: 'bor', label: 'BOR — Bed Occupancy Rate (%)' },
@@ -35,6 +36,7 @@ const IDEAL: Record<string, { min: number; max: number; label: string }> = {
 
 export default function AksesMutu() {
   const { data: saranaKesehatan, loading, error } = useDashboardData()
+  const { isAdmin } = useAuth()
 
   const [indic, setIndic] = useState('bor')
   const [statIndic, setStatIndic] = useState('bor')
@@ -147,35 +149,39 @@ export default function AksesMutu() {
       </div>
 
       {/* Scatter correlation */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
-        <div className="flex items-center gap-3 mb-4 flex-wrap">
-          <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Analisis Korelasi Indikator RS</h3>
-          <select value={corrX} onChange={e => setCorrX(e.target.value)}
-            className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[200px]">
-            {RS_OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
-          </select>
-          <span className="text-xs text-gray-400">vs</span>
-          <select value={corrY} onChange={e => setCorrY(e.target.value)}
-            className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[200px]">
-            {RS_OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
-          </select>
-          <span className="ml-auto text-xs font-mono px-3 py-1 rounded-full" style={{ background: '#F0FAF9', color: '#0FB0AA' }}>r = {r.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}</span>
-        </div>
-        <ResponsiveContainer width="100%" height={220}>
-          <ScatterChart margin={{ top: 10, right: 20, bottom: 10, left: 10 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-            <XAxis dataKey="x" type="number" name={corrX} tick={{ fontSize: 11 }} />
-            <YAxis dataKey="y" type="number" name={corrY} tick={{ fontSize: 11 }} />
-            <Tooltip content={({ payload }) => {
-              if (!payload?.length) return null
-              const p = payload[0].payload
-              return <div className="bg-white border border-gray-100 rounded-xl shadow p-3 text-xs"><div className="font-semibold mb-1">{p.name}</div><div>{corrX.toUpperCase()}: {p.x?.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div><div>{corrY.toUpperCase()}: {p.y?.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div></div>
-            }} />
-            <Scatter data={scatterData} fill="#0FB0AA" fillOpacity={0.75} />
-          </ScatterChart>
-        </ResponsiveContainer>
-      </div>
-      <InsightBox insights={scatterInsights} />
+      {isAdmin && (
+        <>
+          <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+            <div className="flex items-center gap-3 mb-4 flex-wrap">
+              <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Analisis Korelasi Indikator RS</h3>
+              <select value={corrX} onChange={e => setCorrX(e.target.value)}
+                className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[200px]">
+                {RS_OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
+              </select>
+              <span className="text-xs text-gray-400">vs</span>
+              <select value={corrY} onChange={e => setCorrY(e.target.value)}
+                className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[200px]">
+                {RS_OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
+              </select>
+              <span className="ml-auto text-xs font-mono px-3 py-1 rounded-full" style={{ background: '#F0FAF9', color: '#0FB0AA' }}>r = {r.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}</span>
+            </div>
+            <ResponsiveContainer width="100%" height={220}>
+              <ScatterChart margin={{ top: 10, right: 20, bottom: 10, left: 10 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+                <XAxis dataKey="x" type="number" name={corrX} tick={{ fontSize: 11 }} />
+                <YAxis dataKey="y" type="number" name={corrY} tick={{ fontSize: 11 }} />
+                <Tooltip content={({ payload }) => {
+                  if (!payload?.length) return null
+                  const p = payload[0].payload
+                  return <div className="bg-white border border-gray-100 rounded-xl shadow p-3 text-xs"><div className="font-semibold mb-1">{p.name}</div><div>{corrX.toUpperCase()}: {p.x?.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div><div>{corrY.toUpperCase()}: {p.y?.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div></div>
+                }} />
+                <Scatter data={scatterData} fill="#0FB0AA" fillOpacity={0.75} />
+              </ScatterChart>
+            </ResponsiveContainer>
+          </div>
+          <InsightBox insights={scatterInsights} />
+        </>
+      )}
 
       <StatPanel
         stats={stats}
@@ -190,20 +196,24 @@ export default function AksesMutu() {
       />
 
 
-      <CrosstabSection
-        data={data}
-        variables={RS_OPTIONS}
-        defaultRowVar="bor"
-        defaultColVar="alos"
-      />
+      {isAdmin && (
+        <CrosstabSection
+          data={data}
+          variables={RS_OPTIONS}
+          defaultRowVar="bor"
+          defaultColVar="alos"
+        />
+      )}
 
-      <RiskClusteringMap 
-        title="Analisis Klasterisasi Pemetaan Risiko Akses & Mutu Pelayanan Kesehatan"
-        data={data} 
-        variables={['bor', 'gdr', 'ndr']} 
-        directions={[1, 1, 1]} 
-        variableLabels={['BOR (%)', 'GDR (‰)', 'NDR (‰)']} 
-      />
+      {isAdmin && (
+        <RiskClusteringMap 
+          title="Analisis Klasterisasi Pemetaan Risiko Akses & Mutu Pelayanan Kesehatan"
+          data={data} 
+          variables={['bor', 'gdr', 'ndr']} 
+          directions={[1, 1, 1]} 
+          variableLabels={['BOR (%)', 'GDR (‰)', 'NDR (‰)']} 
+        />
+      )}
 
       <DataTable data={data} columns={[
         { key: 'kabupaten', label: 'Kabupaten/Kota' },

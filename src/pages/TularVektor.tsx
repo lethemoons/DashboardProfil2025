@@ -15,6 +15,7 @@ import InsightBox from '../components/InsightBox'
 import StatPanel from '../components/StatPanel'
 import DataTable from '../components/DataTable'
 import CrosstabSection from '../components/CrosstabSection'
+import { useAuth } from '../contexts/AuthContext'
 
 const OPTIONS = [
   { key: 'dbd_kasus', label: 'DBD — Jumlah Kasus' },
@@ -25,7 +26,8 @@ const OPTIONS = [
 
 export default function TularVektor() {
   const [mapIndicator, setMapIndicator] = useState('dbd_kasus');
-  const { data: penyakitPD3I, loading, error } = useDashboardData()
+  const { data: rawData, loading, error } = useDashboardData()
+  const { isAdmin } = useAuth()
 
   const [indic, setIndic] = useState('dbd_kasus')
   const [dbdFilter, setDbdFilter] = useState('10')
@@ -33,7 +35,7 @@ export default function TularVektor() {
   const [malariaFilter, setMalariaFilter] = useState('10')
   const [malariaIndic, setMalariaIndic] = useState('malaria_suspek')
 
-  const data = useMemo(() => penyakitPD3I.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [penyakitPD3I])
+  const data = useMemo(() => rawData.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [rawData])
 
   const totDBD = data.reduce((s, d) => s + (d.dbd_kasus as number), 0)
   const avgCFR = data.length ? data.reduce((s, d) => s + (d.dbd_cfr as number), 0) / data.length : 0
@@ -244,26 +246,30 @@ export default function TularVektor() {
       <InsightBox insights={[generateDynamicBarInsight(data, malariaIndic, malariaLabel, 'Tingginya indikator malaria pada wilayah tersebut menuntut upaya pengawasan wilayah perbatasan, distribusi kelambu, dan peningkatan kompetensi petugas puskesmas setempat.')]} />
 
       {/* Korelasi DBD kasus vs CFR */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
-        <div className="flex items-center gap-3 mb-4">
-          <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Korelasi Kasus DBD vs CFR</h3>
-          <span className="ml-auto text-xs font-mono px-3 py-1 rounded-full" style={{ background: '#F0FAF9', color: '#0F8F8B' }}>r = {r.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}</span>
-        </div>
-        <ResponsiveContainer width="100%" height={200}>
-          <ScatterChart margin={{ top: 5, right: 20, bottom: 5, left: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-            <XAxis dataKey="x" type="number" name="Kasus DBD" tick={{ fontSize: 11 }} label={{ value: 'Kasus DBD', position: 'insideBottom', offset: -5, fontSize: 11 }} />
-            <YAxis dataKey="y" type="number" name="CFR" tick={{ fontSize: 11 }} label={{ value: 'CFR (%)', angle: -90, position: 'insideLeft', fontSize: 11 }} />
-            <Tooltip content={({ payload }) => {
-              if (!payload?.length) return null
-              const p = payload[0].payload
-              return <div className="bg-white border border-gray-100 rounded-xl shadow p-3 text-xs"><div className="font-semibold mb-1">{p.name}</div><div>Kasus: {p.x?.toLocaleString('id-ID')}</div><div>CFR: {p.y?.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%</div></div>
-            }} />
-            <Scatter data={scatterData} fill="#0F8F8B" fillOpacity={0.75} />
-          </ScatterChart>
-        </ResponsiveContainer>
-      </div>
-      <InsightBox insights={scatterInsights} />
+      {isAdmin && (
+        <>
+          <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+            <div className="flex items-center gap-3 mb-4">
+              <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Korelasi Kasus DBD vs CFR</h3>
+              <span className="ml-auto text-xs font-mono px-3 py-1 rounded-full" style={{ background: '#F0FAF9', color: '#0F8F8B' }}>r = {r.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}</span>
+            </div>
+            <ResponsiveContainer width="100%" height={200}>
+              <ScatterChart margin={{ top: 5, right: 20, bottom: 5, left: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+                <XAxis dataKey="x" type="number" name="Kasus DBD" tick={{ fontSize: 11 }} label={{ value: 'Kasus DBD', position: 'insideBottom', offset: -5, fontSize: 11 }} />
+                <YAxis dataKey="y" type="number" name="CFR" tick={{ fontSize: 11 }} label={{ value: 'CFR (%)', angle: -90, position: 'insideLeft', fontSize: 11 }} />
+                <Tooltip content={({ payload }) => {
+                  if (!payload?.length) return null
+                  const p = payload[0].payload
+                  return <div className="bg-white border border-gray-100 rounded-xl shadow p-3 text-xs"><div className="font-semibold mb-1">{p.name}</div><div>Kasus: {p.x?.toLocaleString('id-ID')}</div><div>CFR: {p.y?.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%</div></div>
+                }} />
+                <Scatter data={scatterData} fill="#0F8F8B" fillOpacity={0.75} />
+              </ScatterChart>
+            </ResponsiveContainer>
+          </div>
+          <InsightBox insights={scatterInsights} />
+        </>
+      )}
 
       <StatPanel
         stats={stats}
@@ -277,21 +283,25 @@ export default function TularVektor() {
       />
 
 
-      <CrosstabSection
-        data={data}
-        variables={OPTIONS}
-        defaultRowVar="dbd_kasus"
-        defaultColVar="dbd_cfr"
-      />
+      {isAdmin && (
+        <CrosstabSection
+          data={data}
+          variables={OPTIONS}
+          defaultRowVar="dbd_kasus"
+          defaultColVar="dbd_cfr"
+        />
+      )}
 
       
-      <RiskClusteringMap 
-        title="Analisis Klasterisasi Pemetaan Risiko Penyakit Tular Vektor & Zoonotik"
-        data={data} 
-        variables={['dbd_kasus', 'dbd_cfr', 'malaria_positif']} 
-        directions={[1, 1, 1]} 
-        variableLabels={['Kasus DBD', 'CFR DBD (%)', 'Malaria Positif']} 
-      />
+      {isAdmin && (
+        <RiskClusteringMap 
+          title="Analisis Klasterisasi Pemetaan Risiko Penyakit Tular Vektor & Zoonotik"
+          data={data} 
+          variables={['dbd_kasus', 'dbd_cfr', 'malaria_positif']} 
+          directions={[1, 1, 1]} 
+          variableLabels={['Kasus DBD', 'CFR DBD (%)', 'Malaria Positif']} 
+        />
+      )}
 
       <DataTable data={data} columns={[
         { key: 'kabupaten', label: 'Kabupaten/Kota' },

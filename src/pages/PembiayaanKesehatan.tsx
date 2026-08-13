@@ -13,6 +13,8 @@ import KPICard from '../components/KPICard'
 import InsightBox from '../components/InsightBox'
 import StatPanel from '../components/StatPanel'
 import DataTable from '../components/DataTable'
+import { useAuth } from '../contexts/AuthContext'
+import { generateDynamicBarInsight } from '../utils/insightGenerator'
 import ChoroplethMap from '../components/ChoroplethMap'
 import CrosstabSection from '../components/CrosstabSection'
 
@@ -20,6 +22,7 @@ const fmtRp = (v: number) => 'Rp ' + (v >= 1e12 ? (v / 1e12).toLocaleString('id-
 
 export default function PembiayaanKesehatan() {
   const { data: pembiayaan, loading, error } = useDashboardData()
+  const { isAdmin } = useAuth()
 
   const [statIndic, setStatIndic] = useState('2025')
   const [trendKab, setTrendKab] = useState('all')
@@ -135,7 +138,7 @@ export default function PembiayaanKesehatan() {
                       outerRadius={80}
                       paddingAngle={2}
                       dataKey="value"
-                      label={({ cx, cy, midAngle, innerRadius, outerRadius, percentage, name }) => {
+                      label={({ cx, cy, midAngle, innerRadius, outerRadius, percentage, name }: any) => {
                         const RADIAN = Math.PI / 180;
                         const radius = innerRadius + (outerRadius - innerRadius) * 0.55;
                         const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -153,8 +156,8 @@ export default function PembiayaanKesehatan() {
                       ))}
                     </Pie>
                     <Tooltip
-                      formatter={(value: number, name: string, props: any) => [
-                        `${value.toLocaleString('id-ID')} (${props.payload.percentage}%)`,
+                      formatter={(value: any, name: string, props: any) => [
+                        `${Number(value).toLocaleString('id-ID')} (${props.payload.percentage}%)`,
                         name
                       ]}
                       contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
@@ -178,7 +181,7 @@ export default function PembiayaanKesehatan() {
                       outerRadius={80}
                       paddingAngle={2}
                       dataKey="value"
-                      label={({ cx, cy, midAngle, innerRadius, outerRadius, percentage, name }) => {
+                      label={({ cx, cy, midAngle, innerRadius, outerRadius, percentage, name }: any) => {
                         const RADIAN = Math.PI / 180;
                         const radius = innerRadius + (outerRadius - innerRadius) * 0.55;
                         const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -196,8 +199,8 @@ export default function PembiayaanKesehatan() {
                       ))}
                     </Pie>
                     <Tooltip
-                      formatter={(value: number, name: string, props: any) => [
-                        `${value.toLocaleString('id-ID')} (${props.payload.percentage}%)`,
+                      formatter={(value: any, name: string, props: any) => [
+                        `${Number(value).toLocaleString('id-ID')} (${props.payload.percentage}%)`,
                         name
                       ]}
                       contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
@@ -297,16 +300,18 @@ export default function PembiayaanKesehatan() {
 
 
 
-      <CrosstabSection
-        data={data.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR')}
-        variables={[
-          { key: '2023', label: 'Anggaran Kesehatan 2023' },
-          { key: '2024', label: 'Anggaran Kesehatan 2024' },
-          { key: '2025', label: 'Anggaran Kesehatan 2025' }
-        ]}
-        defaultRowVar="2024"
-        defaultColVar="2025"
-      />
+      {isAdmin && (
+        <CrosstabSection
+          data={data.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR')}
+          variables={[
+            { key: '2023', label: 'Anggaran Kesehatan 2023' },
+            { key: '2024', label: 'Anggaran Kesehatan 2024' },
+            { key: '2025', label: 'Anggaran Kesehatan 2025' }
+          ]}
+          defaultRowVar="2024"
+          defaultColVar="2025"
+        />
+      )}
 
       <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
         <h3 className="font-semibold text-gray-800 mb-4" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>

@@ -11,6 +11,7 @@ import InsightBox from '../components/InsightBox'
 import StatPanel from '../components/StatPanel'
 import DataTable from '../components/DataTable'
 import CrosstabSection from '../components/CrosstabSection'
+import { useAuth } from '../contexts/AuthContext'
 
 const IBU_OPTIONS = [
   { key: 'k1_pct', label: 'Cakupan K1 (%)' },
@@ -31,19 +32,22 @@ const ANAK_OPTIONS = [
   { key: 'bblr_pct', label: 'BBLR (%)' },
 ]
 
-export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
+export default function KesehatanKeluarga() {
+  const { data: rawData, loading, error } = useDashboardData()
+  const { isAdmin } = useAuth()
+  
   const [ibuIndic, setIbuIndic] = useState('k1_pct')
   const [anakIndic, setAnakIndic] = useState('stunting_pct')
   const [tab, setTab] = useState<'ibu' | 'anak' | 'lansia'>('ibu')
 
-  const ibuData = useMemo(() => kesehatanIbu.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [kesehatanIbu])
-  const anakData = useMemo(() => kesehatanAnak.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [kesehatanAnak])
-  const lansiaData = useMemo(() => usiaProduktif.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [usiaProduktif])
+  const ibuData = useMemo(() => (rawData || []).filter((d: any) => d.kabupaten !== 'PROV. JAWA TIMUR'), [rawData])
+  const anakData = useMemo(() => (rawData || []).filter((d: any) => d.kabupaten !== 'PROV. JAWA TIMUR'), [rawData])
+  const lansiaData = useMemo(() => (rawData || []).filter((d: any) => d.kabupaten !== 'PROV. JAWA TIMUR'), [rawData])
 
-  const totKematianIbu = ibuData.reduce((s, d) => s + (d.kematian_ibu_hamil as number) + (d.kematian_ibu_bersalin as number) + (d.kematian_ibu_nifas as number), 0)
-  const avgK1 = ibuData.length ? ibuData.reduce((s, d) => s + (d.k1_pct as number), 0) / ibuData.length : 0
-  const totKematianAnak = anakData.reduce((s, d) => s + (d.kematian_neonatal as number) + (d.kematian_bayi as number), 0)
-  const avgStunting = anakData.length ? anakData.reduce((s, d) => s + (d.stunting_pct as number), 0) / anakData.length : 0
+  const totKematianIbu = ibuData.reduce((s: any, d: any) => s + (d.kematian_ibu_hamil as number) + (d.kematian_ibu_bersalin as number) + (d.kematian_ibu_nifas as number), 0)
+  const avgK1 = ibuData.length ? ibuData.reduce((s: any, d: any) => s + (d.k1_pct as number), 0) / ibuData.length : 0
+  const totKematianAnak = anakData.reduce((s: any, d: any) => s + (d.kematian_neonatal as number) + (d.kematian_bayi as number), 0)
+  const avgStunting = anakData.length ? anakData.reduce((s: any, d: any) => s + (d.stunting_pct as number), 0) / anakData.length : 0
 
   const ibuChartData = [...ibuData].sort((a, b) => (b[ibuIndic] as number) - (a[ibuIndic] as number)).slice(0, 15)
   const anakChartData = [...anakData].sort((a, b) => (b[anakIndic] as number) - (a[anakIndic] as number)).slice(0, 15)
@@ -128,13 +132,15 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
             }
           />
           <InsightBox insights={ibuStatInsights} />
-          <CrosstabSection
-            data={ibuData}
-            variables={IBU_OPTIONS}
-            defaultRowVar="k1_pct"
-            defaultColVar="persalinan_fasyankes_pct"
-            title="Analisis Crosstab Kesehatan Ibu"
-          />
+          {isAdmin && (
+            <CrosstabSection
+              data={ibuData}
+              variables={IBU_OPTIONS}
+              defaultRowVar="k1_pct"
+              defaultColVar="persalinan_fasyankes_pct"
+              title="Analisis Crosstab Kesehatan Ibu"
+            />
+          )}
           <DataTable data={ibuData} columns={[
             { key: 'kabupaten', label: 'Kabupaten/Kota' },
             { key: 'k1_pct', label: 'K1 (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
@@ -188,13 +194,15 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
             `Rata-rata prevalensi balita stunting di Jawa Timur berada pada angka ${avgStunting.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%. Stunting bukan sekadar masalah fisik tubuh yang pendek, tetapi mengindikasikan gagal kembang otak yang berakibat pada rendahnya kecerdasan anak di masa depan. Intervensi gizi wajib diprioritaskan pada 1000 Hari Pertama Kehidupan (HPK).`,
             `Kematian neonatal dan bayi yang terpantau mencapai ${totKematianAnak} kasus. Tingginya kematian pada bulan pertama kehidupan ini mayoritas dipicu oleh bayi lahir prematur atau Berat Badan Lahir Rendah (BBLR). Pemenuhan gizi ibu hamil sejak sebelum konsepsi adalah pencegahan paling efektif.`,
           ]} />
-          <CrosstabSection
-            data={anakData}
-            variables={ANAK_OPTIONS}
-            defaultRowVar="stunting_pct"
-            defaultColVar="gizi_kurang_pct"
-            title="Analisis Crosstab Kesehatan Anak"
-          />
+          {isAdmin && (
+            <CrosstabSection
+              data={anakData}
+              variables={ANAK_OPTIONS}
+              defaultRowVar="stunting_pct"
+              defaultColVar="gizi_kurang_pct"
+              title="Analisis Crosstab Kesehatan Anak"
+            />
+          )}
           <DataTable data={anakData} columns={[
             { key: 'kabupaten', label: 'Kabupaten/Kota' },
             { key: 'stunting_pct', label: 'Stunting (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
@@ -231,10 +239,12 @@ export default function KesehatanKeluarga({ sub = '5.1' }: { sub?: string }) {
             `Total lansia yang berhasil mendapat pelayanan kesehatan sesuai standar mencapai ${lansiaData.reduce((s, d) => s + (d.lansia_dilayani as number), 0).toLocaleString('id-ID')} jiwa. Seiring meningkatnya usia harapan hidup, lansia sangat rentan terhadap penyakit degeneratif kronis (seperti diabetes dan stroke) yang butuh pengobatan seumur hidup.`,
             `Ketersediaan posyandu lansia tercatat sebanyak ${lansiaData.reduce((s, d) => s + (d.posyandu_lansia as number), 0).toLocaleString('id-ID')} unit. Posyandu lansia sangat esensial sebagai sarana skrining rutin (cek tensi, cek gula darah) agar lansia tetap mandiri, aktif, dan mencegah kelumpuhan akibat penyakit penyerta.`,
           ]} />
-          <CrosstabSection
-            data={lansiaData}
-            title="Analisis Crosstab Usia Produktif & Lansia"
-          />
+          {isAdmin && (
+            <CrosstabSection
+              data={lansiaData}
+              title="Analisis Crosstab Usia Produktif & Lansia"
+            />
+          )}
           <DataTable data={lansiaData} columns={[
             { key: 'kabupaten', label: 'Kabupaten/Kota' },
             { key: 'produktif_laki', label: 'Produktif L', format: v => v?.toLocaleString('id-ID') },

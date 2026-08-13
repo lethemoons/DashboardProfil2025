@@ -14,6 +14,7 @@ import InsightBox from '../components/InsightBox'
 import StatPanel from '../components/StatPanel'
 import DataTable from '../components/DataTable'
 import CrosstabSection from '../components/CrosstabSection'
+import { useAuth } from '../contexts/AuthContext'
 
 const OPTIONS = [
   { key: 'tbc_kasus', label: 'TBC — Jumlah Kasus' },
@@ -165,6 +166,7 @@ const DiareTooltip = ({ active, payload, label }: any) => {
 export default function PenyakitMenular() {
   const [mapIndicator, setMapIndicator] = useState('tbc_kasus');
   const { data: penyakitMenular, loading, error } = useDashboardData()
+  const { isAdmin } = useAuth()
 
   const [indic, setIndic] = useState('tbc_kasus')
   const [indicFilter, setIndicFilter] = useState('10')
@@ -175,7 +177,7 @@ export default function PenyakitMenular() {
   const [corrX, setCorrX] = useState('tbc_kasus')
   const [corrY, setCorrY] = useState('diare_semua_umur')
 
-  const data = useMemo(() => penyakitMenular.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [penyakitMenular])
+  const data = useMemo(() => (penyakitMenular || []).filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [penyakitMenular])
 
   const totTBC = data.reduce((s, d) => s + (d.tbc_kasus as number), 0)
   const totODHIV = data.reduce((s, d) => s + (d.odhiv_baru as number), 0)
@@ -449,35 +451,39 @@ export default function PenyakitMenular() {
       <InsightBox insights={[generateDynamicBarInsight(data, diareAge === 'balita' ? 'diare_balita' : 'diare_semua_umur', 'Kasus Diare', 'Sanitasi lingkungan yang buruk dan kurangnya akses terhadap air bersih seringkali berbanding lurus dengan tingginya kasus diare, khususnya pada kelompok rentan seperti balita.')]} />
 
       {/* Korelasi */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
-        <div className="flex items-center gap-3 mb-4 flex-wrap">
-          <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Analisis Korelasi</h3>
-          <select value={corrX} onChange={e => setCorrX(e.target.value)}
-            className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400">
-            {OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
-          </select>
-          <span className="text-xs text-gray-400">vs</span>
-          <select value={corrY} onChange={e => setCorrY(e.target.value)}
-            className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400">
-            {OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
-          </select>
-          <span className="ml-auto text-xs font-mono px-3 py-1 rounded-full" style={{ background: '#F0FAF9', color: '#0F8F8B' }}>r = {r.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}</span>
-        </div>
-        <ResponsiveContainer width="100%" height={200}>
-          <ScatterChart margin={{ top: 5, right: 20, bottom: 5, left: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-            <XAxis dataKey="x" type="number" tick={{ fontSize: 11 }} />
-            <YAxis dataKey="y" type="number" tick={{ fontSize: 11 }} />
-            <Tooltip content={({ payload }) => {
-              if (!payload?.length) return null
-              const p = payload[0].payload
-              return <div className="bg-white border border-gray-100 rounded-xl shadow p-3 text-xs"><div className="font-semibold mb-1">{p.name}</div><div>X: {p.x?.toLocaleString('id-ID')}</div><div>Y: {p.y?.toLocaleString('id-ID')}</div></div>
-            }} />
-            <Scatter data={scatterData} fill="#0F8F8B" fillOpacity={0.75} />
-          </ScatterChart>
-        </ResponsiveContainer>
-      </div>
-      <InsightBox insights={scatterInsights} />
+      {isAdmin && (
+        <>
+          <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+            <div className="flex items-center gap-3 mb-4 flex-wrap">
+              <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Analisis Korelasi</h3>
+              <select value={corrX} onChange={e => setCorrX(e.target.value)}
+                className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400">
+                {OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
+              </select>
+              <span className="text-xs text-gray-400">vs</span>
+              <select value={corrY} onChange={e => setCorrY(e.target.value)}
+                className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400">
+                {OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
+              </select>
+              <span className="ml-auto text-xs font-mono px-3 py-1 rounded-full" style={{ background: '#F0FAF9', color: '#0F8F8B' }}>r = {r.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}</span>
+            </div>
+            <ResponsiveContainer width="100%" height={200}>
+              <ScatterChart margin={{ top: 5, right: 20, bottom: 5, left: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+                <XAxis dataKey="x" type="number" tick={{ fontSize: 11 }} />
+                <YAxis dataKey="y" type="number" tick={{ fontSize: 11 }} />
+                <Tooltip content={({ payload }) => {
+                  if (!payload?.length) return null
+                  const p = payload[0].payload
+                  return <div className="bg-white border border-gray-100 rounded-xl shadow p-3 text-xs"><div className="font-semibold mb-1">{p.name}</div><div>X: {p.x?.toLocaleString('id-ID')}</div><div>Y: {p.y?.toLocaleString('id-ID')}</div></div>
+                }} />
+                <Scatter data={scatterData} fill="#0F8F8B" fillOpacity={0.75} />
+              </ScatterChart>
+            </ResponsiveContainer>
+          </div>
+          <InsightBox insights={scatterInsights} />
+        </>
+      )}
 
       <StatPanel
         stats={stats}
@@ -491,13 +497,15 @@ export default function PenyakitMenular() {
       />
 
       
-      <RiskClusteringMap 
-        title="Analisis Klasterisasi Pemetaan Risiko Penyakit Menular Langsung"
-        data={data} 
-        variables={['tbc_kasus', 'tbc_sukses_pct', 'arv_pct', 'diare_semua_umur', 'kusta_mb']} 
-        directions={[1, -1, -1, 1, 1]} 
-        variableLabels={['TBC Kasus', 'TBC Sukses (%)', 'Mendapat ARV (%)', 'Diare', 'Kusta MB']} 
-      />
+      {isAdmin && (
+        <RiskClusteringMap 
+          title="Analisis Klasterisasi Pemetaan Risiko Penyakit Menular Langsung"
+          data={data} 
+          variables={['tbc_kasus', 'tbc_sukses_pct', 'arv_pct', 'diare_semua_umur', 'kusta_mb']} 
+          directions={[1, -1, -1, 1, 1]} 
+          variableLabels={['TBC Kasus', 'TBC Sukses (%)', 'Mendapat ARV (%)', 'Diare', 'Kusta MB']} 
+        />
+      )}
 
       <DataTable data={data} columns={[
         { key: 'kabupaten', label: 'Kabupaten/Kota' },
@@ -512,7 +520,7 @@ export default function PenyakitMenular() {
         { key: 'kusta_mb', label: 'Kusta MB' },
       ]} />
       
-      <CrosstabSection data={data} options={OPTIONS} />
+      {isAdmin && <CrosstabSection data={data} variables={OPTIONS} defaultRowVar="tbc_kasus" defaultColVar="tbc_sukses_pct" title="Analisis Crosstab Penyakit Menular" />}
     </div>
   )
 }

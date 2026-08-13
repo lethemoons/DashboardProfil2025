@@ -13,9 +13,11 @@ import ChoroplethMap from '../components/ChoroplethMap'
 import RankChart from '../components/RankChart'
 import DataTable from '../components/DataTable'
 import CrosstabSection from '../components/CrosstabSection'
+import { useAuth } from '../contexts/AuthContext'
 
 export default function UKBM() {
   const { data: saranaKesehatan, loading, error } = useDashboardData()
+  const { isAdmin } = useAuth()
 
   const [statIndic, setStatIndic] = useState('jumlah_posyandu_siklus_hidup_aktif')
   const [mapIndicator, setMapIndicator] = useState('jumlah_posyandu_siklus_hidup_aktif')
@@ -110,12 +112,14 @@ export default function UKBM() {
         }
       />
 
-      <CrosstabSection
-        data={dataWithPct}
-        variables={rankIndicators}
-        defaultRowVar="jumlah_posyandu_siklus_hidup_aktif"
-        defaultColVar="pct_aktif"
-      />
+      {isAdmin && (
+        <CrosstabSection
+          data={dataWithPct}
+          variables={rankIndicators}
+          defaultRowVar="jumlah_posyandu_siklus_hidup_aktif"
+          defaultColVar="pct_aktif"
+        />
+      )}
 
       <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
         <h3 className="font-semibold text-gray-800 mb-4" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>

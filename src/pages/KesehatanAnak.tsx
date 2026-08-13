@@ -15,6 +15,7 @@ import InsightBox from '../components/InsightBox'
 import StatPanel from '../components/StatPanel'
 import DataTable from '../components/DataTable'
 import CrosstabSection from '../components/CrosstabSection'
+import { useAuth } from '../contexts/AuthContext'
 import { ANAK_CSV_DATA } from '../data/anakCsvData'
 
 const ANAK_OPTIONS = [
@@ -80,9 +81,10 @@ const CustomCompareTooltip = ({ active, payload, label, data }: any) => {
 };
 
 export default function KesehatanAnak() {
-  const [mapIndicator, setMapIndicator] = useState('gizi_kurang_pct');
   const { data: kesehatanAnak, loading, error } = useDashboardData()
+  const { isAdmin } = useAuth()
 
+  const [mapIndicator, setMapIndicator] = useState('gizi_kurang_pct');
   const [indic, setIndic] = useState('gizi_kurang_pct')
   const [chartFilter, setChartFilter] = useState('10')
   const [deathChartFilter, setDeathChartFilter] = useState('10')
@@ -345,51 +347,59 @@ export default function KesehatanAnak() {
       <InsightBox insights={compareInsights} />
 
       {/* Korelasi */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm mt-4">
-        <div className="flex items-center gap-3 mb-4 flex-wrap">
-          <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Analisis Korelasi</h3>
-          <select value={corrX} onChange={e => setCorrX(e.target.value)}
-            className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400">
-            {ANAK_OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
-          </select>
-          <span className="text-xs text-gray-400">vs</span>
-          <select value={corrY} onChange={e => setCorrY(e.target.value)}
-            className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400">
-            {ANAK_OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
-          </select>
-          <span className="ml-auto text-xs font-mono px-3 py-1 rounded-full" style={{ background: '#F0FAF9', color: '#0F8F8B' }}>r = {r.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 })} — {Math.abs(r) > 0.7 ? 'kuat' : Math.abs(r) > 0.4 ? 'sedang' : 'lemah'}</span>
-        </div>
-        <ResponsiveContainer width="100%" height={200}>
-          <ScatterChart margin={{ top: 5, right: 20, bottom: 5, left: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-            <XAxis dataKey="x" type="number" tick={{ fontSize: 11 }} />
-            <YAxis dataKey="y" type="number" tick={{ fontSize: 11 }} />
-            <Tooltip content={({ payload }) => {
-              if (!payload?.length) return null
-              const p = payload[0].payload
-              return <div className="bg-white border border-gray-100 rounded-xl shadow p-3 text-xs"><div className="font-semibold mb-1">{p.name}</div><div>X: {p.x?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%</div><div>Y: {p.y?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%</div></div>
-            }} />
-            <Scatter data={scatterData} fill="#078FA5" fillOpacity={0.75} />
-          </ScatterChart>
-        </ResponsiveContainer>
-      </div>
-      <InsightBox insights={scatterInsights} />
+      {isAdmin && (
+        <>
+          <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm mt-4">
+            <div className="flex items-center gap-3 mb-4 flex-wrap">
+              <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Analisis Korelasi</h3>
+              <select value={corrX} onChange={e => setCorrX(e.target.value)}
+                className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400">
+                {ANAK_OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
+              </select>
+              <span className="text-xs text-gray-400">vs</span>
+              <select value={corrY} onChange={e => setCorrY(e.target.value)}
+                className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400">
+                {ANAK_OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
+              </select>
+              <span className="ml-auto text-xs font-mono px-3 py-1 rounded-full" style={{ background: '#F0FAF9', color: '#0F8F8B' }}>r = {r.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 })} — {Math.abs(r) > 0.7 ? 'kuat' : Math.abs(r) > 0.4 ? 'sedang' : 'lemah'}</span>
+            </div>
+            <ResponsiveContainer width="100%" height={200}>
+              <ScatterChart margin={{ top: 5, right: 20, bottom: 5, left: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+                <XAxis dataKey="x" type="number" tick={{ fontSize: 11 }} />
+                <YAxis dataKey="y" type="number" tick={{ fontSize: 11 }} />
+                <Tooltip content={({ payload }) => {
+                  if (!payload?.length) return null
+                  const p = payload[0].payload
+                  return <div className="bg-white border border-gray-100 rounded-xl shadow p-3 text-xs"><div className="font-semibold mb-1">{p.name}</div><div>X: {p.x?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%</div><div>Y: {p.y?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%</div></div>
+                }} />
+                <Scatter data={scatterData} fill="#078FA5" fillOpacity={0.75} />
+              </ScatterChart>
+            </ResponsiveContainer>
+          </div>
+          <InsightBox insights={scatterInsights} />
+        </>
+      )}
 
-      <CrosstabSection
-        data={data}
-        variables={ANAK_OPTIONS}
-        defaultRowVar="gizi_kurang_pct"
-        defaultColVar="gizi_buruk_pct"
-      />
+      {isAdmin && (
+        <CrosstabSection
+          data={data}
+          variables={ANAK_OPTIONS}
+          defaultRowVar="gizi_kurang_pct"
+          defaultColVar="gizi_buruk_pct"
+        />
+      )}
 
       
-      <RiskClusteringMap 
-        title="Analisis Klasterisasi Pemetaan Risiko Kesehatan Anak"
-        data={data} 
-        variables={['kematian_bayi', 'gizi_buruk_pct', 'imunisasi_dasar_lengkap_pct']} 
-        directions={[1, 1, -1]} 
-        variableLabels={['Kematian Bayi', 'Gizi Buruk (%)', 'Imunisasi Dasar Lengkap (%)']} 
-      />
+      {isAdmin && (
+        <RiskClusteringMap 
+          title="Analisis Klasterisasi Pemetaan Risiko Kesehatan Anak"
+          data={data} 
+          variables={['kematian_bayi', 'gizi_buruk_pct', 'imunisasi_dasar_lengkap_pct']} 
+          directions={[1, 1, -1]} 
+          variableLabels={['Kematian Bayi', 'Gizi Buruk (%)', 'Imunisasi Dasar Lengkap (%)']} 
+        />
+      )}
 
       <DataTable data={data} columns={[
         { key: 'kabupaten', label: 'Kabupaten/Kota' },

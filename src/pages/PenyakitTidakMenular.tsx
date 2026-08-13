@@ -13,6 +13,7 @@ import InsightBox from '../components/InsightBox'
 import StatPanel from '../components/StatPanel'
 import DataTable from '../components/DataTable'
 import CrosstabSection from '../components/CrosstabSection'
+import { useAuth } from '../contexts/AuthContext'
 
 const PTM_OPTIONS = [
   { key: 'hipertensi_laki', label: 'Hipertensi — Laki-laki' },
@@ -24,9 +25,10 @@ const PTM_OPTIONS = [
 ]
 
 export default function PenyakitTidakMenular() {
-  const [mapIndicator, setMapIndicator] = useState('hipertensi_laki');
   const { data: ptm, loading, error } = useDashboardData()
+  const { isAdmin } = useAuth()
 
+  const [mapIndicator, setMapIndicator] = useState('hipertensi_laki');
   const [ptmIndic, setPtmIndic] = useState('hipertensi_laki')
   const [indicFilter, setIndicFilter] = useState('10')
   const [genderFilter, setGenderFilter] = useState('10')
@@ -187,21 +189,25 @@ export default function PenyakitTidakMenular() {
         }
       />
       <InsightBox insights={ptmInsights} />
-      <CrosstabSection
-        data={ptmData}
-        variables={PTM_OPTIONS}
-        defaultRowVar="hipertensi_laki"
-        defaultColVar="dm_terdiagnosis"
-        title="Analisis Crosstab PTM"
-      />
+      {isAdmin && (
+        <CrosstabSection
+          data={ptmData}
+          variables={PTM_OPTIONS}
+          defaultRowVar="hipertensi_laki"
+          defaultColVar="dm_terdiagnosis"
+          title="Analisis Crosstab PTM"
+        />
+      )}
       
-      <RiskClusteringMap 
-        title="Analisis Klasterisasi Pemetaan Risiko Penyakit Tidak Menular"
-        data={ptmData} 
-        variables={['hipertensi_laki', 'dm_terkendali_pct']} 
-        directions={[-1, -1]} 
-        variableLabels={['Pelayanan Hipertensi Laki-laki', 'DM Terkendali (%)']} 
-      />
+      {isAdmin && (
+        <RiskClusteringMap 
+          title="Analisis Klasterisasi Pemetaan Risiko Penyakit Tidak Menular"
+          data={ptmData} 
+          variables={['hipertensi_laki', 'dm_terkendali_pct']} 
+          directions={[-1, -1]} 
+          variableLabels={['Pelayanan Hipertensi Laki-laki', 'DM Terkendali (%)']} 
+        />
+      )}
 
       <DataTable data={ptmData} columns={[
         { key: 'kabupaten', label: 'Kabupaten/Kota' },

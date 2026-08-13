@@ -8,9 +8,11 @@ import ChoroplethMap from '../components/ChoroplethMap'
 import RankChart from '../components/RankChart'
 import InsightBox from '../components/InsightBox'
 import CrosstabSection from '../components/CrosstabSection'
+import { useAuth } from '../contexts/AuthContext'
 
 export default function SDMKesehatan() {
   const { data: rawData, indicators, loading, error } = useSdmData()
+  const { isAdmin } = useAuth()
   const [mapIndicator, setMapIndicator] = useState(indicators[0] || '');
   const [selectedInd, setSelectedInd] = useState('')
   const [statIndic, setStatIndic] = useState('')
@@ -173,12 +175,14 @@ export default function SDMKesehatan() {
 
 
 
-      <CrosstabSection
-        data={provData}
-        variables={indicators.map(ind => ({ key: ind, label: ind.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }))}
-        defaultRowVar={indicators[0] || ''}
-        defaultColVar={indicators[1] || indicators[0] || ''}
-      />
+      {isAdmin && (
+        <CrosstabSection
+          data={provData}
+          variables={indicators.map(ind => ({ key: ind, label: ind.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }))}
+          defaultRowVar={indicators[0] || ''}
+          defaultColVar={indicators[1] || indicators[0] || ''}
+        />
+      )}
 
       <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
         <h3 className="font-semibold text-gray-800 mb-4" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Data Table SDM Kesehatan</h3>

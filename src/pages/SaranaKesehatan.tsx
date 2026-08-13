@@ -10,6 +10,7 @@ import InsightBox from '../components/InsightBox'
 import StatPanel from '../components/StatPanel'
 import DataTable from '../components/DataTable'
 import CrosstabSection from '../components/CrosstabSection'
+import { useAuth } from '../contexts/AuthContext'
 
 const KATEGORI_OPTIONS = [
   'Semua',
@@ -84,6 +85,7 @@ const CustomYAxisTick = ({ x, y, payload }: any) => {
 
 export default function SaranaKesehatan() {
   const { data: saranaKesehatan, loading, error } = useDashboardData()
+  const { isAdmin } = useAuth()
 
   const [kategori, setKategori] = useState('Semua')
   const [tampilan, setTampilan] = useState('Top 10')
@@ -136,17 +138,17 @@ export default function SaranaKesehatan() {
     return ALL_FASILITAS
       .map(opt => ({
         name: opt.label,
-        value: Number(jatim[opt.key] || 0)
+        value: Number((jatim as any)[opt.key] || 0)
       }))
       .filter(d => d.value > 0)
       .sort((a, b) => b.value - a.value)
   }, [jatim])
 
-  const totRS = Number(jatim.rs_umum || 0) + Number(jatim.rs_khusus || 0)
-  const totPuskesmas = Number(jatim.puskesmas_rawat_inap || 0) + Number(jatim.puskesmas_non_rawat_inap || 0)
-  const totKlinik = Number(jatim.klinik_pratama || 0) + Number(jatim.klinik_utama || 0)
-  const totTPM = Number(jatim.tempat_praktik_mandiri_dokter || 0) + Number(jatim.tempat_praktik_mandiri_dokter_gigi || 0) + Number(jatim.tempat_praktik_mandiri_dokter_spesialis || 0) + Number(jatim.tempat_praktik_mandiri_bidan || 0) + Number(jatim.tempat_praktik_mandiri_perawat || 0)
-  const totApotek = Number(jatim.apotek || 0)
+  const totRS = Number((jatim as any).rs_umum || 0) + Number((jatim as any).rs_khusus || 0)
+  const totPuskesmas = Number((jatim as any).puskesmas_rawat_inap || 0) + Number((jatim as any).puskesmas_non_rawat_inap || 0)
+  const totKlinik = Number((jatim as any).klinik_pratama || 0) + Number((jatim as any).klinik_utama || 0)
+  const totTPM = Number((jatim as any).tempat_praktik_mandiri_dokter || 0) + Number((jatim as any).tempat_praktik_mandiri_dokter_gigi || 0) + Number((jatim as any).tempat_praktik_mandiri_dokter_spesialis || 0) + Number((jatim as any).tempat_praktik_mandiri_bidan || 0) + Number((jatim as any).tempat_praktik_mandiri_perawat || 0)
+  const totApotek = Number((jatim as any).apotek || 0)
 
   if (loading) return <div className="p-8 text-center text-gray-500">Loading data...</div>
   if (error) return <div className="p-8 text-center text-red-500">Error: {error}</div>
@@ -213,12 +215,14 @@ export default function SaranaKesehatan() {
         }
       />
 
-      <CrosstabSection
-        data={saranaKesehatan.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR')}
-        variables={ALL_FASILITAS.filter(f => f.key !== 'jumlah_tempat_tidur').map(f => ({ key: f.key, label: f.label }))}
-        defaultRowVar="rs_umum"
-        defaultColVar="puskesmas_rawat_inap"
-      />
+      {isAdmin && (
+        <CrosstabSection
+          data={saranaKesehatan.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR')}
+          variables={ALL_FASILITAS.filter(f => f.key !== 'jumlah_tempat_tidur').map(f => ({ key: f.key, label: f.label }))}
+          defaultRowVar="rs_umum"
+          defaultColVar="puskesmas_rawat_inap"
+        />
+      )}
 
       <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm mt-2">
         <h3 className="font-semibold text-gray-800 mb-4" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Daftar Lengkap Fasilitas Kesehatan</h3>

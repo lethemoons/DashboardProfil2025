@@ -11,6 +11,7 @@ import InsightBox from '../components/InsightBox'
 import StatPanel from '../components/StatPanel'
 import DataTable from '../components/DataTable'
 import CrosstabSection from '../components/CrosstabSection'
+import { useAuth } from '../contexts/AuthContext'
 
 const MENULAR_OPTIONS = [
   { key: 'tbc_kasus', label: 'TBC - Kasus' },
@@ -37,14 +38,16 @@ const PTM_OPTIONS = [
 ]
 
 export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) {
-  const [tab, setTab] = useState<'menular' | 'pd3i' | 'vektor' | 'ptm'>('menular')
+  const { data: rawData, loading, error } = useDashboardData()
+  const { isAdmin } = useAuth()
+  const [tab, setTab] = useState<'menular' | 'pd3i' | 'vektor' | 'ptm'>(sub === '6.1' ? 'menular' : sub === '6.2' ? 'pd3i' : sub === '6.3' ? 'vektor' : 'ptm')
   const [menularIndic, setMenularIndic] = useState('tbc_kasus')
   const [vektorIndic, setVektorIndic] = useState('dbd_kasus')
   const [ptmIndic, setPtmIndic] = useState('hipertensi_laki')
 
-  const menularData = useMemo(() => penyakitMenular.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [penyakitMenular])
-  const pd3iData = useMemo(() => penyakitPD3I.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [penyakitPD3I])
-  const ptmData = useMemo(() => ptm.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [ptm])
+  const menularData = useMemo(() => (rawData || []).filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [rawData])
+  const pd3iData = useMemo(() => (rawData || []).filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [rawData])
+  const ptmData = useMemo(() => (rawData || []).filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [rawData])
 
 
 
@@ -133,13 +136,15 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
             }
           />
           {menularStatInsights.length > 0 && <InsightBox insights={menularStatInsights} />}
-          <CrosstabSection
-            data={menularData}
-            variables={MENULAR_OPTIONS}
-            defaultRowVar="tbc_kasus"
-            defaultColVar="diare_semua_umur"
-            title="Analisis Crosstab Penyakit Menular"
-          />
+          {isAdmin && (
+            <CrosstabSection
+              data={menularData}
+              variables={MENULAR_OPTIONS}
+              defaultRowVar="tbc_kasus"
+              defaultColVar="diare_semua_umur"
+              title="Analisis Crosstab Penyakit Menular"
+            />
+          )}
           <DataTable data={menularData} columns={[
             { key: 'kabupaten', label: 'Kabupaten/Kota' },
             { key: 'tbc_kasus', label: 'TBC Kasus', format: v => v?.toLocaleString('id-ID') },
@@ -175,10 +180,12 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
             `Total kasus DBD: ${totDBD.toLocaleString('id-ID')}.`,
             `Kasus malaria positif: ${pd3iData.reduce((s, d) => s + (d.malaria_positif as number), 0).toLocaleString('id-ID')}.`,
           ]} />
-          <CrosstabSection
-            data={pd3iData}
-            title="Analisis Crosstab DBD & Imunisasi"
-          />
+          {isAdmin && (
+            <CrosstabSection
+              data={pd3iData}
+              title="Analisis Crosstab DBD & Imunisasi"
+            />
+          )}
           <DataTable data={pd3iData} columns={[
             { key: 'kabupaten', label: 'Kabupaten/Kota' },
             { key: 'difteri_kasus', label: 'Difteri' },
@@ -217,13 +224,15 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
             </ResponsiveContainer>
           </div>
           <InsightBox insights={[`Total DBD: ${totDBD.toLocaleString('id-ID')} | Filariasis: ${pd3iData.reduce((s, d) => s + (d.filariasis_kronis as number), 0)} kasus.`]} />
-          <CrosstabSection
-            data={pd3iData}
-            variables={VEKTOR_OPTIONS}
-            defaultRowVar="dbd_kasus"
-            defaultColVar="dbd_cfr"
-            title="Analisis Crosstab Penyakit Tular Vektor"
-          />
+          {isAdmin && (
+            <CrosstabSection
+              data={pd3iData}
+              variables={VEKTOR_OPTIONS}
+              defaultRowVar="dbd_kasus"
+              defaultColVar="dbd_cfr"
+              title="Analisis Crosstab Penyakit Tular Vektor"
+            />
+          )}
         </>
       )}
 
@@ -258,13 +267,15 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
             `Total kasus hipertensi (L+P): ${totHipertensi.toLocaleString('id-ID')}.`,
             `Total DM terdiagnosis: ${ptmData.reduce((s, d) => s + (d.dm_terdiagnosis as number), 0).toLocaleString('id-ID')}.`,
           ]} />
-          <CrosstabSection
-            data={ptmData}
-            variables={PTM_OPTIONS}
-            defaultRowVar="hipertensi_laki"
-            defaultColVar="dm_terdiagnosis"
-            title="Analisis Crosstab Penyakit Tidak Menular"
-          />
+          {isAdmin && (
+            <CrosstabSection
+              data={ptmData}
+              variables={PTM_OPTIONS}
+              defaultRowVar="hipertensi_laki"
+              defaultColVar="dm_terdiagnosis"
+              title="Analisis Crosstab Penyakit Tidak Menular"
+            />
+          )}
           <DataTable data={ptmData} columns={[
             { key: 'kabupaten', label: 'Kabupaten/Kota' },
             { key: 'hipertensi_laki', label: 'Hipertensi L', format: v => v?.toLocaleString('id-ID') },

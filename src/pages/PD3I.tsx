@@ -13,6 +13,7 @@ import KPICard from '../components/KPICard'
 import InsightBox from '../components/InsightBox'
 import StatPanel from '../components/StatPanel'
 import DataTable from '../components/DataTable'
+import { useAuth } from '../contexts/AuthContext'
 
 const PD3I_OPTIONS = [
   { key: 'difteri_kasus', label: 'Difteri — Jumlah Kasus' },
@@ -25,9 +26,10 @@ const PD3I_OPTIONS = [
 
 
 export default function PD3I() {
-  const [mapIndicator, setMapIndicator] = useState('difteri_kasus');
   const { data: penyakitPD3I, loading, error } = useDashboardData()
+  const { isAdmin } = useAuth()
 
+  const [mapIndicator, setMapIndicator] = useState('difteri_kasus');
   const [pd3iIndic, setPd3iIndic] = useState('difteri_kasus')
   const [pd3iFilter, setPd3iFilter] = useState('10')
 
@@ -149,13 +151,15 @@ export default function PD3I() {
           <InsightBox insights={pd3iInsights} />
 
           
-      <RiskClusteringMap 
-        title="Analisis Klasterisasi Pemetaan Risiko PD3I"
-        data={pd3iData} 
-        variables={['difteri_kasus', 'campak_suspek_kasus', 'klb_24jam_pct']} 
-        directions={[1, 1, -1]} 
-        variableLabels={['Kasus Difteri', 'Suspek Campak', 'KLB Ditangani <24 Jam (%)']} 
-      />
+      {isAdmin && (
+        <RiskClusteringMap 
+          title="Analisis Klasterisasi Pemetaan Risiko PD3I"
+          data={pd3iData} 
+          variables={['difteri_kasus', 'campak_suspek_kasus', 'klb_24jam_pct']} 
+          directions={[1, 1, -1]} 
+          variableLabels={['Kasus Difteri', 'Suspek Campak', 'KLB Ditangani <24 Jam (%)']} 
+        />
+      )}
 
       <DataTable data={pd3iData} columns={[
             { key: 'kabupaten', label: 'Kabupaten/Kota' },

@@ -13,6 +13,7 @@ import KPICard from '../components/KPICard'
 import InsightBox from '../components/InsightBox'
 import StatPanel from '../components/StatPanel'
 import DataTable from '../components/DataTable'
+import { useAuth } from '../contexts/AuthContext'
 
 const OPTIONS = [
   { key: 'produktif_laki', label: 'Usia Produktif Laki-laki' },
@@ -23,6 +24,7 @@ const OPTIONS = [
 ]
 
 export default function UsiaProduktifLansia() {
+  const { isAdmin } = useAuth()
   const [mapIndicator, setMapIndicator] = useState('produktif_laki');
   const { data: usiaProduktif, loading, error } = useDashboardData()
 
@@ -170,13 +172,15 @@ export default function UsiaProduktifLansia() {
       />
 
       
-      <RiskClusteringMap 
-        title="Analisis Klasterisasi Pemetaan Risiko Usia Produktif & Lansia"
-        data={data} 
-        variables={['produktif_laki', 'lansia_dilayani']} 
-        directions={[-1, -1]} 
-        variableLabels={['Usia Produktif Laki-laki', 'Lansia Dilayani']} 
-      />
+      {isAdmin && (
+        <RiskClusteringMap 
+          title="Analisis Klasterisasi Pemetaan Risiko Usia Produktif & Lansia"
+          data={data} 
+          variables={['produktif_laki', 'lansia_dilayani']} 
+          directions={[-1, -1]} 
+          variableLabels={['Usia Produktif Laki-laki', 'Lansia Dilayani']} 
+        />
+      )}
 
       <DataTable data={data} columns={[
         { key: 'kabupaten', label: 'Kabupaten/Kota' },
