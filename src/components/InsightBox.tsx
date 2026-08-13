@@ -3,6 +3,7 @@ import { ReactNode } from 'react'
 interface Props {
   insights?: string[]
   children?: ReactNode
+  title?: string
 }
 
 function renderFormattedText(text: string): ReactNode {
@@ -23,14 +24,14 @@ function renderFormattedText(text: string): ReactNode {
   })
 }
 
-export default function InsightBox({ insights, children }: Props) {
+export default function InsightBox({ insights, children, title = 'INSIGHT OTOMATIS' }: Props) {
   if ((!insights || insights.length === 0) && !children) return null
   
   return (
     <div className="bg-[#F5FBFB] rounded-xl p-5 border border-[#CCEEED] text-sm text-gray-700 mt-4">
       <div className="flex items-center gap-2 mb-3">
         <div className="w-6 h-6 rounded-full bg-[#0F8F8B] text-white flex items-center justify-center font-serif text-[13px] font-bold">i</div>
-        <span className="text-[#0F8F8B] font-bold text-sm tracking-wide">INSIGHT OTOMATIS</span>
+        <span className="text-[#0F8F8B] font-bold text-sm tracking-wide">{title}</span>
       </div>
       <div className="flex items-start gap-2 ml-1">
         <div className="w-1.5 h-1.5 rounded-full bg-[#0F8F8B] mt-1.5 flex-shrink-0" />

@@ -8,6 +8,7 @@ import {
 import { evaluateTarget, TARGETS } from '../utils/targets'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
+import { generateCorrelationInsight, generateDynamicBarInsight } from '../utils/insightGenerator'
 import FilterBar from '../components/FilterBar'
 import KPICard from '../components/KPICard'
 import InsightBox from '../components/InsightBox'
@@ -45,10 +46,14 @@ export default function KesehatanLingkungan() {
   const minKab = data.length ? data.reduce((a, b) => (a[indic] as number) < (b[indic] as number) ? a : b) : null
   const indicLabel = KESLING_OPTIONS.find(o => o.key === indic)?.label ?? indic
 
-  const chartInsights = maxKab && minKab ? [
-    `${maxKab.kabupaten} mencatat angka tertinggi (${(maxKab[indic] as number).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%). Kondisi ini sangat berdampak positif untuk menekan risiko penularan penyakit berbasis lingkungan di masyarakat.`,
-    `${minKab.kabupaten} berada di angka terendah (${(minKab[indic] as number).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%). Daerah ini memerlukan intervensi segera guna mencegah potensi wabah penyakit yang berkaitan erat dengan sanitasi dan kualitas lingkungan yang kurang memadai.`,
-  ] : []
+  const chartInsights = [
+    generateDynamicBarInsight(
+      data,
+      indic,
+      indicLabel,
+      "Hal ini menunjukkan tingkat akses dan sanitasi dasar yang berbeda antarwilayah, yang berdampak langsung pada prevalensi penyakit berbasis lingkungan seperti diare dan tifoid."
+    )
+  ]
 
   if (loading) return <div className="p-8 text-center text-gray-500">Loading data...</div>
   if (error) return <div className="p-8 text-center text-red-500">Error: {error}</div>

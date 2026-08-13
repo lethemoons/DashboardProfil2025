@@ -171,10 +171,7 @@ export default function SDMKesehatan() {
         }
       />
 
-      <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
-        <h3 className="font-semibold text-gray-800 mb-4" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Peta Persebaran: {selectedInd.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</h3>
-        {selectedInd && <ChoroplethMap data={provData} indicatorKey={selectedInd} indicatorLabel={selectedInd.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} />}
-      </div>
+
 
       <CrosstabSection
         data={provData}

@@ -7,6 +7,7 @@ import {
 , LabelList } from 'recharts'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
+import { generateDynamicBarInsight } from '../utils/insightGenerator'
 import FilterBar from '../components/FilterBar'
 import KPICard from '../components/KPICard'
 import InsightBox from '../components/InsightBox'
@@ -53,7 +54,12 @@ export default function UsiaProduktifLansia() {
   }))
 
   const chartInsights = [
-    `Grafik pelayanan ini memotret sejauh mana program kesehatan telah menjangkau populasi usia produktif dan kelompok lanjut usia (lansia) di masing-masing kabupaten/kota. Jika sebuah wilayah menunjukkan angka cakupan yang menonjol, itu berarti sistem posbindu (pos pembinaan terpadu) serta layanan skrining kesehatannya berjalan secara optimal. Ini penting agar penyakit tidak menular seperti diabetes atau hipertensi bisa dideteksi jauh sebelum berkembang menjadi komplikasi berat.`
+    generateDynamicBarInsight(
+      data,
+      indic,
+      indicLabel,
+      "Grafik pelayanan ini memotret sejauh mana program kesehatan telah menjangkau populasi usia produktif dan kelompok lanjut usia (lansia) di masing-masing kabupaten/kota. Jika sebuah wilayah menunjukkan angka cakupan yang menonjol, itu berarti sistem posbindu (pos pembinaan terpadu) serta layanan skrining kesehatannya berjalan secara optimal. Ini penting agar penyakit tidak menular seperti diabetes atau hipertensi bisa dideteksi jauh sebelum berkembang menjadi komplikasi berat."
+    )
   ]
 
   const statInsights = [

@@ -66,12 +66,14 @@ export default function RiskClusteringMap({ title, data, variables, directions, 
     // 5. Construct map mappings
     const mapData: Record<string, { clusterIdx: number, riskLevel: 'Rendah' | 'Sedang' | 'Tinggi' }> = {};
     const countByRisk = { Rendah: 0, Sedang: 0, Tinggi: 0 };
+    const membersByRisk: Record<'Rendah' | 'Sedang' | 'Tinggi', string[]> = { Rendah: [], Sedang: [], Tinggi: [] };
     
     kabNames.forEach((kab, i) => {
       const clusterIdx = clusters[i];
       const riskLevel = riskByClusterIdx[clusterIdx];
       mapData[kab] = { clusterIdx, riskLevel };
       countByRisk[riskLevel]++;
+      membersByRisk[riskLevel].push(kab);
     });
 
     // 6. Build profiles for summary
@@ -80,6 +82,7 @@ export default function RiskClusteringMap({ title, data, variables, directions, 
       return {
         riskLevel: e.riskLevel,
         count: countByRisk[e.riskLevel],
+        members: membersByRisk[e.riskLevel].sort(),
         centroid: originalCentroid,
         standardizedCentroid: centroids[e.clusterId]
       };
@@ -233,6 +236,12 @@ export default function RiskClusteringMap({ title, data, variables, directions, 
             <div className="text-xs font-semibold px-2 py-1 bg-gray-100 rounded-md w-max text-gray-600 mb-4">{profile.count} Kabupaten/Kota</div>
             <div className="text-sm text-gray-700 leading-relaxed flex-1">
               {getNarrative(profile)}
+              {profile.members && profile.members.length > 0 && (
+                <div className="mt-4 pt-3 border-t border-gray-100 text-[11px] leading-relaxed text-gray-500">
+                  <span className="font-bold text-gray-700 block mb-1">Anggota Cluster:</span>
+                  {profile.members.join(', ')}
+                </div>
+              )}
             </div>
           </div>
         ))}

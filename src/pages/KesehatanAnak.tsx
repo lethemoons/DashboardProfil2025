@@ -8,6 +8,7 @@ import {
 import { evaluateTarget, TARGETS } from '../utils/targets'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
+import { generateCorrelationInsight, generateDynamicBarInsight } from '../utils/insightGenerator'
 import FilterBar from '../components/FilterBar'
 import KPICard from '../components/KPICard'
 import InsightBox from '../components/InsightBox'
@@ -162,15 +163,25 @@ export default function KesehatanAnak() {
   ]
   
   const indicatorInsights = [
-    `Berdasarkan data indikator kesehatan anak, tampak jelas bahwa masih terdapat perbedaan signifikan antar wilayah. Angka cakupan yang belum merata menunjukkan tantangan dalam pemerataan akses pelayanan dasar. Untuk kabupaten/kota dengan pencapaian yang masih rendah, intervensi lintas sektor sangat dibutuhkan agar status gizi maupun perlindungan anak (melalui imunisasi dan pemeriksaan dini) dapat lebih dioptimalkan.`
+    generateDynamicBarInsight(
+      data,
+      indic,
+      indicLabel,
+      "Angka cakupan yang belum merata menunjukkan tantangan dalam pemerataan akses pelayanan dasar. Untuk kabupaten/kota dengan pencapaian yang masih rendah, intervensi lintas sektor sangat dibutuhkan agar status gizi maupun perlindungan anak (melalui imunisasi dan pemeriksaan dini) dapat lebih dioptimalkan."
+    )
   ]
 
   const scatterInsights = [
-    `Analisis korelasi di atas membantu kita memahami apakah dua masalah kesehatan anak berjalan beriringan. Jika angka korelasinya positif dan kuat (mendekati 1), artinya saat salah satu indikator memburuk, indikator lainnya juga cenderung ikut memburuk. Pemahaman ini sangat vital bagi para pengambil kebijakan untuk merancang program yang bisa menyelesaikan beberapa masalah sekaligus dari satu akar permasalahan yang sama.`
+    generateCorrelationInsight(
+      ANAK_OPTIONS.find(o => o.key === corrX)?.label,
+      ANAK_OPTIONS.find(o => o.key === corrY)?.label,
+      r
+    )
   ]
   
+  const compareLabel = COMPARE_OPTIONS.find(o => o.key === compareIndic)?.label ?? 'Indikator';
   const compareInsights = [
-    `Grafik perbandingan ini menyandingkan dua tahapan penting dalam perawatan anak. Selisih persentase yang jauh antara keduanya (lebih dari 10%) mengindikasikan adanya kendala di lapangan (misalnya anak yang sudah menerima layanan A gagal mendapatkan layanan B). Semakin kecil selisih antar indikator ini, semakin konsisten masyarakat dalam mengikuti pedoman kesehatan anak secara tuntas.`
+    `Grafik perbandingan ini menyandingkan ${compareLabel}. Selisih persentase yang jauh antara keduanya (lebih dari 10%) mengindikasikan adanya kendala di lapangan (misalnya anak yang sudah menerima layanan A gagal mendapatkan layanan B). Semakin kecil selisih antar indikator ini, semakin konsisten masyarakat dalam mengikuti pedoman kesehatan anak secara tuntas.`
   ]
 
   if (loading) return <div className="p-8 text-center text-gray-500">Loading data...</div>
@@ -213,7 +224,7 @@ export default function KesehatanAnak() {
         />
       </div>
       
-      <InsightBox insights={statInsights} />
+      <InsightBox title="PENDAHULUAN" insights={statInsights} />
 
       {/* Kematian anak stacked */}
       <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">

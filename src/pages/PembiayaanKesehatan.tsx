@@ -2,7 +2,8 @@ import { useState, useMemo } from 'react'
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   CartesianGrid, Legend, AreaChart, Area, PieChart, Pie, Cell, Label
-, LabelList } from 'recharts'
+  , LabelList
+} from 'recharts'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
 import { KABUPATEN_LIST } from '../data/kabupaten'
@@ -36,7 +37,7 @@ export default function PembiayaanKesehatan() {
     { name: 'Pekerja Mandiri (PBPU)', value: 2681330, percentage: 6.4 },
     { name: 'Bukan Pekerja (BP)', value: 773500, percentage: 1.8 }
   ]
-  const nonPbiColors = ['#055A6E', '#0B6E6B', '#6B7B10']
+  const nonPbiColors = ['#1281b1ff', '#0B6E6B', '#6B7B10']
 
   const data = useMemo(() => pembiayaan.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [pembiayaan])
   const kpiData = data
@@ -78,10 +79,10 @@ export default function PembiayaanKesehatan() {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <KPICard title="Total Anggaran Kesehatan" value="Rp 6.461.825.519.944" icon="💰" color="#0F8F8B" />
-        <KPICard title="Rata-rata Pembiayaan" value={fmtRp(avgAngg)} sub="Per Kab/Kota" icon="📊" color="#9EAF24" />
-        <KPICard title="Pembiayaan Tertinggi" value={maxKab ? maxKab.kabupaten : '-'} sub={maxKab ? fmtRp(Number(maxKab["2025"])) : ''} icon="🏆" color="#078FA5" />
-        <KPICard title="Pembiayaan Terendah" value={minKab ? minKab.kabupaten : '-'} sub={minKab ? fmtRp(Number(minKab["2025"])) : ''} icon="⚠️" color="#f97316" />
+        <KPICard title="Total Anggaran Kesehatan" value={<span className="text-lg sm:text-base md:text-sm lg:text-base xl:text-lg tracking-tighter break-words">Rp 6.461.825.519.944</span>} icon="💰" color="#0F8F8B" />
+        <KPICard title="Rata-rata Pembiayaan" value={<span className="text-lg sm:text-base md:text-sm lg:text-base xl:text-lg tracking-tighter break-words">{fmtRp(avgAngg)}</span>} sub="Per Kab/Kota" icon="📊" color="#9EAF24" />
+        <KPICard title="Pembiayaan Tertinggi" value={<span className="text-lg sm:text-base md:text-sm lg:text-base xl:text-lg tracking-tighter break-words">{maxKab ? maxKab.kabupaten : '-'}</span>} sub={maxKab ? fmtRp(Number(maxKab["2025"])) : ''} icon="🏆" color="#078FA5" />
+        <KPICard title="Pembiayaan Terendah" value={<span className="text-lg sm:text-base md:text-sm lg:text-base xl:text-lg tracking-tighter break-words">{minKab ? minKab.kabupaten : '-'}</span>} sub={minKab ? fmtRp(Number(minKab["2025"])) : ''} icon="⚠️" color="#f97316" />
       </div>
 
       {/* JKN Container */}
@@ -256,21 +257,10 @@ export default function PembiayaanKesehatan() {
             <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={v => v >= 1e12 ? (v / 1e12).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + 'T' : v >= 1e9 ? (v / 1e9).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + 'M' : (v / 1e6).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' juta'} />
             <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={98} interval={0} />
             <Tooltip formatter={(v: any) => fmtRp(v)} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
-            <Bar dataKey="2025" name="Anggaran 2025" radius={[0, 6, 6, 0]} fill="#0F8F8B" ><LabelList dataKey="2025" position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : v >= 1e12 ? (v/1e12).toLocaleString('id-ID', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + 'T' : v >= 1e9 ? (v/1e9).toLocaleString('id-ID', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + 'M' : (v/1e6).toLocaleString('id-ID', {minimumFractionDigits: 0, maximumFractionDigits: 0}) + ' jt'} /></Bar>
+            <Bar dataKey="2025" name="Anggaran 2025" radius={[0, 6, 6, 0]} fill="#0F8F8B" ><LabelList dataKey="2025" position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : v >= 1e12 ? (v / 1e12).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + 'T' : v >= 1e9 ? (v / 1e9).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + 'M' : (v / 1e6).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' jt'} /></Bar>
           </BarChart>
         </ResponsiveContainer>
-        <div className="bg-[#F5FBFB] rounded-xl p-5 border border-[#CCEEED] text-sm text-gray-700 mt-4">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-6 h-6 rounded-full bg-[#0F8F8B] text-white flex items-center justify-center font-serif text-[13px] font-bold">i</div>
-            <span className="text-[#0F8F8B] font-bold text-sm tracking-wide">INFO RINGKAS</span>
-          </div>
-          <div className="flex items-start gap-2 ml-1">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#0F8F8B] mt-1.5 flex-shrink-0" />
-            <div className="leading-relaxed">
-              Setiap daerah memiliki jumlah anggaran yang berbeda-beda untuk membiayai layanan kesehatan. Saat ini, <strong>{maxKab?.kabupaten}</strong> memiliki anggaran paling banyak (<strong>{fmtRp(Number(maxKab?.["2025"]))}</strong>), sementara <strong>{minKab?.kabupaten}</strong> mengalokasikan anggaran paling sedikit (<strong>{fmtRp(Number(minKab?.["2025"]))}</strong>).
-            </div>
-          </div>
-        </div>
+        <InsightBox insights={[generateDynamicBarInsight(chartData, "2025", "Anggaran 2025", "Setiap daerah memiliki jumlah anggaran yang berbeda-beda untuk membiayai layanan kesehatan. Ketimpangan ekstrem dapat menandakan perbedaan kapasitas fiskal daerah yang perlu diimbangi melalui bantuan provinsi atau pusat.")]} />
       </div>
 
       {/* Trend Area Chart with Filter */}
@@ -298,22 +288,11 @@ export default function PembiayaanKesehatan() {
             <YAxis tick={{ fontSize: 11 }} tickFormatter={v => (v / 1e12).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + 'T'} width={80} />
             <Tooltip formatter={(v: any) => fmtRp(v)} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
             <Area type="linear" dataKey="total" stroke="#0F8F8B" fill="#0F8F8B22" strokeWidth={3} name="Total Anggaran" activeDot={{ r: 6, fill: '#0F8F8B', stroke: '#fff', strokeWidth: 2 }} dot={{ r: 4, fill: '#0F8F8B', stroke: '#fff', strokeWidth: 2 }}>
-              <LabelList dataKey="total" position="top" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : v >= 1e12 ? (v/1e12).toLocaleString('id-ID', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + 'T' : v >= 1e9 ? (v/1e9).toLocaleString('id-ID', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + 'M' : Math.round(v).toLocaleString('id-ID')} />
+              <LabelList dataKey="total" position="top" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : v >= 1e12 ? (v / 1e12).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + 'T' : v >= 1e9 ? (v / 1e9).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + 'M' : Math.round(v).toLocaleString('id-ID')} />
             </Area>
           </AreaChart>
         </ResponsiveContainer>
-        <div className="bg-[#F5FBFB] rounded-xl p-5 border border-[#CCEEED] text-sm text-gray-700">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-6 h-6 rounded-full bg-[#0F8F8B] text-white flex items-center justify-center font-serif text-[13px] font-bold">i</div>
-            <span className="text-[#0F8F8B] font-bold text-sm tracking-wide">INFO RINGKAS</span>
-          </div>
-          <div className="flex items-start gap-2 ml-1">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#0F8F8B] mt-1.5 flex-shrink-0" />
-            <div className="leading-relaxed">
-              Melihat pergerakan tiga tahun terakhir, total anggaran kesehatan wilayah ini dialokasikan sebesar <strong>{fmtRp(val25)}</strong> pada tahun 2025. Angka ini {growthNum > 0 ? "mengalami kenaikan" : growthNum < 0 ? "mengalami penurunan" : "tetap sama"} sekitar <strong>{Math.abs(growthNum).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%</strong> jika dibandingkan dengan tahun lalu (2024). {growthNum > 0 ? "Tren kenaikan ini merupakan komitmen positif pemerintah; implikasinya, masyarakat semestinya bisa menikmati fasilitas puskesmas yang lebih baik, antrean JKN yang lebih terlayani, dan program gizi anak yang lebih merata." : growthNum < 0 ? "Penurunan anggaran ini perlu dikelola secara hati-hati agar efisiensi biaya tidak sampai memotong anggaran prioritas yang langsung menyentuh rakyat miskin, seperti subsidi BPJS Kesehatan atau ketersediaan stok obat gratis." : "Alokasi dana yang stagnan (tetap) menuntut pemerintah daerah untuk membelanjakan anggaran dengan sangat efisien agar pelayanan RS dan Puskesmas tidak menurun kualitasnya."}
-            </div>
-          </div>
-        </div>
+        <InsightBox insights={[`Melihat pergerakan tiga tahun terakhir, total anggaran kesehatan wilayah ini dialokasikan sebesar ${fmtRp(val25)} pada tahun 2025. Angka ini ${growthNum > 0 ? "mengalami kenaikan" : growthNum < 0 ? "mengalami penurunan" : "tetap sama"} sekitar ${Math.abs(growthNum).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}% jika dibandingkan dengan tahun lalu (2024). ${growthNum > 0 ? "Tren kenaikan ini merupakan komitmen positif pemerintah; implikasinya, masyarakat semestinya bisa menikmati fasilitas puskesmas yang lebih baik, antrean JKN yang lebih terlayani, dan program gizi anak yang lebih merata." : growthNum < 0 ? "Penurunan anggaran ini perlu dikelola secara hati-hati agar efisiensi biaya tidak sampai memotong anggaran prioritas yang langsung menyentuh rakyat miskin, seperti subsidi BPJS Kesehatan atau ketersediaan stok obat gratis." : "Alokasi dana yang stagnan (tetap) menuntut pemerintah daerah untuk membelanjakan anggaran dengan sangat efisien agar pelayanan RS dan Puskesmas tidak menurun kualitasnya."}`]} />
       </div>
 
 

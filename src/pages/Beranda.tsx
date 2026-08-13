@@ -100,7 +100,7 @@ export default function Beranda({ onNavigate }: BerandaProps) {
       setCounts({
         wilayah: Math.round(38 * easeProgress),
         halaman: Math.round(7 * easeProgress),
-        modul: Math.round(5 * easeProgress),
+        modul: Math.round(6 * easeProgress),
         indikator: Math.round(100 * easeProgress),
         barisData: Math.round(47913 * easeProgress),
       })
@@ -287,7 +287,7 @@ export default function Beranda({ onNavigate }: BerandaProps) {
             </div>
             <div className="text-2xl lg:text-3xl font-extrabold text-gray-900 mb-1">{counts.modul}</div>
             <div className="text-xs font-semibold text-gray-700">Fitur Analisis</div>
-            <div className="text-[11px] text-gray-400 mt-0.5">Analisis Statistik & Geospasial</div>
+            <div className="text-[11px] text-gray-400 mt-0.5">Statistik, Spasial & Klasterisasi</div>
           </div>
 
           <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm text-center transition-all duration-200 hover:-translate-y-1 hover:shadow-md">
@@ -326,7 +326,7 @@ export default function Beranda({ onNavigate }: BerandaProps) {
               Transformasi Digital Tata Kelola Data Kesehatan Jawa Timur
             </h2>
             <p className="text-sm text-gray-600 leading-relaxed mb-4">
-              Dashboard Profil Kesehatan Provinsi Jawa Timur dikembangkan oleh Dinas Kesehatan Provinsi Jawa Timur sebagai instrumen analitik kesehatan terpadu. Sistem ini mengintegrasikan seluruh indikator pelayanan kesehatan dari 38 kabupaten/kota untuk mendukung monitoring berkala, evaluasi program, serta perumusan kebijakan strategis berbasis data faktual (evidence-based policy).
+              Dashboard Profil Kesehatan Provinsi Jawa Timur dikembangkan oleh Dinas Kesehatan Provinsi Jawa Timur sebagai instrumen analitik kesehatan terpadu. Sistem ini mengintegrasikan seluruh indikator pelayanan kesehatan dari 38 kabupaten/kota untuk mendukung monitoring berkala, evaluasi program, identifikasi kelompok wilayah berdasarkan tingkat risiko, serta perumusan kebijakan strategis berbasis data faktual (evidence-based policy).
             </p>
             <p className="text-sm text-gray-600 leading-relaxed">
               Dengan penyajian data yang transparan, terstandarisasi, dan interaktif, platform ini menjadi jembatan informasi antara pemerintah daerah, tenaga medis, akademisi, dan masyarakat luas.
@@ -384,15 +384,23 @@ export default function Beranda({ onNavigate }: BerandaProps) {
                 </div>
               </div>
 
-              <div className="sm:col-span-2 p-4 rounded-2xl bg-gray-50/80 border border-gray-100 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-start gap-3.5">
-                <div className="w-8 h-8 rounded-lg shrink-0 flex items-center justify-center text-orange-600 bg-orange-100/60">
+              <div className="p-4 rounded-2xl bg-gray-50/80 border border-gray-100 hover:bg-white hover:shadow-sm transition-all duration-200">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center text-orange-600 bg-orange-100/60 mb-2.5">
                   <LayoutGrid size={18} />
                 </div>
-                <div>
-                  <div className="font-semibold text-sm text-gray-800 mb-0.5">Penyajian Informasi Kesehatan Interaktif</div>
-                  <div className="text-xs text-gray-500 leading-relaxed">
-                    Menyajikan visualisasi data multi-format (grafik, tabel, peta, korelasi) yang intuitif dan mudah dipahami seluruh pemangku kepentingan.
-                  </div>
+                <div className="font-semibold text-sm text-gray-800 mb-1">Penyajian Interaktif</div>
+                <div className="text-xs text-gray-500 leading-relaxed">
+                  Menyajikan visualisasi data multi-format yang intuitif dan mudah dipahami.
+                </div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-gray-50/80 border border-gray-100 hover:bg-white hover:shadow-sm transition-all duration-200">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center text-rose-600 bg-rose-100/60 mb-2.5">
+                  <Layers size={18} />
+                </div>
+                <div className="font-semibold text-sm text-gray-800 mb-1">Identifikasi Risiko Wilayah</div>
+                <div className="text-xs text-gray-500 leading-relaxed">
+                  Mengelompokkan daerah berdasarkan tingkat risiko untuk kemudahan penentuan prioritas intervensi.
                 </div>
               </div>
             </div>
@@ -419,7 +427,7 @@ export default function Beranda({ onNavigate }: BerandaProps) {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* Fitur 2 */}
           <div
             onClick={() => onNavigate('sarana')}
@@ -514,6 +522,27 @@ export default function Beranda({ onNavigate }: BerandaProps) {
             </div>
           </div>
 
+          {/* Fitur 7 - Klasterisasi */}
+          <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-rose-200 transition-all duration-200 group flex flex-col justify-between">
+            <div>
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center text-rose-600 bg-rose-50 group-hover:bg-rose-600 group-hover:text-white transition-colors mb-3.5">
+                <Layers size={20} />
+              </div>
+              <h3 className="font-bold text-sm text-gray-800 mb-1.5 group-hover:text-rose-600 transition-colors">
+                Klasterisasi Pemetaan Risiko
+              </h3>
+              <p className="text-xs text-gray-500 leading-relaxed">
+                Pengelompokan otomatis kabupaten/kota ke dalam tingkat risiko rendah, sedang, dan tinggi.
+              </p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-gray-50 flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+              <span className="text-[11px] font-medium text-gray-400 ml-1">3 Kategori Risiko</span>
+            </div>
+          </div>
+
           </div>
 
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 mt-16">
@@ -524,7 +553,7 @@ export default function Beranda({ onNavigate }: BerandaProps) {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Fitur 1 (Dashboard Interaktif) */}
             <div
               onClick={() => onNavigate('gambaran')}
@@ -831,7 +860,7 @@ export default function Beranda({ onNavigate }: BerandaProps) {
             </div>
             <div>
               <div className="font-bold text-sm text-gray-800 mb-0.5">Pemerintah Daerah & Bappeda</div>
-              <div className="text-xs text-gray-500 leading-relaxed">Perencanaan pembangunan daerah dan alokasi anggaran sektor kesehatan.</div>
+              <div className="text-xs text-gray-500 leading-relaxed">Perencanaan pembangunan dan intervensi wilayah prioritas berbasis klaster risiko.</div>
             </div>
           </div>
 
@@ -1060,7 +1089,7 @@ export default function Beranda({ onNavigate }: BerandaProps) {
       <footer className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 md:p-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 pb-8 border-b border-gray-100">
           {/* Col 1: Branding & Address */}
-          <div className="lg:col-span-5 flex flex-col items-start">
+          <div className="lg:col-span-6 flex flex-col items-start pr-0 lg:pr-12">
             <div className="flex items-center gap-3 mb-4">
               <div className="flex items-center justify-center">
                 <img src="/main_logo_dinkes.png" alt="Logo Dinkes" className="h-10 w-auto object-contain" />
@@ -1083,7 +1112,7 @@ export default function Beranda({ onNavigate }: BerandaProps) {
           </div>
 
           {/* Col 2: Quick Links Navigation */}
-          <div className="lg:col-span-4">
+          <div className="lg:col-span-6">
             <div className="text-xs font-bold uppercase tracking-wider text-gray-800 mb-3">Navigasi Modul Dashboard</div>
             <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
               <button onClick={() => onNavigate('gambaran')} className="text-left hover:text-teal-600 transition-colors py-1 cursor-pointer">
@@ -1113,32 +1142,6 @@ export default function Beranda({ onNavigate }: BerandaProps) {
             </div>
           </div>
 
-          {/* Col 3: System Badges */}
-          <div className="lg:col-span-3">
-            <div className="text-xs font-bold uppercase tracking-wider text-gray-800 mb-3">Spesifikasi Sistem</div>
-            <div className="space-y-2 text-xs text-gray-500">
-              <div className="flex justify-between py-1 border-b border-gray-50">
-                <span>Versi Dashboard</span>
-                <span className="font-semibold text-gray-800">v2.5.0 Enterprise</span>
-              </div>
-              <div className="flex justify-between py-1 border-b border-gray-50">
-                <span>Basis Data</span>
-                <span className="font-semibold text-gray-800">PostgreSQL / REST</span>
-              </div>
-              <div className="flex justify-between py-1 border-b border-gray-50">
-                <span>Periode Data</span>
-                <span className="font-semibold text-gray-800">
-                  {availableYears.length > 0
-                    ? (availableYears.length === 1 ? availableYears[0] : `${availableYears[0]} – ${availableYears[availableYears.length - 1]}`)
-                    : 'Berkala'}
-                </span>
-              </div>
-              <div className="flex justify-between py-1">
-                <span>Akses Pengguna</span>
-                <span className="font-semibold text-teal-600">Publik (Guest) & Admin</span>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Bottom copyright */}
@@ -1211,6 +1214,9 @@ export default function Beranda({ onNavigate }: BerandaProps) {
                   </li>
                   <li>
                     <strong className="text-gray-800">Crosstab Matrix:</strong> Mengelompokkan wilayah ke dalam kuadran kategori (Rendah, Sedang, Tinggi) berdasarkan ambang batas distribusi statistik.
+                  </li>
+                  <li>
+                    <strong className="text-gray-800">Klasterisasi Pemetaan Risiko:</strong> Pengelompokan (clustering) wilayah ke dalam kategori Risiko Rendah, Sedang, dan Tinggi berdasarkan kombinasi karakteristik indikator kesehatan, divisualisasikan melalui choropleth map untuk memudahkan identifikasi wilayah prioritas intervensi.
                   </li>
                 </ul>
               </div>

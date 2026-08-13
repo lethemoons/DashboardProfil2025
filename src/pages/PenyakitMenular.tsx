@@ -8,6 +8,7 @@ import {
 import { evaluateTarget, TARGETS } from '../utils/targets'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
+import { generateCorrelationInsight, generateDynamicBarInsight } from '../utils/insightGenerator'
 import KPICard from '../components/KPICard'
 import InsightBox from '../components/InsightBox'
 import StatPanel from '../components/StatPanel'
@@ -230,12 +231,21 @@ export default function PenyakitMenular() {
     zinc: isBalita ? (d.diare_balita_zinc || 0) : undefined,
   }))
 
-  const chartInsights = maxKab && minKab ? [
-    `${maxKab.kabupaten} tertinggi pada ${indicLabel}: ${(maxKab[indic] as number).toLocaleString('id-ID')}.`,
-  ] : []
+  const chartInsights = [
+    generateDynamicBarInsight(
+      data,
+      indic,
+      indicLabel,
+      "Angka yang tinggi pada penyakit menular mengindikasikan perlunya pelacakan kontak erat secara lebih agresif serta peningkatan kampanye pencegahan di wilayah tersebut."
+    )
+  ]
 
   const scatterInsights = [
-    `Korelasi ${OPTIONS.find(o => o.key === corrX)?.label?.split(' —')[0]} vs ${OPTIONS.find(o => o.key === corrY)?.label?.split(' —')[0]}: r = ${r.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}.`,
+    generateCorrelationInsight(
+      OPTIONS.find(o => o.key === corrX)?.label,
+      OPTIONS.find(o => o.key === corrY)?.label,
+      r
+    )
   ]
 
   const statInsights = [
@@ -316,6 +326,7 @@ export default function PenyakitMenular() {
           </div>
         </div>
       </div>
+      <InsightBox insights={[generateDynamicBarInsight(data, 'tbc_kasus', 'Kasus TBC', 'Upaya penemuan kasus secara aktif (Active Case Finding) serta pendampingan kepatuhan minum obat melalui PMO (Pengawas Menelan Obat) sangat krusial untuk meningkatkan angka kesembuhan dan memutus mata rantai penularan TBC di masyarakat.')]} />
 
       {/* Indikator Penyakit Menular Langsung */}
       <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
@@ -398,6 +409,7 @@ export default function PenyakitMenular() {
           </div>
         </div>
       </div>
+      <InsightBox insights={[generateDynamicBarInsight(data, 'odhiv_baru', 'ODHIV Baru Ditemukan', 'Tingginya angka penemuan kasus baru ODHIV menunjukkan keberhasilan program skrining aktif. Tantangan selanjutnya adalah memastikan seluruh individu yang terdiagnosis segera mendapatkan terapi ARV agar kualitas hidup mereka tetap terjaga dan potensi penularan dapat ditekan.')]} />
 
       {/* Kasus Diare */}
       <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
@@ -434,6 +446,7 @@ export default function PenyakitMenular() {
           </div>
         </div>
       </div>
+      <InsightBox insights={[generateDynamicBarInsight(data, diareAge === 'balita' ? 'diare_balita' : 'diare_semua_umur', 'Kasus Diare', 'Sanitasi lingkungan yang buruk dan kurangnya akses terhadap air bersih seringkali berbanding lurus dengan tingginya kasus diare, khususnya pada kelompok rentan seperti balita.')]} />
 
       {/* Korelasi */}
       <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">

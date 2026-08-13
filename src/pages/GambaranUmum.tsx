@@ -6,6 +6,7 @@ import {
 } from 'recharts'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
+import { generateCorrelationInsight } from '../utils/insightGenerator'
 import { KABUPATEN_LIST } from '../data/kabupaten'
 import FilterBar from '../components/FilterBar'
 import KPICard from '../components/KPICard'
@@ -48,15 +49,13 @@ export default function GambaranUmum() {
 
   const scatterData = data.map(d => ({ x: d[corrX] as number, y: d[corrY] as number, name: d.kabupaten }))
   const r = pearsonR(scatterData.map(d => d.x), scatterData.map(d => d.y))
-  const rLabel = Math.abs(r) > 0.7 ? 'kuat' : Math.abs(r) > 0.4 ? 'sedang' : 'lemah'
-  const rDir = r > 0 ? 'positif' : 'negatif'
-  
-  const maxKab = data.length ? data.reduce((a, b) => (a[indicator] as number) > (b[indicator] as number) ? a : b) : null
-  const minKab = data.length ? data.reduce((a, b) => (a[indicator] as number) < (b[indicator] as number) ? a : b) : null
   const indLabel = INDICATOR_OPTIONS.find(o => o.key === indicator)?.label ?? indicator
-
   const scatterInsights = [
-    `Terdapat korelasi ${rDir} yang ${rLabel} (r = ${r.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}) antara ${INDICATOR_OPTIONS.find(o => o.key === corrX)?.label} dan ${INDICATOR_OPTIONS.find(o => o.key === corrY)?.label}. Jika korelasi bernilai positif, peningkatan satu indikator akan diikuti oleh peningkatan indikator lainnya. Evaluasi korelasi ini penting untuk perumusan kebijakan tata letak dan jangkauan layanan Puskesmas/Rumah Sakit agar merata ke seluruh penduduk.`,
+    generateCorrelationInsight(
+      INDICATOR_OPTIONS.find(o => o.key === corrX)?.label,
+      INDICATOR_OPTIONS.find(o => o.key === corrY)?.label,
+      r
+    )
   ]
 
   const statInsights = stats ? [

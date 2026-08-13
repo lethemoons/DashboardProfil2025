@@ -8,6 +8,7 @@ import {
 import { evaluateTarget, TARGETS } from '../utils/targets'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
+import { generateCorrelationInsight, generateDynamicBarInsight } from '../utils/insightGenerator'
 import FilterBar from '../components/FilterBar'
 import KPICard from '../components/KPICard'
 import InsightBox from '../components/InsightBox'
@@ -70,12 +71,21 @@ export default function TularVektor() {
   const scatterData = data.map(d => ({ x: d.dbd_kasus as number, y: d.dbd_cfr as number, name: d.kabupaten }))
   const r = pearsonR(scatterData.map(d => d.x), scatterData.map(d => d.y))
 
-  const chartInsights = maxKab && minKab ? [
-    `${maxKab.kabupaten} mencatat angka tertinggi untuk indikator ${indicLabel} (${(maxKab[indic] as number).toLocaleString('id-ID')}). Tingginya penyebaran ini mengisyaratkan perlunya pemberantasan sarang nyamuk (PSN) secara masif dan menjaga kebersihan lingkungan perumahan guna menekan angka penularan.`,
-  ] : []
+  const chartInsights = [
+    generateDynamicBarInsight(
+      data,
+      indic,
+      indicLabel,
+      "Tingginya penyebaran ini mengisyaratkan perlunya pemberantasan sarang nyamuk (PSN) secara masif dan menjaga kebersihan lingkungan perumahan guna menekan angka penularan."
+    )
+  ]
 
   const scatterInsights = [
-    `Hubungan antara jumlah kasus DBD dengan CFR (tingkat kematian) menunjukkan korelasi ${Math.abs(r) > 0.7 ? 'kuat' : Math.abs(r) > 0.4 ? 'sedang' : 'lemah'} (r = ${r.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}). Artinya, tingginya jumlah kasus DBD dapat ditekan angka kematiannya apabila didukung dengan kesigapan deteksi dini dan kecepatan penanganan darurat pasien di fasilitas kesehatan.`,
+    generateCorrelationInsight(
+      'Kasus DBD',
+      'CFR DBD (%)',
+      r
+    )
   ]
 
   const statInsights = [
@@ -152,6 +162,7 @@ export default function TularVektor() {
           </div>
         </div>
       </div>
+      <InsightBox insights={[generateDynamicBarInsight(data, 'dbd_kasus', 'Kasus DBD', 'Pemerintah perlu terus memantau rasio CFR untuk memastikan penanganan kasus DBD tidak terlambat di wilayah dengan kasus tinggi.')]} />
 
       {/* Main chart */}
       <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
@@ -198,6 +209,7 @@ export default function TularVektor() {
           </div>
         </div>
       </div>
+      {chartInsights.length > 0 && <InsightBox insights={chartInsights} />}
 
       {/* Malaria chart */}
       <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
@@ -229,7 +241,7 @@ export default function TularVektor() {
           </div>
         </div>
       </div>
-      {chartInsights.length > 0 && <InsightBox insights={chartInsights} />}
+      <InsightBox insights={[generateDynamicBarInsight(data, malariaIndic, malariaLabel, 'Tingginya indikator malaria pada wilayah tersebut menuntut upaya pengawasan wilayah perbatasan, distribusi kelambu, dan peningkatan kompetensi petugas puskesmas setempat.')]} />
 
       {/* Korelasi DBD kasus vs CFR */}
       <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">

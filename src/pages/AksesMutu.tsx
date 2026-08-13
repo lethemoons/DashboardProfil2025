@@ -5,6 +5,7 @@ import {
 } from 'recharts'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
+import { generateCorrelationInsight } from '../utils/insightGenerator'
 import FilterBar from '../components/FilterBar'
 import KPICard from '../components/KPICard'
 import InsightBox from '../components/InsightBox'
@@ -43,6 +44,8 @@ export default function AksesMutu() {
   const data = useMemo(() => saranaKesehatan.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [saranaKesehatan])
 
   const avgBOR = data.length ? data.reduce((s, d) => s + (d.bor as number), 0) / data.length : 0
+  const avgBTO = data.length ? data.reduce((s, d) => s + (d.bto as number), 0) / data.length : 0
+  const avgTOI = data.length ? data.reduce((s, d) => s + (d.toi as number), 0) / data.length : 0
   const avgALOS = data.length ? data.reduce((s, d) => s + (d.alos as number), 0) / data.length : 0
   const avgGDR = data.length ? data.reduce((s, d) => s + (d.gdr as number), 0) / data.length : 0
   const avgNDR = data.length ? data.reduce((s, d) => s + (d.ndr as number), 0) / data.length : 0
@@ -76,7 +79,11 @@ export default function AksesMutu() {
 
 
   const scatterInsights = [
-    `Analisis perbandingan antara indikator mutu ${corrX.toUpperCase()} dan ${corrY.toUpperCase()} menunjukkan korelasi ${Math.abs(r) > 0.7 ? 'kuat' : Math.abs(r) > 0.4 ? 'sedang' : 'lemah'} (r = ${r.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}). Evaluasi berkala sangat penting bagi manajemen rumah sakit untuk memastikan apakah efisiensi penggunaan tempat tidur turut berbanding lurus dengan kualitas layanan dan kecepatan kesembuhan pasien.`,
+    generateCorrelationInsight(
+      RS_OPTIONS.find(o => o.key === corrX)?.label,
+      RS_OPTIONS.find(o => o.key === corrY)?.label,
+      r
+    )
   ]
 
   const statInsights = [
@@ -92,12 +99,42 @@ export default function AksesMutu() {
 
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-        <KPICard title="Total Kunjungan Rawat Jalan" value={totRawatJalan.toLocaleString('id-ID')} icon="🚶" color="#0FB0AA" />
-        <KPICard title="Total Kunjungan Rawat Inap" value={totRawatInap.toLocaleString('id-ID')} icon="🛏️" color="#06B5D0" />
-        <KPICard title="BOR Provinsi" value={avgBOR.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} icon="🏥" color="#CBD92C" />
-        <KPICard title="Gross Death Rate" value={avgGDR.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '‰'} sub="Batas maks: 45‰" icon="📉" color="#f97316" trend={avgGDR <= 45 ? 'neutral' : 'down'} trendVal={avgGDR <= 45 ? 'Dalam batas' : 'Melebihi batas'} />
-        <KPICard title="Net Death Rate" value={avgNDR.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '‰'} sub="Batas maks: 25‰" icon="📉" color="#8b5cf6" trend={avgNDR <= 25 ? 'neutral' : 'down'} trendVal={avgNDR <= 25 ? 'Dalam batas' : 'Melebihi batas'} />
-        <KPICard title="% Puskesmas dg Ketersediaan Obat Esensial & Vaksin" value={pctPuskesmas.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} icon="💊" color="#22c55e" />
+        <KPICard 
+          title="Total Kunjungan Rawat Jalan" 
+          value={totRawatJalan.toLocaleString('id-ID')} 
+          icon="🚶" 
+          color="#0FB0AA" 
+        />
+        <KPICard 
+          title="Total Kunjungan Rawat Inap" 
+          value={totRawatInap.toLocaleString('id-ID')} 
+          icon="🛏️" 
+          color="#06B5D0" 
+        />
+        <KPICard 
+          title="BED OCCUPANCY RATE" 
+          value={avgBOR.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} 
+          targetData={{ status: (avgBOR >= 60 && avgBOR <= 85) ? 'tercapai' : 'belum_tercapai', targetLabel: '60-85%' }}
+          targetText="STANDAR KEMENKES"
+        />
+        <KPICard 
+          title="Gross Death Rate" 
+          value={avgGDR.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '‰'} 
+          targetData={{ status: avgGDR < 45 ? 'tercapai' : 'belum_tercapai', targetLabel: '< 45‰' }}
+          targetText="STANDAR KEMENKES"
+        />
+        <KPICard 
+          title="Net Death Rate" 
+          value={avgNDR.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '‰'} 
+          targetData={{ status: avgNDR < 25 ? 'tercapai' : 'belum_tercapai', targetLabel: '< 25‰' }}
+          targetText="STANDAR KEMENKES"
+        />
+        <KPICard 
+          title="PUSKESMAS DENGAN KETERSEDIAAN OBAT ESENSIAL & VAKSIN" 
+          value={pctPuskesmas.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} 
+          icon="💊" 
+          color="#22c55e" 
+        />
       </div>
 
       <div className="flex flex-col gap-4">

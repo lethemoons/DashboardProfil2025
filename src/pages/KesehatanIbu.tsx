@@ -8,6 +8,7 @@ import {
 import { useDashboardData } from '../hooks/useDashboardData'
 import { evaluateTarget, TARGETS } from '../utils/targets'
 import { descStats, pearsonR } from '../utils/stats'
+import { generateCorrelationInsight, generateDynamicBarInsight } from '../utils/insightGenerator'
 import FilterBar from '../components/FilterBar'
 import KPICard from '../components/KPICard'
 import InsightBox from '../components/InsightBox'
@@ -167,13 +168,13 @@ export default function KesehatanIbu() {
     { label: 'Saat Nifas', value: data.reduce((s, d) => s + (d.kematian_ibu_nifas as number), 0), color: '#fbbf24' },
   ]
 
-  const chartInsights = maxKab && minKab ? [
-    `${maxKab.kabupaten} tertinggi pada ${indicLabel}: ${(maxKab[indic] as number).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%.`,
-    `${minKab.kabupaten} terendah: ${(minKab[indic] as number).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}% — perlu perhatian khusus.`,
-  ] : []
 
   const scatterInsights = [
-    `Korelasi: Terdapat hubungan antara ${corrX.toUpperCase()} dan ${corrY.toUpperCase()} dengan r = ${r.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}.`,
+    generateCorrelationInsight(
+      IBU_OPTIONS.find(o => o.key === corrX)?.label,
+      IBU_OPTIONS.find(o => o.key === corrY)?.label,
+      r
+    )
   ]
 
   const statInsights = [
@@ -253,18 +254,7 @@ export default function KesehatanIbu() {
             <Bar dataKey="nifas" name="Saat Nifas" stackId="a" fill="#0F8F8B" radius={[0, 4, 4, 0]} ><LabelList dataKey="nifas" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
           </BarChart>
         </ResponsiveContainer>
-        <div className="bg-[#F5FBFB] rounded-xl p-5 border border-[#CCEEED] text-sm text-gray-700 mt-4">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-6 h-6 rounded-full bg-[#0F8F8B] text-white flex items-center justify-center font-serif text-[13px] font-bold">i</div>
-            <span className="text-[#0F8F8B] font-bold text-sm tracking-wide">INFO RINGKAS</span>
-          </div>
-          <div className="flex items-start gap-2 ml-1">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#0F8F8B] mt-1.5 flex-shrink-0" />
-            <div className="leading-relaxed">
-              Grafik di atas menunjukkan sebaran kasus kematian ibu di setiap wilayah. Hal ini menjadi peringatan akan pentingnya pemantauan kondisi ibu secara terus-menerus mulai dari masa kehamilan, saat proses melahirkan, hingga masa nifas.
-            </div>
-          </div>
-        </div>
+        <InsightBox insights={[`Grafik di atas menunjukkan sebaran kasus kematian ibu di setiap wilayah. Hal ini menjadi peringatan akan pentingnya pemantauan kondisi ibu secara terus-menerus mulai dari masa kehamilan, saat proses melahirkan, hingga masa nifas.`]} />
       </div>
 
       {/* Cakupan layanan */}
@@ -289,36 +279,11 @@ export default function KesehatanIbu() {
             <XAxis type="number" tick={{ fontSize: 11 }} domain={[0, 100]} />
             <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} interval={0} />
             <Tooltip content={<CustomTooltip />} />
-            {TARGETS[indic] && (
-              <ReferenceLine 
-                x={TARGETS[indic].target_value} 
-                stroke={TARGETS[indic].target_direction === '>=' || TARGETS[indic].target_direction === '>' ? '#0F8F8B' : '#ef4444'}
-                strokeDasharray="3 3"
-                strokeWidth={2}
-                label={{
-                  position: 'insideTopRight',
-                  value: `${['<=', '<'].includes(TARGETS[indic].target_direction) ? 'Batas Maksimum' : 'Target Minimum'}: ${TARGETS[indic].target_value}${TARGETS[indic].isPercentage ? '%' : ''}`,
-                  fill: '#4B5563',
-                  fontSize: 11,
-                  fontWeight: 600
-                }}
-              />
-            )}
+
             <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]} fill="#0F8F8B" ><LabelList dataKey={indic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
           </BarChart>
         </ResponsiveContainer>
-        <div className="bg-[#F5FBFB] rounded-xl p-5 border border-[#CCEEED] text-sm text-gray-700 mt-4">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-6 h-6 rounded-full bg-[#0F8F8B] text-white flex items-center justify-center font-serif text-[13px] font-bold">i</div>
-            <span className="text-[#0F8F8B] font-bold text-sm tracking-wide">INFO RINGKAS</span>
-          </div>
-          <div className="flex items-start gap-2 ml-1">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#0F8F8B] mt-1.5 flex-shrink-0" />
-            <div className="leading-relaxed">
-              Pencapaian layanan ibu hamil dan bersalin (seperti kunjungan pertama/K1, hingga persalinan di fasilitas medis) bervariasi di setiap kabupaten/kota. Angka di atas 80% (berwarna hijau) menunjukkan bahwa mayoritas ibu di wilayah tersebut sudah menerima pelayanan yang memadai. Sebaliknya, baris berwarna oranye menandakan area yang membutuhkan penguatan ekstra.
-            </div>
-          </div>
-        </div>
+        <InsightBox insights={[generateDynamicBarInsight(chartData, indic, indicLabel, "Pencapaian layanan ibu hamil dan bersalin bervariasi di setiap kabupaten/kota.")]} />
       </div>
 
       {/* Korelasi */}
@@ -394,19 +359,7 @@ export default function KesehatanIbu() {
               </ResponsiveContainer>
             </div>
           </div>
-          <div className="bg-[#F5FBFB] rounded-xl p-5 border border-[#CCEEED] text-sm text-gray-700 mt-2">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-6 h-6 rounded-full bg-[#0F8F8B] text-white flex items-center justify-center font-serif text-[13px] font-bold">i</div>
-              <span className="text-[#0F8F8B] font-bold text-sm tracking-wide">INFO RINGKAS</span>
-            </div>
-            <div className="flex items-start gap-2 ml-1">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#0F8F8B] mt-1.5 flex-shrink-0" />
-              <div className="leading-relaxed">
-                Grafik ini menyoroti perbandingan ibu hamil yang menerima suplemen zat besi (Fe) dengan mereka yang melengkapi minimal kunjungan K6. Semakin dekat jarak antara kedua garis (selisih di bawah 10%), semakin terintegrasi layanan kehamilan di daerah tersebut.<br /><br />
-                <em>* Apabila selisih perbedaannya absolut berada pada rentang -10% hingga 10%, wilayah tersebut diberi skor 1.</em>
-              </div>
-            </div>
-          </div>
+          <InsightBox insights={[`Grafik ini menyoroti perbandingan ibu hamil yang menerima suplemen zat besi (Fe) dengan mereka yang melengkapi minimal kunjungan K6. Semakin dekat jarak antara kedua garis (selisih di bawah 10%), semakin terintegrasi layanan kehamilan di daerah tersebut.\n\n* Apabila selisih perbedaannya absolut berada pada rentang -10% hingga 10%, wilayah tersebut diberi skor 1.`]} />
         </div>
 
         {/* Chart B */}
@@ -427,19 +380,7 @@ export default function KesehatanIbu() {
               </ResponsiveContainer>
             </div>
           </div>
-          <div className="bg-[#F5FBFB] rounded-xl p-5 border border-[#CCEEED] text-sm text-gray-700 mt-2">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-6 h-6 rounded-full bg-[#0F8F8B] text-white flex items-center justify-center font-serif text-[13px] font-bold">i</div>
-              <span className="text-[#0F8F8B] font-bold text-sm tracking-wide">INFO RINGKAS</span>
-            </div>
-            <div className="flex items-start gap-2 ml-1">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#0F8F8B] mt-1.5 flex-shrink-0" />
-              <div className="leading-relaxed">
-                Secara logika, jumlah ibu yang melahirkan idealnya sangat mendekati atau sama dengan jumlah bayi yang lahir dalam kondisi hidup (kecuali jika ada bayi kembar). Jika selisih terlalu jauh, hal itu mengindikasikan kemungkinan masalah pencatatan atau pelaporan yang tidak akurat.<br /><br />
-                <em>* Apabila selisih perbedaannya absolut berada pada rentang -10% hingga 10%, wilayah tersebut diberi skor 1.</em>
-              </div>
-            </div>
-          </div>
+          <InsightBox insights={[`Secara logika, jumlah ibu yang melahirkan idealnya sangat mendekati atau sama dengan jumlah bayi yang lahir dalam kondisi hidup (kecuali jika ada bayi kembar). Jika selisih terlalu jauh, hal itu mengindikasikan kemungkinan masalah pencatatan atau pelaporan yang tidak akurat.\n\n* Apabila selisih perbedaannya absolut berada pada rentang -10% hingga 10%, wilayah tersebut diberi skor 1.`]} />
         </div>
 
         {/* Chart C */}
@@ -460,19 +401,7 @@ export default function KesehatanIbu() {
               </ResponsiveContainer>
             </div>
           </div>
-          <div className="bg-[#F5FBFB] rounded-xl p-5 border border-[#CCEEED] text-sm text-gray-700 mt-2">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-6 h-6 rounded-full bg-[#0F8F8B] text-white flex items-center justify-center font-serif text-[13px] font-bold">i</div>
-              <span className="text-[#0F8F8B] font-bold text-sm tracking-wide">INFO RINGKAS</span>
-            </div>
-            <div className="flex items-start gap-2 ml-1">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#0F8F8B] mt-1.5 flex-shrink-0" />
-              <div className="leading-relaxed">
-                Pemeriksaan lengkap paska melahirkan (KF) sepatutnya dibarengi dengan pemberian Vitamin A untuk kesehatan dan kekebalan tubuh sang ibu. Keselarasan kedua data ini mencerminkan apakah standar penanganan pasien benar-benar berjalan satu paket.<br /><br />
-                <em>* Apabila selisih perbedaannya absolut berada pada rentang -10% hingga 10%, wilayah tersebut diberi skor 1.</em>
-              </div>
-            </div>
-          </div>
+          <InsightBox insights={[`Pemeriksaan lengkap paska melahirkan (KF) sepatutnya dibarengi dengan pemberian Vitamin A untuk kesehatan dan kekebalan tubuh sang ibu. Keselarasan kedua data ini mencerminkan apakah standar penanganan pasien benar-benar berjalan satu paket.\n\n* Apabila selisih perbedaannya absolut berada pada rentang -10% hingga 10%, wilayah tersebut diberi skor 1.`]} />
         </div>
       </div>
 

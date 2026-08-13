@@ -246,7 +246,7 @@ export default function RankChart({ data, indicators, defaultIndicator, title = 
           <div className="leading-relaxed">
             Kabupaten/kota dengan nilai tertinggi adalah <strong>{maxKab}</strong> ({formatValue(maxVal)}), 
             sedangkan terendah adalah <strong>{minKab}</strong> ({formatValue(minVal)}). 
-            Rata-rata provinsi berada di <strong>{formatValue(avg)}</strong>, dengan selisih puncak dan dasar sebesar <strong>{formatValue(maxVal - minVal)}</strong>. 
+            Rata-rata provinsi berada di <strong>{formatValue(avg)}</strong>. 
             Secara total, terdapat <strong>{aboveAvg} kabupaten/kota</strong> di atas rata-rata dan <strong>{belowAvg}</strong> di bawahnya.
             {targetConfig && (() => {
               const tercapaiCount = processedData.filter(d => evaluateTarget(d.value, activeIndicator.key)?.status === 'tercapai').length;
