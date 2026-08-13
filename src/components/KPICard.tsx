@@ -30,13 +30,11 @@ export default function KPICard({ title, value, sub, icon, trend, trendVal, colo
       
       <div className="mt-auto">
         {targetData ? (
-          <div className={`pt-3 border-t flex flex-col gap-1.5 ${targetData.status === 'tercapai' ? 'border-[#0F8F8B]/20' : 'border-[#ef4444]/20'}`}>
-            <span className="text-[9px] font-bold uppercase tracking-wider text-gray-400">Target: {targetData.targetLabel}</span>
-            <div className="flex">
-              <span className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full whitespace-nowrap ${targetData.status === 'tercapai' ? 'bg-[#0F8F8B]/10 text-[#0F8F8B]' : 'bg-[#ef4444]/10 text-[#ef4444]'}`}>
-                {targetData.status === 'tercapai' ? 'Tercapai' : 'Belum Tercapai'}
-              </span>
-            </div>
+          <div className={`pt-3 border-t flex items-center justify-between gap-1 ${targetData.status === 'tercapai' ? 'border-[#0F8F8B]/20' : 'border-[#ef4444]/20'}`}>
+            <span className="text-[8px] xl:text-[9px] font-bold uppercase tracking-wide text-gray-400 whitespace-nowrap overflow-hidden text-ellipsis">Target: {targetData.targetLabel}</span>
+            <span className={`text-[8px] xl:text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-full whitespace-nowrap shrink-0 ${targetData.status === 'tercapai' ? 'bg-[#0F8F8B]/10 text-[#0F8F8B]' : 'bg-[#ef4444]/10 text-[#ef4444]'}`}>
+              {targetData.status === 'tercapai' ? 'Tercapai' : 'Belum Tercapai'}
+            </span>
           </div>
         ) : trendVal ? (
           <div className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider pt-2 border-t border-gray-50" style={{ color: trendColor }}>
