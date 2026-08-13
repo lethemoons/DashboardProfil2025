@@ -4,7 +4,8 @@ import RiskClusteringMap from '../components/RiskClusteringMap';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   CartesianGrid, Cell, Legend, ScatterChart, Scatter, ReferenceLine
-, LabelList } from 'recharts'
+  , LabelList
+} from 'recharts'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { evaluateTarget, TARGETS } from '../utils/targets'
 import { descStats, pearsonR } from '../utils/stats'
@@ -58,7 +59,7 @@ const CustomPairTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length >= 2) {
     const p1 = payload[0];
     const p2 = payload[1];
-    
+
     const isPct = p1.name.includes('%') || p1.dataKey.includes('pct');
     const fmt = (v: number) => isPct ? v.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%' : Math.round(v).toLocaleString('id-ID');
 
@@ -206,8 +207,8 @@ export default function KesehatanIbu() {
           <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Peta Sebaran Provinsi Jawa Timur</h3>
           <div className="flex items-center gap-3 flex-wrap">
             <span className="text-xs text-gray-500 font-medium">Indikator:</span>
-            <select 
-              value={mapIndicator} 
+            <select
+              value={mapIndicator}
               onChange={e => setMapIndicator(e.target.value)}
               className="text-xs font-medium border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-[#0F8F8B] bg-gray-50 text-gray-700 max-w-[200px] truncate"
             >
@@ -217,11 +218,11 @@ export default function KesehatanIbu() {
             </select>
           </div>
         </div>
-        
-        <ChoroplethMap 
-          data={data} 
-          indicatorKey={mapIndicator} 
-          indicatorLabel={IBU_OPTIONS.find(o => o.key === mapIndicator)?.label || ''} 
+
+        <ChoroplethMap
+          data={data}
+          indicatorKey={mapIndicator}
+          indicatorLabel={IBU_OPTIONS.find(o => o.key === mapIndicator)?.label || ''}
         />
       </div>
 
@@ -421,14 +422,14 @@ export default function KesehatanIbu() {
         />
       )}
 
-      
+
       {isAdmin && (
-        <RiskClusteringMap 
+        <RiskClusteringMap
           title="Analisis Klasterisasi Pemetaan Risiko Kesehatan Ibu"
-          data={data} 
-          variables={['kematian_ibu_hamil', 'k6_pct', 'persalinan_fasyankes_pct', 'kf_lengkap_pct']} 
-          directions={[1, -1, -1, -1]} 
-          variableLabels={['Kematian Ibu Hamil', 'K6 (%)', 'Persalinan Fasyankes (%)', 'KF Lengkap (%)']} 
+          data={data}
+          variables={['kematian_ibu_hamil', 'k6_pct', 'persalinan_fasyankes_pct', 'kf_lengkap_pct']}
+          directions={[1, -1, -1, -1]}
+          variableLabels={['Kematian Ibu Hamil', 'K6 (%)', 'Persalinan Fasyankes (%)', 'KF Lengkap (%)']}
         />
       )}
 

@@ -212,7 +212,8 @@ app.post('/api/admin/import-excel', authenticateAdmin, uploadExcel.single('file'
     try { if (fs.existsSync(csvPath)) fs.unlinkSync(csvPath) } catch {}
   }
 
-  exec(`python "${scriptPath}" "${excelPath}" "${csvPath}"`, { timeout: 120000 }, (error, stdout, stderr) => {
+  const pythonCmd = process.platform === 'win32' ? 'python' : 'python3'
+  exec(`${pythonCmd} "${scriptPath}" "${excelPath}" "${csvPath}"`, { timeout: 120000 }, (error, stdout, stderr) => {
     console.log(`[import-excel] stdout: ${stdout}`)
     if (stderr) console.warn(`[import-excel] stderr: ${stderr}`)
 

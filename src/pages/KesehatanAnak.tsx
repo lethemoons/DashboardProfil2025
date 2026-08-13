@@ -4,7 +4,8 @@ import RiskClusteringMap from '../components/RiskClusteringMap';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   CartesianGrid, Cell, Legend, ScatterChart, Scatter, ReferenceLine
-, LabelList } from 'recharts'
+  , LabelList
+} from 'recharts'
 import { evaluateTarget, TARGETS } from '../utils/targets'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
@@ -45,11 +46,11 @@ const CustomCompareTooltip = ({ active, payload, label, data }: any) => {
   if (active && payload && payload.length) {
     const p1 = payload[0];
     const p2 = payload[1];
-    
+
     // Absolute difference between percentages
     const diff = Math.abs(p1.value - p2.value);
     const score = diff <= 10 ? 1 : 0;
-    
+
     return (
       <div className="bg-white border border-gray-100 rounded-xl shadow-lg p-3 text-xs">
         <div className="font-semibold mb-2">{label}</div>
@@ -90,14 +91,14 @@ export default function KesehatanAnak() {
   const [deathChartFilter, setDeathChartFilter] = useState('10')
   const [compareFilter, setCompareFilter] = useState('10')
   const [compareIndic, setCompareIndic] = useState('pair_1')
-  
+
   const [corrX, setCorrX] = useState('gizi_kurang_pct')
   const [corrY, setCorrY] = useState('gizi_buruk_pct')
 
   const data = useMemo(() => {
     return kesehatanAnak.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR').map(d => {
       const csv = ANAK_CSV_DATA[d.kabupaten] || {};
-      
+
       const anak_lahir_hidup = csv.anak_lahir_hidup || 0;
       const hb0_val = csv.jumlah_hb0 || 0;
       const hb0_pct = csv.hb0_pct || 0;
@@ -111,31 +112,31 @@ export default function KesehatanAnak() {
       const dpt_pct = csv.dpt_hb_hib3_pct || 0;
       const polio_val = csv.jumlah_polio4 || 0;
       const polio_pct = csv.polio4_pct || 0;
-      
+
       return {
         ...d,
         kematian_neonatal: d.kematian_neonatal || 0,
         kematian_bayi: d.kematian_bayi || 0,
         kematian_balita: d.kematian_balita || 0,
-        
+
         pair_1_a: 100, pair_1_a_val: anak_lahir_hidup,
         pair_1_b: hb0_pct, pair_1_b_val: hb0_val,
-        
+
         pair_2_a: hb0_pct, pair_2_a_val: hb0_val,
         pair_2_b: bcg_pct, pair_2_b_val: bcg_val,
-        
+
         pair_3_a: campak_pct, pair_3_a_val: campak_val,
         pair_3_b: idl_pct, pair_3_b_val: idl_val,
-        
+
         pair_4_a: 100, pair_4_a_val: anak_lahir_hidup,
         pair_4_b: bcg_pct, pair_4_b_val: bcg_val,
-        
+
         pair_5_a: dpt_pct, pair_5_a_val: dpt_val,
         pair_5_b: idl_pct, pair_5_b_val: idl_val,
-        
+
         pair_6_a: polio_pct, pair_6_a_val: polio_val,
         pair_6_b: idl_pct, pair_6_b_val: idl_val,
-        
+
         pair_7_a: dpt_pct, pair_7_a_val: dpt_val,
         pair_7_b: polio_pct, pair_7_b_val: polio_val,
       }
@@ -144,7 +145,7 @@ export default function KesehatanAnak() {
 
   const sortedData = [...data].sort((a, b) => (b[indic] as number) - (a[indic] as number))
   const chartData = chartFilter === 'all' ? sortedData : sortedData.slice(0, Number(chartFilter))
-  
+
   const sortedDeathData = [...data].sort((a, b) =>
     ((b.kematian_neonatal as number) + (b.kematian_bayi as number) + (b.kematian_balita as number)) -
     ((a.kematian_neonatal as number) + (a.kematian_bayi as number) + (a.kematian_balita as number))
@@ -156,14 +157,14 @@ export default function KesehatanAnak() {
 
   const stats = descStats(data.map(d => d[indic] as number))
   const indicLabel = ANAK_OPTIONS.find(o => o.key === indic)?.label ?? indic
-  
+
   const scatterData = data.map(d => ({ x: d[corrX] as number, y: d[corrY] as number, name: d.kabupaten }))
   const r = pearsonR(scatterData.map(d => d.x), scatterData.map(d => d.y))
 
   const statInsights = [
     `Angka kematian balita, bayi, dan neonatal sangat penting untuk dipantau secara ketat. Grafik di bawah menunjukkan distribusi jumlah kematian pada usia-usia rentan tersebut untuk setiap wilayah. Mengidentifikasi wilayah dengan angka yang menonjol membantu dinas kesehatan memprioritaskan alokasi tenaga medis, perbaikan fasilitas persalinan, serta kampanye kesehatan ibu hamil secara lebih efisien.`
   ]
-  
+
   const indicatorInsights = [
     generateDynamicBarInsight(
       data,
@@ -180,7 +181,7 @@ export default function KesehatanAnak() {
       r
     )
   ]
-  
+
   const compareLabel = COMPARE_OPTIONS.find(o => o.key === compareIndic)?.label ?? 'Indikator';
   const compareInsights = [
     `Grafik perbandingan ini menyandingkan ${compareLabel}. Selisih persentase yang jauh antara keduanya (lebih dari 10%) mengindikasikan adanya kendala di lapangan (misalnya anak yang sudah menerima layanan A gagal mendapatkan layanan B). Semakin kecil selisih antar indikator ini, semakin konsisten masyarakat dalam mengikuti pedoman kesehatan anak secara tuntas.`
@@ -207,8 +208,8 @@ export default function KesehatanAnak() {
           <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Peta Sebaran Provinsi Jawa Timur</h3>
           <div className="flex items-center gap-3 flex-wrap">
             <span className="text-xs text-gray-500 font-medium">Indikator:</span>
-            <select 
-              value={mapIndicator} 
+            <select
+              value={mapIndicator}
               onChange={e => setMapIndicator(e.target.value)}
               className="text-xs font-medium border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-[#0F8F8B] bg-gray-50 text-gray-700 max-w-[200px] truncate"
             >
@@ -218,14 +219,14 @@ export default function KesehatanAnak() {
             </select>
           </div>
         </div>
-        
-        <ChoroplethMap 
-          data={data} 
-          indicatorKey={mapIndicator} 
-          indicatorLabel={ANAK_OPTIONS.find(o => o.key === mapIndicator)?.label || ''} 
+
+        <ChoroplethMap
+          data={data}
+          indicatorKey={mapIndicator}
+          indicatorLabel={ANAK_OPTIONS.find(o => o.key === mapIndicator)?.label || ''}
         />
       </div>
-      
+
       <InsightBox title="PENDAHULUAN" insights={statInsights} />
 
       {/* Kematian anak stacked */}
@@ -280,8 +281,8 @@ export default function KesehatanAnak() {
             <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
             <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
             {TARGETS[indic] && (
-              <ReferenceLine 
-                x={TARGETS[indic].target_value} 
+              <ReferenceLine
+                x={TARGETS[indic].target_value}
                 stroke={TARGETS[indic].target_direction === '>=' || TARGETS[indic].target_direction === '>' ? '#0F8F8B' : '#ef4444'}
                 strokeDasharray="3 3"
                 strokeWidth={2}
@@ -295,8 +296,8 @@ export default function KesehatanAnak() {
               />
             )}
             {indic === 'imunisasi_dasar_lengkap_pct' && TARGETS['idl_pct'] && (
-              <ReferenceLine 
-                x={TARGETS['idl_pct'].target_value} 
+              <ReferenceLine
+                x={TARGETS['idl_pct'].target_value}
                 stroke={TARGETS['idl_pct'].target_direction === '>=' || TARGETS['idl_pct'].target_direction === '>' ? '#0F8F8B' : '#ef4444'}
                 strokeDasharray="3 3"
                 strokeWidth={2}
@@ -390,14 +391,14 @@ export default function KesehatanAnak() {
         />
       )}
 
-      
+
       {isAdmin && (
-        <RiskClusteringMap 
+        <RiskClusteringMap
           title="Analisis Klasterisasi Pemetaan Risiko Kesehatan Anak"
-          data={data} 
-          variables={['kematian_bayi', 'gizi_buruk_pct', 'imunisasi_dasar_lengkap_pct']} 
-          directions={[1, 1, -1]} 
-          variableLabels={['Kematian Bayi', 'Gizi Buruk (%)', 'Imunisasi Dasar Lengkap (%)']} 
+          data={data}
+          variables={['kematian_bayi', 'gizi_buruk_pct', 'imunisasi_dasar_lengkap_pct']}
+          directions={[1, 1, -1]}
+          variableLabels={['Kematian Bayi', 'Gizi Buruk (%)', 'Imunisasi Dasar Lengkap (%)']}
         />
       )}
 
