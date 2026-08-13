@@ -1,9 +1,14 @@
 import csv
-import openpyxl
-from pathlib import Path
+import sys
 import re
 import math
-import sys
+from pathlib import Path
+try:
+    import openpyxl
+except ImportError:
+    import subprocess
+    subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'openpyxl', '--quiet'])
+    import openpyxl
 
 PROVINCE_ONLY = {2, 3, 4, 9, 10, 19, 21, 34, 62}
 
