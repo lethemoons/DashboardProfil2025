@@ -178,7 +178,7 @@ npm run dev
 
 Ada **dua cara** memperbarui data dashboard dengan rilis Profil Kesehatan tahun terbaru. Sistem tidak menggunakan form *edit-cell-by-cell*, melainkan dengan mekanisme **Timpa/Overwrite**.
 
-### Cara 1: Upload File Excel Mentah (Sangat Direkomendasikan ✅)
+### Cara 1: Upload File Excel Mentah 
 
 > Format: Gunakan **Lampiran Profil Kesehatan Kemenkes (Excel `.xlsx`)** asli.
 
@@ -189,8 +189,6 @@ Ada **dua cara** memperbarui data dashboard dengan rilis Profil Kesehatan tahun 
 5. Tunggu proses parsing server (± 30–60 detik).
 6. Muncul notifikasi **"Import successful"**.
 
-**Catatan Penting Overwrite:**
-- **Perhatian:** Data baru akan secara absolut menggantikan (overwrite) data sebelumnya pada tahun tersebut. Pastikan nilai di file sudah benar.
 
 ### Cara 2: Upload CSV Long-Format (Manual)
 Jika Anda perlu parsing manual (menggunakan script `parse_kabupaten.py`), Anda dapat mengunggah file CSV berformat long-format dengan kolom `table_no, no, kabupaten, metric, value`.
