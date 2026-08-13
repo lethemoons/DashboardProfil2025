@@ -184,29 +184,8 @@
 
   <!-- HALAMAN 2 -->
   <div class="page">
-    <h2 class="section-title">4. Data Preprocessing (Persiapan Data)</h2>
-    <p>Sebelum Anda dapat mengunggah data ke dalam Dashboard, data mentah (raw data) yang dimiliki oleh Dinas Kesehatan harus melalui proses <em>Data Preprocessing</em>. Proses ini mengubah struktur data dari format cetak Excel Kemenkes menjadi struktur <strong>long-format CSV</strong> yang dapat dipahami oleh sistem Dashboard.</p>
-
-    <h3>Mengapa Preprocessing Diperlukan?</h3>
-    <p>Data mentah seperti file <code>14072026_Lampiran Profil Kesehatan 2025 FIX.xlsx</code> berisi puluhan <em>sheet</em> dengan format tabel yang kompleks (termasuk kolom berlapis, <em>merged cells</em>, dan baris kosong). Dashboard membutuhkan data yang sudah terstruktur rapi dan seragam (standar CSV).</p>
-
-    <h3>Langkah-langkah Data Preprocessing:</h3>
-    <ol>
-      <li><strong>Siapkan File Excel Mentah:</strong> Pastikan Anda memiliki file Excel Lampiran Profil Kesehatan yang sudah terisi lengkap (misal: <code>Lampiran Profil Kesehatan 2025.xlsx</code>).</li>
-      <li><strong>Letakkan File di Folder Proyek:</strong> Pindahkan file Excel tersebut ke dalam folder utama proyek (<em>root directory</em>) tempat kode dashboard berada.</li>
-      <li><strong>Buka Terminal / Command Prompt:</strong> Buka aplikasi terminal dan arahkan (<em>cd</em>) ke folder proyek dashboard Anda.</li>
-      <li><strong>Jalankan Script Preprocessing:</strong> Sistem telah menyediakan script Python khusus untuk mengekstrak data. Jalankan perintah berikut:
-        <pre style="background: #f3f4f6; padding: 10px; border-radius: 5px; border: 1px solid #e5e7eb; margin: 10px 0;">python parse_kabupaten.py</pre>
-      </li>
-      <li><strong>Tunggu Proses Selesai:</strong> Script akan membaca seluruh 88 <em>sheet</em> pada Excel. Proses ini memakan waktu beberapa detik hingga satu menit.</li>
-      <li><strong>Hasil Output (kabupaten_all.csv):</strong> Setelah berhasil, script akan menghasilkan sebuah file bernama <code>kabupaten_all.csv</code> di dalam folder proyek. File CSV inilah yang <strong>sudah siap</strong> untuk diunggah ke dalam Dashboard.</li>
-    </ol>
-  </div>
-
-  <!-- HALAMAN 3 -->
-  <div class="page">
-    <h2 class="section-title">5. Pengelolaan Data & Pembaruan (Overwrite = Update)</h2>
-    <p>Pembaruan data pada sistem ini dirancang menggunakan sistem <strong>Unggah Ulang (Re-upload / Overwrite)</strong> menggunakan file CSV hasil preprocessing.</p>
+    <h2 class="section-title">4. Pengelolaan Data & Pembaruan (Overwrite = Update)</h2>
+    <p>Pembaruan data pada sistem ini dirancang menggunakan sistem <strong>Unggah Ulang (Re-upload / Overwrite)</strong>.</p>
     
     <div class="alert">
       <strong>Memperbarui Data (Overwrite = Update)</strong>
@@ -215,7 +194,7 @@
       <strong>Perhatian:</strong> Pastikan nilai yang dimasukkan sudah benar sebelum menyimpan, karena data baru akan menggantikan data sebelumnya pada kombinasi data yang sama.
     </div>
 
-    <h3>Langkah Mengunggah / Memperbarui Data (Import CSV):</h3>
+    <h3>Langkah Mengunggah / Memperbarui Data (Import CSV/Excel):</h3>
     <div class="screenshot-container">
       <img src="http://localhost:5173/screenshots/admin_actions.png" alt="Admin Actions" onerror="this.style.display='none'">
       <div class="caption">Gambar 3: Panel Tombol Aksi Admin (Unggah, Unduh, Hapus)</div>
@@ -224,12 +203,12 @@
       <li>Klik tombol <strong>Unggah Data</strong> di panel atas kanan.</li>
       <li>Sistem akan membuka baris form kecil berisikan input <strong>Tahun</strong> dan tombol unggah.</li>
       <li>Pastikan Anda mengetikkan tahun data yang ingin diunggah dengan benar (misal: 2025). Jika tahun yang Anda tuju sudah memiliki data, maka proses ini akan <strong>menimpa data lama (overwrite)</strong>.</li>
-      <li>Klik tombol <strong>Pilih & Unggah File</strong> dan pilih file <code>kabupaten_all.csv</code> hasil preprocessing Anda.</li>
-      <li>Tunggu hingga sistem selesai memproses file.</li>
+      <li>Klik tombol <strong>Pilih & Unggah File</strong> dan pilih file bereksistensi <code>.csv</code> atau <code>.xlsx</code>.</li>
+      <li>Tunggu hingga sistem selesai memproses file (memakan waktu beberapa detik hingga semenit tergantung ukuran file Excel).</li>
       <li>Jika berhasil, akan muncul notifikasi "Import successful" dan tabel data otomatis dimuat ulang.</li>
     </ol>
 
-    <h2 class="section-title">6. Mengekspor & Menghapus Data</h2>
+    <h2 class="section-title">5. Mengekspor & Menghapus Data</h2>
     <h3>A. Ekspor Data (Unduh)</h3>
     <p>Jika Anda memerlukan backup data atau butuh templat tabel saat ini, klik tombol <strong>Unduh Data (Tahun)</strong>. Sistem akan men-generate file berformat CSV dari seluruh data di tahun yang sedang aktif terpilih di Top Bar.</p>
 
@@ -239,7 +218,7 @@
     <h3>C. Menghapus Seluruh Data Tahun Tersebut</h3>
     <p>Jika Anda ingin mereset seluruh indikator di tahun tersebut, klik tombol merah bertuliskan <strong>Hapus Data (Tahun)</strong> di pojok kanan atas. Fitur ini akan menghapus ribuan record sekaligus dan tidak dapat dikembalikan, sehingga sistem akan meminta konfirmasi ganda.</p>
     
-    <h2 class="section-title">7. Log Out / Keluar Sesi</h2>
+    <h2 class="section-title">6. Log Out / Keluar Sesi</h2>
     <p>Jika telah selesai mengelola data, pastikan untuk menekan tombol <strong>Logout</strong> (kiri atas) agar sistem kembali ke mode publik (Guest) dan mengunci halaman manajemen. Ini penting untuk mencegah perubahan data yang tidak disengaja.</p>
   </div>
 
