@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Panduan Penggunaan Dashboard Profil Kesehatan Jawa Timur</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    
+    :root {
+      --primary: #0F8F8B;
+      --primary-light: #e0f2f1;
+      --accent: #078FA5;
+      --lime: #9EAF24;
+      --text-main: #1f2937;
+      --text-muted: #6b7280;
+      --bg: #ffffff;
+      --border: #e5e7eb;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: var(--text-main);
+      background-color: var(--bg);
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Page Setup */
+    .page {
+      page-break-after: always;
+      padding: 40px 50px;
+      position: relative;
+    }
+
+    .cover {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      height: 100vh;
+      background: linear-gradient(135deg, rgba(15,143,139,0.05) 0%, rgba(7,143,165,0.05) 100%);
+    }
+
+    .cover img.logo {
+      width: 250px;
+      margin-bottom: 40px;
+    }
+
+    .cover h1 {
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 15px;
+      line-height: 1.2;
+    }
+
+    .cover h2 {
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 60px;
+    }
+
+    .cover .decoration {
+      width: 60px;
+      height: 6px;
+      background: linear-gradient(90deg, var(--primary), var(--lime));
+      border-radius: 3px;
+    }
+
+    /* Content Styling */
+    h2.section-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+      border-bottom: 2px solid var(--primary-light);
+      padding-bottom: 10px;
+      margin-top: 30px;
+      margin-bottom: 20px;
+    }
+
+    h3 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-top: 25px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 14px;
+      margin-bottom: 15px;
+      text-align: justify;
+    }
+
+    ul, ol {
+      font-size: 14px;
+      margin-bottom: 15px;
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    .screenshot-container {
+      margin: 25px 0;
+      text-align: center;
+    }
+
+    .screenshot-container img {
+      max-width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .caption {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-top: 8px;
+    }
+
+    .alert {
+      background-color: var(--primary-light);
+      border-left: 4px solid var(--primary);
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .alert strong {
+      color: var(--primary);
+      display: block;
+      margin-bottom: 5px;
+    }
+    
+    .footer {
+      position: absolute;
+      bottom: 20px;
+      left: 50px;
+      right: 50px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- COVER -->
+  <div class="page cover">
+    <!-- Menggunakan logo dari public folder -->
+    <img src="http://localhost:5173/Main%20Logo%20Horizontal.png" alt="Logo Dinkes Jatim" class="logo" onerror="this.src='http://localhost:5173/logo_dinkes.png'">
+    <h1>PANDUAN PENGGUNAAN<br>DASHBOARD PROFIL KESEHATAN<br>JAWA TIMUR</h1>
+    <h2>Untuk Pengguna Publik (Guest)</h2>
+    <div class="decoration"></div>
+  </div>
+
+  <!-- HALAMAN 1 -->
+  <div class="page">
+    <h2 class="section-title">1. Mengenal Dashboard</h2>
+    <p>Dashboard Profil Kesehatan Provinsi Jawa Timur adalah sistem analitik terpadu yang menyajikan indikator pelayanan kesehatan dari 38 kabupaten/kota. Dashboard ini ditujukan untuk memantau, mengevaluasi, dan menganalisis capaian program kesehatan secara berkala dan interaktif.</p>
+    
+    <div class="alert">
+      <strong>Informasi Penting</strong>
+      Data yang tersaji dalam dashboard merupakan rekapitulasi data resmi dari Dinas Kesehatan Provinsi Jawa Timur yang diperbarui secara berkala.
+    </div>
+
+    <h2 class="section-title">2. Mengenal Beranda</h2>
+    <p>Halaman Beranda adalah gerbang utama yang menampilkan ringkasan kapasitas sistem, latar belakang, dan pintasan menuju berbagai modul utama dashboard.</p>
+    <div class="screenshot-container">
+      <img src="http://localhost:5173/screenshots/beranda_hero.png" alt="Beranda Hero" onerror="this.style.display='none'">
+      <div class="caption">Gambar 1: Halaman Beranda Dashboard</div>
+    </div>
+    <ul>
+      <li><strong>Mulai Eksplorasi:</strong> Tombol untuk langsung menuju halaman "Gambaran Umum".</li>
+      <li><strong>Lihat Dokumentasi:</strong> Mengunduh panduan penggunaan ini.</li>
+      <li><strong>Profil Kesehatan Jatim:</strong> Mengunduh dokumen Profil Kesehatan (PDF) resmi.</li>
+    </ul>
+
+    <h2 class="section-title">3. Struktur & Navigasi Dashboard</h2>
+    <p>Dashboard ini memiliki sidebar navigasi di sisi kiri (atau menu hamburger pada perangkat mobile) yang mengelompokkan data ke dalam 6 pilar utama:</p>
+    <div class="screenshot-container">
+      <img src="http://localhost:5173/screenshots/sidebar.png" alt="Sidebar" onerror="this.style.display='none'" style="max-width: 250px;">
+      <div class="caption">Gambar 2: Navigasi Sidebar</div>
+    </div>
+    <ol>
+      <li><strong>Gambaran Umum:</strong> Rangkuman data kependudukan dan metrik utama provinsi.</li>
+      <li><strong>Sarana Kesehatan:</strong> Data fasyankes, posyandu, dan mutu pelayanan.</li>
+      <li><strong>SDM Kesehatan:</strong> Ketersediaan dan rasio tenaga kesehatan.</li>
+      <li><strong>Pembiayaan Kesehatan:</strong> Anggaran daerah, DAK, dan kepesertaan JKN.</li>
+      <li><strong>Kesehatan Keluarga:</strong> Indikator kesehatan ibu, anak, dan lansia.</li>
+      <li><strong>Pengendalian Penyakit:</strong> Penyakit menular, imunisasi (PD3I), dan PTM.</li>
+      <li><strong>Kesehatan Lingkungan:</strong> Akses sanitasi, air minum, dan STBM.</li>
+    </ol>
+  </div>
+
+  <!-- HALAMAN 2 -->
+  <div class="page">
+    <h2 class="section-title">4. Menggunakan Filter Data</h2>
+    <p>Di bagian atas setiap halaman, terdapat menu *Top Bar* yang berfungsi sebagai kontrol global untuk filter data.</p>
+    <div class="screenshot-container">
+      <img src="http://localhost:5173/screenshots/filter_topbar.png" alt="Top Bar Filter" onerror="this.style.display='none'">
+      <div class="caption">Gambar 3: Filter Tahun pada Top Bar</div>
+    </div>
+    <ul>
+      <li><strong>Pemilihan Tahun:</strong> Anda dapat memilih tahun data yang ingin dilihat (misal: 2023, 2024, 2025) menggunakan dropdown di sudut kanan atas. Ketika tahun diubah, seluruh visualisasi pada halaman tersebut akan secara otomatis memperbarui datanya.</li>
+    </ul>
+
+    <h2 class="section-title">5. Membaca KPI Card & Target</h2>
+    <p>KPI (Key Performance Indicator) Card menampilkan angka capaian utama (summary) untuk indikator tertentu pada level Provinsi.</p>
+    <div class="screenshot-container">
+      <img src="http://localhost:5173/screenshots/kpi_cards.png" alt="KPI Cards" onerror="this.style.display='none'">
+      <div class="caption">Gambar 4: KPI Cards dengan Indikator Target</div>
+    </div>
+    <p>Beberapa KPI Card memiliki informasi **Target**. Status capaian ditandai dengan:</p>
+    <ul>
+      <li><strong>Tercapai:</strong> Persentase capaian sama atau melebihi target, ditandai dengan centang hijau.</li>
+      <li><strong>Belum Tercapai:</strong> Persentase capaian di bawah target, ditandai dengan peringatan merah/kuning.</li>
+    </ul>
+
+    <h2 class="section-title">6. Membaca Visualisasi Grafik (Chart)</h2>
+    <p>Grafik disajikan dalam berbagai bentuk seperti Bar Chart, Horizontal Bar Chart, dan Area Chart. Seluruh grafik bersifat interaktif.</p>
+    <div class="screenshot-container">
+      <img src="http://localhost:5173/screenshots/chart_example.png" alt="Contoh Grafik" onerror="this.style.display='none'">
+      <div class="caption">Gambar 5: Contoh Interaktivitas Bar Chart</div>
+    </div>
+    <ul>
+      <li><strong>Tooltip:</strong> Arahkan kursor (hover) ke atas batang grafik untuk melihat rincian nilai numerik lengkap.</li>
+      <li><strong>Legenda:</strong> Klik pada label legenda di bawah grafik untuk menampilkan atau menyembunyikan kategori data tertentu.</li>
+      <li><strong>Insight Otomatis:</strong> Di bawah grafik biasanya terdapat kotak berwarna biru/teal yang memberikan ringkasan interpretasi data secara otomatis, misalnya nilai tertinggi, terendah, dan rata-rata.</li>
+    </ul>
+  </div>
+
+  <!-- HALAMAN 3 -->
+  <div class="page">
+    <h2 class="section-title">7. Membaca Peta Sebaran (Choropleth Map)</h2>
+    <p>Peta tematik digunakan untuk melihat persebaran capaian indikator secara geografis antar kabupaten/kota di Jawa Timur.</p>
+    <div class="screenshot-container">
+      <img src="http://localhost:5173/screenshots/map_example.png" alt="Choropleth Map" onerror="this.style.display='none'">
+      <div class="caption">Gambar 6: Choropleth Map Interaktif</div>
+    </div>
+    <ul>
+      <li><strong>Memilih Indikator:</strong> Gunakan dropdown indikator di sudut kanan atas kotak peta untuk mengubah data yang dipetakan.</li>
+      <li><strong>Membaca Warna:</strong> Semakin gelap intensitas warna, semakin tinggi nilai indikator pada wilayah tersebut. Semakin terang, semakin rendah nilainya.</li>
+      <li><strong>Interaktivitas:</strong> Arahkan kursor ke sebuah wilayah pada peta untuk memunculkan nama Kabupaten/Kota beserta nilai pasti dari indikator yang dipilih.</li>
+    </ul>
+
+    <h2 class="section-title">8. Analisis Interaktif Tingkat Lanjut</h2>
+    <p>Dashboard ini juga menyediakan fitur analisis statistik tingkat lanjut yang dapat Anda manfaatkan secara langsung:</p>
+    
+    <h3>A. Matriks Kuadran Wilayah (Crosstab)</h3>
+    <p>Memetakan 38 kabupaten/kota ke dalam matriks persilangan kategori Rendah, Sedang, dan Tinggi. Sangat berguna untuk melihat klaster kinerja daerah.</p>
+    <div class="screenshot-container">
+      <img src="http://localhost:5173/screenshots/crosstab.png" alt="Crosstab" onerror="this.style.display='none'">
+      <div class="caption">Gambar 7: Tabel Crosstab Interaktif</div>
+    </div>
+
+    <h3>B. Klasterisasi Pemetaan Risiko (K-Means/Spasial)</h3>
+    <p>Sistem secara otomatis mengelompokkan kabupaten/kota ke dalam 3 zona: Risiko Rendah (Hijau), Sedang (Kuning), dan Tinggi (Merah) berdasarkan algoritma klasterisasi spasial terintegrasi.</p>
+    <div class="screenshot-container">
+      <img src="http://localhost:5173/screenshots/clustering.png" alt="Clustering Map" onerror="this.style.display='none'">
+      <div class="caption">Gambar 8: Peta Klasterisasi Risiko</div>
+    </div>
+  </div>
+
+</body>
+</html>
