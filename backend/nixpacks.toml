@@ -1,8 +1,8 @@
 [phases.setup]
-nixPkgs = ["nodejs_20", "python311", "python311Packages.openpyxl"]
+nixPkgs = ["nodejs_20", "python311", "python311Packages.pip"]
 
 [phases.install]
-cmds = ["npm install", "npx prisma generate"]
+cmds = ["npm install", "npx prisma generate", "pip3 install openpyxl --break-system-packages"]
 
 [start]
 cmd = "npm run start"
