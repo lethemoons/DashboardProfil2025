@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Panduan Pengelolaan Dashboard Profil Kesehatan Jawa Timur</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    
+    :root {
+      --primary: #0F8F8B;
+      --primary-light: #e0f2f1;
+      --accent: #078FA5;
+      --lime: #9EAF24;
+      --text-main: #1f2937;
+      --text-muted: #6b7280;
+      --bg: #ffffff;
+      --border: #e5e7eb;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: var(--text-main);
+      background-color: var(--bg);
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Page Setup */
+    .page {
+      page-break-after: always;
+      padding: 40px 50px;
+      position: relative;
+    }
+
+    .cover {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      height: 100vh;
+      background: linear-gradient(135deg, rgba(15,143,139,0.05) 0%, rgba(7,143,165,0.05) 100%);
+    }
+
+    .cover img.logo {
+      width: 250px;
+      margin-bottom: 40px;
+    }
+
+    .cover h1 {
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 15px;
+      line-height: 1.2;
+    }
+
+    .cover h2 {
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 60px;
+    }
+
+    .cover .decoration {
+      width: 60px;
+      height: 6px;
+      background: linear-gradient(90deg, var(--primary), var(--lime));
+      border-radius: 3px;
+    }
+
+    /* Content Styling */
+    h2.section-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+      border-bottom: 2px solid var(--primary-light);
+      padding-bottom: 10px;
+      margin-top: 30px;
+      margin-bottom: 20px;
+    }
+
+    h3 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-top: 25px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 14px;
+      margin-bottom: 15px;
+      text-align: justify;
+    }
+
+    ul, ol {
+      font-size: 14px;
+      margin-bottom: 15px;
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    .screenshot-container {
+      margin: 25px 0;
+      text-align: center;
+    }
+
+    .screenshot-container img {
+      max-width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .caption {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-top: 8px;
+    }
+
+    .alert {
+      background-color: #fef2f2;
+      border-left: 4px solid #ef4444;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .alert strong {
+      color: #b91c1c;
+      display: block;
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- COVER -->
+  <div class="page cover">
+    <img src="http://localhost:5173/Main%20Logo%20Horizontal.png" alt="Logo Dinkes Jatim" class="logo" onerror="this.src='http://localhost:5173/logo_dinkes.png'">
+    <h1>PANDUAN PENGELOLAAN<br>DASHBOARD PROFIL KESEHATAN<br>JAWA TIMUR</h1>
+    <h2>Untuk Administrator Tingkat Provinsi</h2>
+    <div class="decoration"></div>
+  </div>
+
+  <!-- HALAMAN 1 -->
+  <div class="page">
+    <h2 class="section-title">1. Pengenalan Role & Akses Admin</h2>
+    <p>Dashboard Profil Kesehatan Provinsi Jawa Timur memiliki dua mode akses: <strong>Guest</strong> (untuk publik melihat data) dan <strong>Admin</strong> (untuk pengelola data memperbarui informasi database backend).</p>
+    <p>Halaman khusus Admin tidak dapat diakses tanpa login. Segala perubahan yang Anda lakukan sebagai Admin pada database akan secara langsung (real-time) memperbarui visualisasi yang dilihat oleh Guest.</p>
+
+    <h2 class="section-title">2. Prosedur Login Admin</h2>
+    <p>Untuk mengakses panel kontrol:</p>
+    <ol>
+      <li>Pilih menu <strong>Admin Dashboard</strong> pada sidebar sebelah kiri bawah.</li>
+      <li>Anda akan diarahkan ke form login khusus.</li>
+      <li>Masukkan Username dan Password (kredensial standar yang diberikan oleh pengelola server).</li>
+      <li>Klik <strong>Login</strong> untuk masuk.</li>
+    </ol>
+    <div class="screenshot-container">
+      <img src="http://localhost:5173/screenshots/admin_login.png" alt="Form Login Admin" onerror="this.style.display='none'" style="max-width: 600px;">
+      <div class="caption">Gambar 1: Halaman Login Admin Dashboard</div>
+    </div>
+
+    <h2 class="section-title">3. Antarmuka Admin Dashboard</h2>
+    <p>Setelah login, Anda akan melihat halaman tabel data yang komprehensif. Halaman ini digunakan untuk melihat, mengekspor, serta memanajemen data mentah yang menjadi tulang punggung dashboard.</p>
+    <div class="screenshot-container">
+      <img src="http://localhost:5173/screenshots/admin_dashboard.png" alt="Admin Dashboard" onerror="this.style.display='none'">
+      <div class="caption">Gambar 2: Tampilan Utama Admin Dashboard (Tabel & Filter)</div>
+    </div>
+    <p>Fitur pada halaman ini meliputi:</p>
+    <ul>
+      <li><strong>Kolom Pencarian:</strong> Cari nama kabupaten/kota atau nama matriks.</li>
+      <li><strong>Tabel Pagination:</strong> Memuat 50 baris data per halaman dengan navigasi Previous/Next.</li>
+      <li><strong>Filter Tahun Global:</strong> Tabel ini disinkronisasikan dengan dropdown tahun di pojok kanan atas layar (Top Bar).</li>
+    </ul>
+  </div>
+
+  <!-- HALAMAN 2 -->
+  <div class="page">
+    <h2 class="section-title">4. Pengelolaan Data & Pembaruan (Overwrite = Update)</h2>
+    <p>Pembaruan data pada sistem ini dirancang menggunakan sistem <strong>Unggah Ulang (Re-upload / Overwrite)</strong>.</p>
+    
+    <div class="alert">
+      <strong>Memperbarui Data (Overwrite = Update)</strong>
+      Untuk memperbarui data yang sudah tersimpan, Admin melakukan input kembali data pada periode, wilayah, dan indikator yang sama. Data baru akan menggantikan nilai data sebelumnya. Dashboard tidak menyediakan fitur pengeditan langsung pada setiap cell tabel.
+      <br><br>
+      <strong>Perhatian:</strong> Pastikan nilai yang dimasukkan sudah benar sebelum menyimpan, karena data baru akan menggantikan data sebelumnya pada kombinasi data yang sama.
+    </div>
+
+    <h3>Langkah Mengunggah / Memperbarui Data (Import CSV/Excel):</h3>
+    <div class="screenshot-container">
+      <img src="http://localhost:5173/screenshots/admin_actions.png" alt="Admin Actions" onerror="this.style.display='none'">
+      <div class="caption">Gambar 3: Panel Tombol Aksi Admin (Unggah, Unduh, Hapus)</div>
+    </div>
+    <ol>
+      <li>Klik tombol <strong>Unggah Data</strong> di panel atas kanan.</li>
+      <li>Sistem akan membuka baris form kecil berisikan input <strong>Tahun</strong> dan tombol unggah.</li>
+      <li>Pastikan Anda mengetikkan tahun data yang ingin diunggah dengan benar (misal: 2025). Jika tahun yang Anda tuju sudah memiliki data, maka proses ini akan <strong>menimpa data lama (overwrite)</strong>.</li>
+      <li>Klik tombol <strong>Pilih & Unggah File</strong> dan pilih file bereksistensi <code>.csv</code> atau <code>.xlsx</code>.</li>
+      <li>Tunggu hingga sistem selesai memproses file (memakan waktu beberapa detik hingga semenit tergantung ukuran file Excel).</li>
+      <li>Jika berhasil, akan muncul notifikasi "Import successful" dan tabel data otomatis dimuat ulang.</li>
+    </ol>
+
+    <h2 class="section-title">5. Mengekspor & Menghapus Data</h2>
+    <h3>A. Ekspor Data (Unduh)</h3>
+    <p>Jika Anda memerlukan backup data atau butuh templat tabel saat ini, klik tombol <strong>Unduh Data (Tahun)</strong>. Sistem akan men-generate file berformat CSV dari seluruh data di tahun yang sedang aktif terpilih di Top Bar.</p>
+
+    <h3>B. Menghapus Baris Individual</h3>
+    <p>Pada tabel data, terdapat tombol merah <strong>Delete</strong> di paling kanan setiap baris. Gunakan ini jika terdapat entri ganda atau kesalahan spesifik pada satu record (satu nilai indikator untuk satu daerah).</p>
+
+    <h3>C. Menghapus Seluruh Data Tahun Tersebut</h3>
+    <p>Jika Anda ingin mereset seluruh indikator di tahun tersebut, klik tombol merah bertuliskan <strong>Hapus Data (Tahun)</strong> di pojok kanan atas. Fitur ini akan menghapus ribuan record sekaligus dan tidak dapat dikembalikan, sehingga sistem akan meminta konfirmasi ganda.</p>
+    
+    <h2 class="section-title">6. Log Out / Keluar Sesi</h2>
+    <p>Jika telah selesai mengelola data, pastikan untuk menekan tombol <strong>Logout</strong> (kiri atas) agar sistem kembali ke mode publik (Guest) dan mengunci halaman manajemen. Ini penting untuk mencegah perubahan data yang tidak disengaja.</p>
+  </div>
+
+</body>
+</html>

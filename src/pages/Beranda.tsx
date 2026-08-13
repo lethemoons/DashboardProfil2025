@@ -48,6 +48,7 @@ import {
   HeartPulse,
 } from 'lucide-react'
 import api from '../services/api'
+import { useAuth } from '../contexts/AuthContext'
 
 interface BerandaProps {
   onNavigate: (pageId: any, groupId?: any) => void
@@ -56,6 +57,7 @@ interface BerandaProps {
 
 
 export default function Beranda({ onNavigate }: BerandaProps) {
+  const { isAuthenticated, isAdmin } = useAuth()
   // Counter animation state
   const [counts, setCounts] = useState({
     wilayah: 0,
@@ -172,14 +174,6 @@ export default function Beranda({ onNavigate }: BerandaProps) {
                 <ArrowRight size={18} strokeWidth={2.2} />
               </button>
 
-              <button
-                onClick={() => setShowDocModal(true)}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-semibold text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 transition-all duration-200 cursor-pointer"
-              >
-                <FileText size={18} className="text-teal-600" />
-                <span>Lihat Dokumentasi</span>
-              </button>
-
               <a
                 href="https://dinkes.jatimprov.go.id/source/bankdata&statis&sekretariat&PPA&105__1784015649_profil-kesehatan-2025-14072026.pdf"
                 target="_blank"
@@ -187,8 +181,30 @@ export default function Beranda({ onNavigate }: BerandaProps) {
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-semibold text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 transition-all duration-200 cursor-pointer"
               >
                 <Download size={18} className="text-teal-600" />
-                <span>Profil Kesehatan Jatim 2025</span>
+                <span>Profil Kesehatan Jatim</span>
               </a>
+
+              <a
+                href="/Panduan_User_Penggunaan_Dashboard_Profil_Kesehatan_Jawa_Timur.pdf"
+                target="_blank"
+                rel="noreferrer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-semibold text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 transition-all duration-200 cursor-pointer"
+              >
+                <FileText size={18} className="text-teal-600" />
+                <span>Panduan User</span>
+              </a>
+
+              {isAuthenticated && isAdmin && (
+                <a
+                  href="/Panduan_Admin_Pengelolaan_Dashboard_Profil_Kesehatan_Jawa_Timur.pdf"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-semibold text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 transition-all duration-200 cursor-pointer"
+                >
+                  <ShieldCheck size={18} className="text-teal-600" />
+                  <span>Panduan Admin</span>
+                </a>
+              )}
             </div>
 
             {/* Micro Highlights strip */}
