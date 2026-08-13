@@ -1,8 +1,5 @@
 [phases.setup]
-nixPkgs = ["nodejs_20", "python311"]
-
-[phases.install]
-cmds = ["npm install", "npx prisma generate"]
+nixPkgs = ["nodejs_20", "python311", "python311Packages.pip"]
 
 [start]
-cmd = "npm run start"
+cmd = "bash start.sh"
