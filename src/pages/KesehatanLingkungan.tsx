@@ -60,7 +60,7 @@ export default function KesehatanLingkungan() {
       <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
         <KPICard title="Air Minum Memenuhi Syarat" value="69,6%" sub="Rumah tangga dengan air minum yang memenuhi syarat 35%" icon="💧" color="#0F8F8B" targetData={evaluateTarget(69.6, 'sam_memenuhi_syarat_pct')} />
         <KPICard title="Sanitasi Aman" value="6,75%" sub="Akses sanitasi layak sendiri 83,49%" icon="🚿" color="#0F8F8B" />
-        <KPICard title="Desa/Kelurahan SBS" value="63,5%" sub="Stop Buang Air Besar Sembarangan" icon="🏡" color="#0F8F8B" targetData={evaluateTarget(63.5, 'desa_sbs_pct')} />
+        <KPICard title="Desa/Kelurahan 5 Pilar STBM" value="25,34%" sub="Sanitasi Total Berbasis Masyarakat" icon="🏡" color="#0F8F8B" />
         <KPICard title="TFU Pengawasan Standar" value="72,7%" sub="Fasilitas Umum" icon="🏢" color="#0F8F8B" targetData={evaluateTarget(72.7, 'tfu_memenuhi_syarat_pct')} />
         <KPICard title="TPP Memenuhi Syarat" value="79,7%" sub="Pengelolaan Pangan" icon="🍽️" color="#0F8F8B" targetData={evaluateTarget(79.7, 'tpp_memenuhi_syarat_pct')} />
         <KPICard title="Kualitas Udara" value="47,3%" sub="Memenuhi Syarat" icon="💨" color="#0F8F8B" />

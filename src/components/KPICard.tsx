@@ -27,14 +27,11 @@ export default function KPICard({ title, value, sub, icon, trend, trendVal, colo
       </div>
       {targetData ? (
         <div className={`mt-1 pt-3 border-t flex flex-col gap-1.5 ${targetData.status === 'tercapai' ? 'border-[#0F8F8B]/20' : 'border-[#ef4444]/20'}`}>
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Target: {targetData.targetLabel}</span>
-            <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${targetData.status === 'tercapai' ? 'bg-[#0F8F8B]/10 text-[#0F8F8B]' : 'bg-[#ef4444]/10 text-[#ef4444]'}`}>
+          <div className="flex items-center justify-between gap-1 overflow-hidden">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 truncate">Target: {targetData.targetLabel}</span>
+            <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full whitespace-nowrap shrink-0 ${targetData.status === 'tercapai' ? 'bg-[#0F8F8B]/10 text-[#0F8F8B]' : 'bg-[#ef4444]/10 text-[#ef4444]'}`}>
               {targetData.status === 'tercapai' ? 'Tercapai' : 'Belum Tercapai'}
             </span>
-          </div>
-          <div className="text-xs font-medium text-gray-500">
-            {targetData.text}
           </div>
         </div>
       ) : trendVal ? (

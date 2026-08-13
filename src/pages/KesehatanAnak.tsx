@@ -178,11 +178,13 @@ export default function KesehatanAnak() {
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-4">
         <KPICard title="Kematian Neonatal" value="3.159" sub="Kasus" icon="💔" color="#ef4444" />
         <KPICard title="Kematian Bayi" value="3.695" sub="Kasus" icon="👶" color="#f97316" />
-        <KPICard title="Balita Gizi Kurang" value="4,7%" icon="📏" color="#0F8F8B" targetData={evaluateTarget(4.7, 'underweight_pct')} />
+        <KPICard title="Balita Gizi Kurang" value="4,7%" icon="📏" color="#0F8F8B" />
         <KPICard title="Balita Gizi Buruk" value="0,6%" icon="⚠️" color="#f97316" targetData={evaluateTarget(0.6, 'wasting_pct')} />
+        <KPICard title="Inisiasi Menyusu Dini (IMD)" value="76,5%" icon="🤱" color="#0F8F8B" targetData={evaluateTarget(76.5, 'imd_pct')} />
+        <KPICard title="ASI Eksklusif 6 Bulan" value="82%" icon="🍼" color="#0F8F8B" targetData={evaluateTarget(82, 'asi_eksklusif_pct')} />
         <KPICard title="Imunisasi Bayi Lengkap" value="84,8%" icon="💉" color="#0F8F8B" targetData={evaluateTarget(84.8, 'idl_pct')} />
       </div>
 
