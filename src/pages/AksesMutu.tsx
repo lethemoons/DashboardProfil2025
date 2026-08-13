@@ -94,7 +94,7 @@ export default function AksesMutu() {
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         <KPICard title="Total Kunjungan Rawat Jalan" value={totRawatJalan.toLocaleString('id-ID')} icon="🚶" color="#0FB0AA" />
         <KPICard title="Total Kunjungan Rawat Inap" value={totRawatInap.toLocaleString('id-ID')} icon="🛏️" color="#06B5D0" />
-        <KPICard title="BOR Provinsi" value={avgBOR.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} sub="Ideal: 60–85%" icon="🏥" color="#CBD92C" trend={avgBOR >= 60 && avgBOR <= 85 ? 'neutral' : avgBOR < 60 ? 'down' : 'up'} trendVal={avgBOR >= 60 && avgBOR <= 85 ? 'Dalam rentang ideal' : avgBOR < 60 ? 'Di bawah ideal' : 'Melebihi ideal'} />
+        <KPICard title="BOR Provinsi" value={avgBOR.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} icon="🏥" color="#CBD92C" />
         <KPICard title="Gross Death Rate" value={avgGDR.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '‰'} sub="Batas maks: 45‰" icon="📉" color="#f97316" trend={avgGDR <= 45 ? 'neutral' : 'down'} trendVal={avgGDR <= 45 ? 'Dalam batas' : 'Melebihi batas'} />
         <KPICard title="Net Death Rate" value={avgNDR.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '‰'} sub="Batas maks: 25‰" icon="📉" color="#8b5cf6" trend={avgNDR <= 25 ? 'neutral' : 'down'} trendVal={avgNDR <= 25 ? 'Dalam batas' : 'Melebihi batas'} />
         <KPICard title="% Puskesmas dg Ketersediaan Obat Esensial & Vaksin" value={pctPuskesmas.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} icon="💊" color="#22c55e" />

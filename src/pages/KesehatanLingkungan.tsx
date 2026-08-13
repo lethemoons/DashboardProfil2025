@@ -57,7 +57,7 @@ export default function KesehatanLingkungan() {
     <div className="flex flex-col gap-5">
 
 
-      <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         <KPICard title="Air Minum Memenuhi Syarat" value="69,6%" sub="Rumah tangga dengan air minum yang memenuhi syarat 35%" icon="💧" color="#0F8F8B" targetData={evaluateTarget(69.6, 'sam_memenuhi_syarat_pct')} />
         <KPICard title="Sanitasi Aman" value="6,75%" sub="Akses sanitasi layak sendiri 83,49%" icon="🚿" color="#0F8F8B" />
         <KPICard title="Desa/Kelurahan 5 Pilar STBM" value="25,34%" sub="Sanitasi Total Berbasis Masyarakat" icon="🏡" color="#0F8F8B" />
