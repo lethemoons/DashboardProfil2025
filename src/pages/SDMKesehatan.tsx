@@ -63,7 +63,7 @@ export default function SDMKesehatan() {
     indicators.forEach(ind => {
       cols.push({
         key: ind,
-        label: ind.replace(/_/g, ' ').toUpperCase(),
+        label: ind.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
         format: (v: any) => Number(v || 0).toLocaleString('id-ID')
       })
     })
@@ -97,7 +97,7 @@ export default function SDMKesehatan() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <KPICard title="Total SDM Kesehatan" value={totalSDM.toLocaleString('id-ID')} icon="👥" color="#0F8F8B" />
-        <KPICard title="Jenis SDM Terbanyak" value={topSdmType.name.replace(/_/g, ' ').toUpperCase()} sub={`${topSdmType.value.toLocaleString('id-ID')} orang`} icon="🏅" color="#078FA5" />
+        <KPICard title="Jenis SDM Terbanyak" value={topSdmType.name.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} sub={`${topSdmType.value.toLocaleString('id-ID')} orang`} icon="🏅" color="#078FA5" />
         <KPICard title="Kabupaten SDM Terbanyak" value={topSdmKab.name.replace('Kota ', '')} sub={`${topSdmKab.value.toLocaleString('id-ID')} SDM`} icon="🏥" color="#9EAF24" />
       </div>
 
@@ -132,7 +132,7 @@ export default function SDMKesehatan() {
               <span className="text-xs font-semibold text-gray-500">Pilih Indikator:</span>
               <select value={selectedInd} onChange={e => setSelectedInd(e.target.value)} className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-teal-500 max-w-[250px]">
                 {indicators.map(ind => (
-                  <option key={ind} value={ind}>{ind.replace(/_/g, ' ').toUpperCase()}</option>
+                  <option key={ind} value={ind}>{ind.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</option>
                 ))}
               </select>
             </div>
@@ -150,7 +150,7 @@ export default function SDMKesehatan() {
           <div className="mt-4">
             <RankChart 
               data={provData} 
-              indicators={indicators.map(ind => ({ key: ind, label: ind.replace(/_/g, ' ').toUpperCase(), isPercentage: false }))} 
+              indicators={indicators.map(ind => ({ key: ind, label: ind.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()), isPercentage: false }))} 
               defaultIndicator={selectedInd}
               title=""
             />
@@ -160,25 +160,25 @@ export default function SDMKesehatan() {
 
       <StatPanel
         stats={stats}
-        label={statIndic ? statIndic.replace(/_/g, ' ').toUpperCase() : ''}
+        label={statIndic ? statIndic.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : ''}
         rightElement={
           <select value={statIndic} onChange={e => setStatIndic(e.target.value)}
             className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-teal-400 max-w-[250px]">
             {indicators.map(ind => (
-              <option key={ind} value={ind}>{ind.replace(/_/g, ' ').toUpperCase()}</option>
+              <option key={ind} value={ind}>{ind.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</option>
             ))}
           </select>
         }
       />
 
       <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
-        <h3 className="font-semibold text-gray-800 mb-4" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Peta Persebaran: {selectedInd.replace(/_/g, ' ').toUpperCase()}</h3>
-        {selectedInd && <ChoroplethMap data={provData} indicatorKey={selectedInd} indicatorLabel={selectedInd.replace(/_/g, ' ').toUpperCase()} />}
+        <h3 className="font-semibold text-gray-800 mb-4" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Peta Persebaran: {selectedInd.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</h3>
+        {selectedInd && <ChoroplethMap data={provData} indicatorKey={selectedInd} indicatorLabel={selectedInd.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} />}
       </div>
 
       <CrosstabSection
         data={provData}
-        variables={indicators.map(ind => ({ key: ind, label: ind.replace(/_/g, ' ').toUpperCase() }))}
+        variables={indicators.map(ind => ({ key: ind, label: ind.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }))}
         defaultRowVar={indicators[0] || ''}
         defaultColVar={indicators[1] || indicators[0] || ''}
       />
