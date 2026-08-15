@@ -217,15 +217,17 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                           <input className="border px-2 py-1 w-full rounded focus:outline-none focus:ring-1 focus:ring-[#0F8F8B]" value={editData.value} onChange={e => setEditData({...editData, value: e.target.value})} />
                         ) : row.value}
                       </td>
-                      <td className="px-6 py-3 text-right space-x-3">
+                      <td className="px-6 py-3">
                         {editingId === row.id ? (
-                          <>
-                            <button onClick={() => handleSaveEdit(row.id, row)} className="text-green-600 hover:text-green-800 font-medium">Save</button>
-                            <button onClick={() => handleDelete(row.id)} className="text-red-500 hover:text-red-700 font-medium">Delete</button>
-                            <button onClick={() => setEditingId(null)} className="text-gray-500 hover:text-gray-700 font-medium">Cancel</button>
-                          </>
+                          <div className="flex items-center justify-end gap-2 flex-wrap">
+                            <button onClick={() => handleSaveEdit(row.id, row)} className="px-3 py-1.5 bg-green-50 text-green-700 hover:bg-green-100 rounded-md text-xs font-bold transition-colors shadow-sm border border-green-200">Save</button>
+                            <button onClick={() => handleDelete(row.id)} className="px-3 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-md text-xs font-bold transition-colors shadow-sm border border-red-200">Delete</button>
+                            <button onClick={() => setEditingId(null)} className="px-3 py-1.5 bg-gray-100 text-gray-600 hover:bg-gray-200 rounded-md text-xs font-bold transition-colors shadow-sm border border-gray-200">Cancel</button>
+                          </div>
                         ) : (
-                          <button onClick={() => handleEdit(row)} className="text-blue-500 hover:text-blue-700 font-medium">Edit</button>
+                          <div className="flex items-center justify-end">
+                            <button onClick={() => handleEdit(row)} className="px-3 py-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-md text-xs font-bold transition-colors shadow-sm border border-blue-200">Edit</button>
+                          </div>
                         )}
                       </td>
                     </tr>
