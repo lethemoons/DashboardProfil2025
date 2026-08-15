@@ -1,4 +1,4 @@
-export type TargetDirection = '>=' | '<=' | '<' | '>';
+export type TargetDirection = '>=' | '<=' | '<' | '>' | '=';
 
 export interface TargetConfig {
   indicator_name: string;
@@ -40,7 +40,7 @@ export const TARGETS: Record<string, TargetConfig> = {
 
   // === Kesehatan Ibu ===
   aki_angka: { indicator_name: 'Angka Kematian Ibu (AKI)', indicator_key: 'aki_angka', target_value: 100, target_unit: 'per 100.000 KH', target_direction: '<' },
-  k6_pct: { indicator_name: 'Pelayanan kesehatan ibu hamil/K6', indicator_key: 'k6_pct', target_value: 100, target_unit: '%', target_direction: '>=', isPercentage: true },
+  k6_pct: { indicator_name: 'Pelayanan kesehatan ibu hamil/K6', indicator_key: 'k6_pct', target_value: 100, target_unit: '%', target_direction: '=', isPercentage: true },
   pf_pct: { indicator_name: 'Pertolongan persalinan oleh nakes', indicator_key: 'pf_pct', target_value: 95, target_unit: '%', target_direction: '>=', isPercentage: true },
   kn_lengkap_pct: { indicator_name: 'Kunjungan Neonatal Lengkap', indicator_key: 'kn_lengkap_pct', target_value: 91, target_unit: '%', target_direction: '>=', isPercentage: true },
 
@@ -53,10 +53,10 @@ export const TARGETS: Record<string, TargetConfig> = {
   balita_ditimbang_pct: { indicator_name: 'Balita ditimbang/D-S', indicator_key: 'balita_ditimbang_pct', target_value: 80, target_unit: '%', target_direction: '>=', isPercentage: true },
   vit_a_bayi_pct: { indicator_name: 'Vitamin A bayi usia 6–11 bln', indicator_key: 'vit_a_bayi_pct', target_value: 91, target_unit: '%', target_direction: '>=', isPercentage: true },
   ttd_remaja_putri_pct: { indicator_name: 'Konsumsi TTD remaja putri', indicator_key: 'ttd_remaja_putri_pct', target_value: 65, target_unit: '%', target_direction: '>=', isPercentage: true },
-  pkg_sd_pct: { indicator_name: 'PKG siswa SD/MI', indicator_key: 'pkg_sd_pct', target_value: 100, target_unit: '%', target_direction: '>=', isPercentage: true },
-  pkg_smp_pct: { indicator_name: 'PKG siswa SMP/MTs', indicator_key: 'pkg_smp_pct', target_value: 100, target_unit: '%', target_direction: '>=', isPercentage: true },
-  pkg_sma_pct: { indicator_name: 'PKG siswa SMA/MA', indicator_key: 'pkg_sma_pct', target_value: 100, target_unit: '%', target_direction: '>=', isPercentage: true },
-  pkg_dasar_pct: { indicator_name: 'PKG usia pendidikan dasar', indicator_key: 'pkg_dasar_pct', target_value: 100, target_unit: '%', target_direction: '>=', isPercentage: true },
+  pkg_sd_pct: { indicator_name: 'PKG siswa SD/MI', indicator_key: 'pkg_sd_pct', target_value: 100, target_unit: '%', target_direction: '=', isPercentage: true },
+  pkg_smp_pct: { indicator_name: 'PKG siswa SMP/MTs', indicator_key: 'pkg_smp_pct', target_value: 100, target_unit: '%', target_direction: '=', isPercentage: true },
+  pkg_sma_pct: { indicator_name: 'PKG siswa SMA/MA', indicator_key: 'pkg_sma_pct', target_value: 100, target_unit: '%', target_direction: '=', isPercentage: true },
+  pkg_dasar_pct: { indicator_name: 'PKG usia pendidikan dasar', indicator_key: 'pkg_dasar_pct', target_value: 100, target_unit: '%', target_direction: '=', isPercentage: true },
 
   // === Imunisasi ===
   idl_pct: { indicator_name: 'Imunisasi dasar lengkap', indicator_key: 'idl_pct', target_value: 95, target_unit: '%', target_direction: '>=', isPercentage: true },
@@ -75,32 +75,32 @@ export const TARGETS: Record<string, TargetConfig> = {
   tbc_tsr_ro_pct: { indicator_name: 'TSR TB Resisten Obat', indicator_key: 'tbc_tsr_ro_pct', target_value: 80, target_unit: '%', target_direction: '>=', isPercentage: true },
   pneumonia_balita_ditemukan_pct: { indicator_name: 'Penemuan pneumonia balita', indicator_key: 'pneumonia_balita_ditemukan_pct', target_value: 75, target_unit: '%', target_direction: '>=', isPercentage: true },
   puskesmas_pneumonia_standar_pct: { indicator_name: 'Puskesmas tatalaksana pneumonia', indicator_key: 'puskesmas_pneumonia_standar_pct', target_value: 60, target_unit: '%', target_direction: '>=', isPercentage: true },
-  diare_semua_umur_ditemukan_pct: { indicator_name: 'Penemuan diare semua umur', indicator_key: 'diare_semua_umur_ditemukan_pct', target_value: 100, target_unit: '%', target_direction: '>=', isPercentage: true },
-  diare_balita_ditemukan_pct: { indicator_name: 'Penemuan diare balita', indicator_key: 'diare_balita_ditemukan_pct', target_value: 100, target_unit: '%', target_direction: '>=', isPercentage: true },
+  diare_semua_umur_ditemukan_pct: { indicator_name: 'Penemuan diare semua umur', indicator_key: 'diare_semua_umur_ditemukan_pct', target_value: 100, target_unit: '%', target_direction: '=', isPercentage: true },
+  diare_balita_ditemukan_pct: { indicator_name: 'Penemuan diare balita', indicator_key: 'diare_balita_ditemukan_pct', target_value: 100, target_unit: '%', target_direction: '=', isPercentage: true },
   diare_balita_standar_pct: { indicator_name: 'Pengobatan diare balita standar', indicator_key: 'diare_balita_standar_pct', target_value: 85, target_unit: '%', target_direction: '>=', isPercentage: true },
   odhiv_arv_pct: { indicator_name: 'ODHIV mendapat ARV', indicator_key: 'odhiv_arv_pct', target_value: 75, target_unit: '%', target_direction: '>=', isPercentage: true },
-  hepb_bumil_dd_pct: { indicator_name: 'Deteksi dini Hepatitis B ibu hamil', indicator_key: 'hepb_bumil_dd_pct', target_value: 100, target_unit: '%', target_direction: '>=', isPercentage: true },
+  hepb_bumil_dd_pct: { indicator_name: 'Deteksi dini Hepatitis B ibu hamil', indicator_key: 'hepb_bumil_dd_pct', target_value: 100, target_unit: '%', target_direction: '=', isPercentage: true },
   kusta_anak_pct: { indicator_name: 'Kasus kusta anak <15 th', indicator_key: 'kusta_anak_pct', target_value: 5, target_unit: '%', target_direction: '<', isPercentage: true },
   kusta_cacat2_pct: { indicator_name: 'Cacat tingkat 2 kusta', indicator_key: 'kusta_cacat2_pct', target_value: 5, target_unit: '%', target_direction: '<', isPercentage: true },
   kusta_rft_pct: { indicator_name: 'RFT kusta', indicator_key: 'kusta_rft_pct', target_value: 90, target_unit: '%', target_direction: '>=', isPercentage: true },
 
   // === PD3I ===
   tetanus_neonatorum_rate: { indicator_name: 'Tetanus neonatorum', indicator_key: 'tetanus_neonatorum_rate', target_value: 1, target_unit: 'per 1.000 KH', target_direction: '<' },
-  klb_24jam_pct: { indicator_name: 'KLB ditangani <24 jam', indicator_key: 'klb_24jam_pct', target_value: 100, target_unit: '%', target_direction: '>=', isPercentage: true },
+  klb_24jam_pct: { indicator_name: 'KLB ditangani <24 jam', indicator_key: 'klb_24jam_pct', target_value: 100, target_unit: '%', target_direction: '=', isPercentage: true },
 
   // === Penyakit Tular Vektor ===
   dbd_cfr: { indicator_name: 'CFR DBD', indicator_key: 'dbd_cfr', target_value: 0.5, target_unit: '%', target_direction: '<', isPercentage: true },
 
   // === Penyakit Tidak Menular ===
-  hipertensi_pelayanan_pct: { indicator_name: 'Pelayanan penderita hipertensi', indicator_key: 'hipertensi_pelayanan_pct', target_value: 100, target_unit: '%', target_direction: '>=', isPercentage: true },
+  hipertensi_pelayanan_pct: { indicator_name: 'Pelayanan penderita hipertensi', indicator_key: 'hipertensi_pelayanan_pct', target_value: 100, target_unit: '%', target_direction: '=', isPercentage: true },
   skrining_kanker_rahim_pct: { indicator_name: 'Skrining kanker leher rahim', indicator_key: 'skrining_kanker_rahim_pct', target_value: 75, target_unit: '%', target_direction: '>=', isPercentage: true },
-  odgj_pelayanan_pct: { indicator_name: 'Pelayanan ODGJ berat', indicator_key: 'odgj_pelayanan_pct', target_value: 100, target_unit: '%', target_direction: '>=', isPercentage: true },
+  odgj_pelayanan_pct: { indicator_name: 'Pelayanan ODGJ berat', indicator_key: 'odgj_pelayanan_pct', target_value: 100, target_unit: '%', target_direction: '=', isPercentage: true },
 
   // === Kesehatan Lingkungan ===
   sam_memenuhi_syarat_pct: { indicator_name: 'Sarana air minum standar', indicator_key: 'sam_memenuhi_syarat_pct', target_value: 70, target_unit: '%', target_direction: '>=', isPercentage: true },
   tfu_memenuhi_syarat_pct: { indicator_name: 'TFU memenuhi syarat', indicator_key: 'tfu_memenuhi_syarat_pct', target_value: 70, target_unit: '%', target_direction: '>=', isPercentage: true },
   tpp_memenuhi_syarat_pct: { indicator_name: 'TPP memenuhi syarat', indicator_key: 'tpp_memenuhi_syarat_pct', target_value: 70, target_unit: '%', target_direction: '>=', isPercentage: true },
-  desa_stop_babs_pct: { indicator_name: 'Pilar 1 STBM - Stop BABS', indicator_key: 'desa_stop_babs_pct', target_value: 100, target_unit: '%', target_direction: '>=', isPercentage: true },
+  desa_stop_babs_pct: { indicator_name: 'Pilar 1 STBM - Stop BABS', indicator_key: 'desa_stop_babs_pct', target_value: 100, target_unit: '%', target_direction: '=', isPercentage: true },
   desa_ctps_pct: { indicator_name: 'Pilar 2 STBM - CTPS', indicator_key: 'desa_ctps_pct', target_value: 75, target_unit: '%', target_direction: '>', isPercentage: true },
   desa_pammrt_pct: { indicator_name: 'Pilar 3 STBM - PAMMRT', indicator_key: 'desa_pammrt_pct', target_value: 75, target_unit: '%', target_direction: '>', isPercentage: true },
   desa_psrt_pct: { indicator_name: 'Pilar 4 STBM - PSRT', indicator_key: 'desa_psrt_pct', target_value: 75, target_unit: '%', target_direction: '>', isPercentage: true },
@@ -125,6 +125,8 @@ export function evaluateTarget(actualValue: number, indicatorKey: string): Targe
     status = actualValue < config.target_value ? 'tercapai' : 'belum_tercapai';
   } else if (config.target_direction === '>') {
     status = actualValue > config.target_value ? 'tercapai' : 'belum_tercapai';
+  } else if (config.target_direction === '=') {
+    status = actualValue === config.target_value ? 'tercapai' : 'belum_tercapai';
   }
 
   let text = '';
@@ -134,12 +136,18 @@ export function evaluateTarget(actualValue: number, indicatorKey: string): Targe
     } else {
       text = `${formattedDiff} ${unitText} di bawah target`;
     }
-  } else {
+  } else if (['<=', '<'].includes(config.target_direction)) {
     // For <= and < targets
     if (status === 'tercapai') {
       text = diff === 0 ? `Tepat di batas target` : `${formattedDiff} ${unitText} lebih rendah dari batas target`;
     } else {
       text = `${formattedDiff} ${unitText} melebih batas target maksimal`;
+    }
+  } else if (config.target_direction === '=') {
+    if (status === 'tercapai') {
+      text = `Tepat di target`;
+    } else {
+      text = actualValue < config.target_value ? `${formattedDiff} ${unitText} di bawah target` : `${formattedDiff} ${unitText} di atas target`;
     }
   }
 

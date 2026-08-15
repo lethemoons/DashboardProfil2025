@@ -224,8 +224,8 @@ export default function Beranda({ onNavigate }: BerandaProps) {
           <div className="lg:col-span-5 relative">
             <div className="relative rounded-2xl overflow-hidden shadow-lg border border-gray-100 group">
               <img
-                src="/bromo.jpg"
-                alt="Gunung Bromo Jawa Timur"
+                src="/dinkes.jpeg"
+                alt="Dinas Kesehatan Provinsi Jawa Timur"
                 className="w-full h-80 sm:h-96 object-cover object-center group-hover:scale-105 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent" />
@@ -559,40 +559,40 @@ export default function Beranda({ onNavigate }: BerandaProps) {
             </div>
           </div>
 
-          </div>
+        </div>
 
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 mt-16">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 mt-16">
+          <div>
+            <div className="text-xs font-bold tracking-wider uppercase text-teal-600 mb-1">Kemampuan Sistem</div>
+            <h2 className="text-2xl font-bold text-gray-900">Fitur Tambahan</h2>
+            <p className="text-sm text-gray-500 mt-1">Modul pendukung fungsionalitas dan navigasi dashboard</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Fitur 1 (Dashboard Interaktif) */}
+          <div
+            onClick={() => onNavigate('gambaran')}
+            className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-teal-200 transition-all duration-200 cursor-pointer group flex flex-col justify-between"
+          >
             <div>
-              <div className="text-xs font-bold tracking-wider uppercase text-teal-600 mb-1">Kemampuan Sistem</div>
-              <h2 className="text-2xl font-bold text-gray-900">Fitur Tambahan</h2>
-              <p className="text-sm text-gray-500 mt-1">Modul pendukung fungsionalitas dan navigasi dashboard</p>
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center text-teal-600 bg-teal-50 group-hover:bg-teal-600 group-hover:text-white transition-colors mb-3.5">
+                <LayoutDashboard size={20} />
+              </div>
+              <h3 className="font-bold text-sm text-gray-800 mb-1.5 group-hover:text-teal-600 transition-colors">
+                Dashboard Interaktif
+              </h3>
+              <p className="text-xs text-gray-500 leading-relaxed">
+                Tampilan visual komprehensif dengan metrik utama, grafik distribusi, dan rangkuman indikator.
+              </p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-gray-50 flex items-center justify-between text-[11px] font-medium text-teal-600">
+              <span>Buka Gambaran</span>
+              <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* Fitur 1 (Dashboard Interaktif) */}
-            <div
-              onClick={() => onNavigate('gambaran')}
-              className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-teal-200 transition-all duration-200 cursor-pointer group flex flex-col justify-between"
-            >
-              <div>
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center text-teal-600 bg-teal-50 group-hover:bg-teal-600 group-hover:text-white transition-colors mb-3.5">
-                  <LayoutDashboard size={20} />
-                </div>
-                <h3 className="font-bold text-sm text-gray-800 mb-1.5 group-hover:text-teal-600 transition-colors">
-                  Dashboard Interaktif
-                </h3>
-                <p className="text-xs text-gray-500 leading-relaxed">
-                  Tampilan visual komprehensif dengan metrik utama, grafik distribusi, dan rangkuman indikator.
-                </p>
-              </div>
-              <div className="mt-4 pt-3 border-t border-gray-50 flex items-center justify-between text-[11px] font-medium text-teal-600">
-                <span>Buka Gambaran</span>
-                <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
-              </div>
-            </div>
-
-            {/* Fitur 7 */}
+          {/* Fitur 7 */}
           <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-cyan-200 transition-all duration-200 group flex flex-col justify-between">
             <div>
               <div className="w-10 h-10 rounded-xl flex items-center justify-center text-cyan-600 bg-cyan-50 group-hover:bg-cyan-600 group-hover:text-white transition-colors mb-3.5">

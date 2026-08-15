@@ -14,7 +14,9 @@ import DataTable from '../components/DataTable'
 import RankChart from '../components/RankChart'
 import CrosstabSection from '../components/CrosstabSection'
 import RiskClusteringMap from '../components/RiskClusteringMap'
+import ChoroplethMap from '../components/ChoroplethMap'
 import { useAuth } from '../contexts/AuthContext'
+
 
 const RS_OPTIONS = [
   { key: 'bor', label: 'BOR — Bed Occupancy Rate (%)' },
@@ -42,6 +44,7 @@ export default function AksesMutu() {
   const [statIndic, setStatIndic] = useState('bor')
   const [corrX, setCorrX] = useState('bor')
   const [corrY, setCorrY] = useState('alos')
+  const [mapIndic, setMapIndic] = useState('bor')
 
   const data = useMemo(() => saranaKesehatan.filter(d => d.kabupaten !== 'PROV. JAWA TIMUR'), [saranaKesehatan])
 
@@ -136,6 +139,30 @@ export default function AksesMutu() {
           value={pctPuskesmas.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} 
           icon="💊" 
           color="#22c55e" 
+        />
+      </div>
+
+      {/* Choropleth Map */}
+      <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+          <h3 className="font-semibold text-gray-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Peta Sebaran Akses & Mutu Pelayanan Provinsi Jawa Timur</h3>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-gray-500 font-medium">Indikator:</span>
+            <select
+              value={mapIndic}
+              onChange={e => setMapIndic(e.target.value)}
+              className="text-xs font-medium border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-[#0FB0AA] bg-gray-50 text-gray-700"
+            >
+              {RS_OPTIONS.map(o => (
+                <option key={o.key} value={o.key}>{o.label}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+        <ChoroplethMap
+          data={data}
+          indicatorKey={mapIndic}
+          indicatorLabel={RS_OPTIONS.find(o => o.key === mapIndic)?.label ?? ''}
         />
       </div>
 

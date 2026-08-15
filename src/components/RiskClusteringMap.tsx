@@ -25,6 +25,9 @@ const RISK_COLORS = {
 };
 
 export default function RiskClusteringMap({ title, data, variables, directions, variableLabels }: RiskClusteringMapProps) {
+  // HIDDEN PER USER REQUEST (JANGAN DIHAPUS, CUKUP DI-HIDE)
+  if (true) return null;
+
   const [tooltip, setTooltip] = useState<{ text: string, x: number, y: number } | null>(null);
   const [hoveredKab, setHoveredKab] = useState<string | null>(null);
 
