@@ -615,10 +615,10 @@ export default function CrosstabSection({
                 df = {crosstabResult.chiSquareResult.df}
               </span>
               <span
-                className={`px-2.5 py-0.5 rounded-md font-mono font-bold border shadow-2xs ${
+                className={`px-2.5 py-0.5 rounded-md bg-white border border-gray-200 font-mono shadow-2xs ${
                   crosstabResult.chiSquareResult.isSignificant
-                    ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
-                    : 'bg-gray-100 text-gray-700 border-gray-300'
+                    ? 'text-emerald-700 font-semibold'
+                    : 'text-gray-700'
                 }`}
               >
                 p-value = {crosstabResult.chiSquareResult.pValue < 0.001 ? '< 0.001' : crosstabResult.chiSquareResult.pValue.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
