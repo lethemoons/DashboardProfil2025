@@ -252,9 +252,9 @@ export default function KesehatanAnak() {
             <YAxis tick={{ fontSize: 11 }} allowDecimals={false} />
             <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
             <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-            <Bar dataKey="neonatal" name="Neonatal" stackId="a" fill="#078FA5" ><LabelList dataKey="neonatal" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
-            <Bar dataKey="bayi" name="Bayi" stackId="a" fill="#9EAF24" ><LabelList dataKey="bayi" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
-            <Bar dataKey="balita" name="Balita" stackId="a" fill="#0F8F8B" radius={[4, 4, 0, 0]} ><LabelList dataKey="balita" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+            <Bar dataKey="neonatal" name="Neonatal" stackId="a" fill="#078FA5" ><LabelList dataKey="neonatal" position="center" style={{ fontSize: 10, fill: '#ffffff', fontWeight: 700, paintOrder: 'stroke' }} stroke="#078FA5" strokeWidth={2} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+            <Bar dataKey="bayi" name="Bayi" stackId="a" fill="#9EAF24" ><LabelList dataKey="bayi" position="center" style={{ fontSize: 10, fill: '#ffffff', fontWeight: 700, paintOrder: 'stroke' }} stroke="#9EAF24" strokeWidth={2} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+            <Bar dataKey="balita" name="Balita" stackId="a" fill="#0F8F8B" radius={[4, 4, 0, 0]} ><LabelList dataKey="balita" position="center" style={{ fontSize: 10, fill: '#ffffff', fontWeight: 700, paintOrder: 'stroke' }} stroke="#0F8F8B" strokeWidth={2} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
