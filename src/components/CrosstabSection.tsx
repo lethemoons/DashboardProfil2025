@@ -608,22 +608,16 @@ export default function CrosstabSection({
             </div>
 
             <div className="flex items-center gap-3 text-xs flex-wrap">
-              <span className="px-2.5 py-0.5 rounded-md bg-white border border-teal-200 font-mono text-teal-900 font-semibold shadow-2xs">
+              <span className="px-2.5 py-0.5 rounded-md bg-white border border-gray-200 font-mono text-gray-700 shadow-2xs">
                 χ² = {crosstabResult.chiSquareResult.chiSquare.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </span>
               <span className="px-2.5 py-0.5 rounded-md bg-white border border-gray-200 font-mono text-gray-700 shadow-2xs">
                 df = {crosstabResult.chiSquareResult.df}
               </span>
-              <span
-                className={`px-2.5 py-0.5 rounded-md bg-white border border-gray-200 font-mono shadow-2xs ${
-                  crosstabResult.chiSquareResult.isSignificant
-                    ? 'text-emerald-700 font-semibold'
-                    : 'text-gray-700'
-                }`}
-              >
+              <span className="px-2.5 py-0.5 rounded-md bg-white border border-gray-200 font-mono text-gray-700 shadow-2xs">
                 p-value = {crosstabResult.chiSquareResult.pValue < 0.001 ? '< 0.001' : crosstabResult.chiSquareResult.pValue.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
               </span>
-              <span className="px-2.5 py-0.5 rounded-md bg-white border border-gray-200 font-mono text-gray-600 text-[11px] shadow-2xs" title="Cramér's V (Ukuran Pengaruh)">
+              <span className="px-2.5 py-0.5 rounded-md bg-white border border-gray-200 font-mono text-gray-700 shadow-2xs" title="Cramér's V (Ukuran Pengaruh)">
                 V = {crosstabResult.chiSquareResult.cramerV.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </span>
             </div>
