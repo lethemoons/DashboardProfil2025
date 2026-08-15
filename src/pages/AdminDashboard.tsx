@@ -12,6 +12,8 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [uploadingExcel, setUploadingExcel] = useState(false)
   const [importYear, setImportYear] = useState(new Date().getFullYear())
   const [showUploadForm, setShowUploadForm] = useState(false)
+  const [editingId, setEditingId] = useState<number | null>(null)
+  const [editData, setEditData] = useState({ value: '', metric: '', no: '' })
   
   const { data, total, loading, error, refetch } = useAdminData(page, limit, search)
   const fileInput = useRef<HTMLInputElement>(null)
@@ -19,6 +21,26 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value)
     setPage(1)
+  }
+
+  const handleEdit = (row: any) => {
+    setEditingId(row.id)
+    setEditData({ value: row.value, metric: row.metric, no: row.no })
+  }
+
+  const handleSaveEdit = async (id: number, row: any) => {
+    try {
+      await api.put(`/admin/data/${id}`, {
+        ...row,
+        value: editData.value,
+        metric: editData.metric,
+        no: editData.no
+      })
+      setEditingId(null)
+      refetch()
+    } catch (err: any) {
+      alert(err.message || 'Failed to update')
+    }
   }
 
   const handleDelete = async (id: number) => {
@@ -179,12 +201,32 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                     <tr key={row.id} className="hover:bg-gray-50">
                       <td className="px-6 py-3">{row.id}</td>
                       <td className="px-6 py-3">{row.tableNo}</td>
-                      <td className="px-6 py-3">{row.no}</td>
+                      <td className="px-6 py-3">
+                        {editingId === row.id ? (
+                          <input className="border px-2 py-1 w-full rounded focus:outline-none focus:ring-1 focus:ring-[#0F8F8B]" value={editData.no} onChange={e => setEditData({...editData, no: e.target.value})} />
+                        ) : row.no}
+                      </td>
                       <td className="px-6 py-3">{row.kabupaten}</td>
-                      <td className="px-6 py-3">{row.metric}</td>
-                      <td className="px-6 py-3 font-medium">{row.value}</td>
-                      <td className="px-6 py-3 text-right space-x-2">
-                        <button onClick={() => handleDelete(row.id)} className="text-red-500 hover:text-red-700">Delete</button>
+                      <td className="px-6 py-3">
+                        {editingId === row.id ? (
+                          <input className="border px-2 py-1 w-full rounded focus:outline-none focus:ring-1 focus:ring-[#0F8F8B]" value={editData.metric} onChange={e => setEditData({...editData, metric: e.target.value})} />
+                        ) : row.metric}
+                      </td>
+                      <td className="px-6 py-3 font-medium">
+                        {editingId === row.id ? (
+                          <input className="border px-2 py-1 w-full rounded focus:outline-none focus:ring-1 focus:ring-[#0F8F8B]" value={editData.value} onChange={e => setEditData({...editData, value: e.target.value})} />
+                        ) : row.value}
+                      </td>
+                      <td className="px-6 py-3 text-right space-x-3">
+                        {editingId === row.id ? (
+                          <>
+                            <button onClick={() => handleSaveEdit(row.id, row)} className="text-green-600 hover:text-green-800 font-medium">Save</button>
+                            <button onClick={() => handleDelete(row.id)} className="text-red-500 hover:text-red-700 font-medium">Delete</button>
+                            <button onClick={() => setEditingId(null)} className="text-gray-500 hover:text-gray-700 font-medium">Cancel</button>
+                          </>
+                        ) : (
+                          <button onClick={() => handleEdit(row)} className="text-blue-500 hover:text-blue-700 font-medium">Edit</button>
+                        )}
                       </td>
                     </tr>
                   ))}

@@ -24,7 +24,7 @@ function renderFormattedText(text: string): ReactNode {
   })
 }
 
-export default function InsightBox({ insights, children, title = 'INSIGHT OTOMATIS' }: Props) {
+export default function InsightBox({ insights, children, title = 'KESIMPULAN SINGKAT' }: Props) {
   if ((!insights || insights.length === 0) && !children) return null
   
   return (

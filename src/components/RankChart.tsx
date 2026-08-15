@@ -239,7 +239,7 @@ export default function RankChart({ data, indicators, defaultIndicator, title = 
           <div className="w-6 h-6 rounded-full bg-[#0F8F8B] text-white flex items-center justify-center font-serif text-[13px] font-bold">
             i
           </div>
-          <span className="text-[#0F8F8B] font-bold text-sm tracking-wide">INSIGHT OTOMATIS</span>
+          <span className="text-[#0F8F8B] font-bold text-sm tracking-wide">KESIMPULAN SINGKAT</span>
         </div>
         <div className="flex items-start gap-2 ml-1">
           <div className="w-1.5 h-1.5 rounded-full bg-[#0F8F8B] mt-1.5 flex-shrink-0" />

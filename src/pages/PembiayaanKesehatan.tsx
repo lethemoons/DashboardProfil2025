@@ -103,7 +103,7 @@ export default function PembiayaanKesehatan() {
           </div>
           {(() => {
             const jknEval = evaluateTarget(78.8, 'jkn_aktif_pct');
-            if (!jknEval) return null;
+            if (!jknEval || !isAdmin) return null;
             return (
               <div className={`mt-3 flex flex-col gap-1 w-full text-left p-3 rounded-lg border ${jknEval.status === 'tercapai' ? 'border-[#0F8F8B]/20 bg-[#0F8F8B]/5' : 'border-[#ef4444]/20 bg-[#ef4444]/5'}`}>
                 <div className="flex items-center justify-between">
