@@ -157,8 +157,12 @@ export default function TularVektor() {
                 <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} />
                 <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
                 <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-                <Bar yAxisId="left" dataKey="kasus" name="Kasus DBD" fill="#078FA5" radius={[3, 3, 0, 0]} />
-                <Line yAxisId="right" type="monotone" dataKey="cfr" name="CFR (%)" stroke="#9EAF24" strokeWidth={2} dot={{ r: 3 }} />
+                <Bar yAxisId="left" dataKey="kasus" name="Kasus DBD" fill="#078FA5" radius={[3, 3, 0, 0]}>
+                  <LabelList dataKey="kasus" position="insideTop" offset={8} style={{ fontSize: 10, fill: '#ffffff', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} />
+                </Bar>
+                <Line yAxisId="right" type="monotone" dataKey="cfr" name="CFR (%)" stroke="#9EAF24" strokeWidth={2} dot={{ r: 3 }}>
+                  <LabelList dataKey="cfr" position="top" offset={8} style={{ fontSize: 10, fill: '#4d590c', fontWeight: 800, paintOrder: 'stroke' }} stroke="#ffffff" strokeWidth={3} strokeLinejoin="round" formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 2 }) + '%'} />
+                </Line>
               </ComposedChart>
             </ResponsiveContainer>
           </div>
