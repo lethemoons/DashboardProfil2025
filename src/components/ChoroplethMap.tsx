@@ -23,6 +23,8 @@ export default function ChoroplethMap({ data, indicatorKey, indicatorLabel }: Ch
   const [tooltip, setTooltip] = useState<{ text: string, x: number, y: number, value?: number } | null>(null);
   const [hoveredKab, setHoveredKab] = useState<string | null>(null);
 
+  const [showLabels, setShowLabels] = useState(false);
+
   // Compute map data and color scale
   const { mapData, min, max, avg, highKab, lowKab, countAbove } = useMemo(() => {
     let min = Infinity;
@@ -72,10 +74,23 @@ export default function ChoroplethMap({ data, indicatorKey, indicatorLabel }: Ch
   return (
     <div className="flex flex-col gap-5">
       <div className="relative w-full h-[500px] bg-white rounded-xl overflow-hidden flex flex-col md:flex-row border border-gray-100 shadow-sm relative">
+        
+        {/* Toggle Label Button */}
+        <div className="absolute top-4 left-4 z-10">
+          <button
+            onClick={() => setShowLabels(!showLabels)}
+            className="flex items-center gap-2 px-3 py-2 bg-white/90 backdrop-blur border border-gray-200 rounded-xl shadow-sm hover:bg-white text-xs font-semibold text-gray-700 transition-all focus:outline-none"
+          >
+            <div className={`w-8 h-4 rounded-full p-0.5 transition-colors ${showLabels ? 'bg-[#0fb0aa]' : 'bg-gray-300'}`}>
+              <div className={`w-3 h-3 bg-white rounded-full shadow-sm transform transition-transform ${showLabels ? 'translate-x-4' : 'translate-x-0'}`} />
+            </div>
+            Label Kabupaten/Kota
+          </button>
+        </div>
 
         {tooltip && (
           <div
-            className="absolute z-10 bg-white p-3 rounded-xl shadow-lg border border-gray-100 pointer-events-none transform -translate-x-1/2 -translate-y-[120%] min-w-[180px]"
+            className="absolute z-20 bg-white p-3 rounded-xl shadow-lg border border-gray-100 pointer-events-none transform -translate-x-1/2 -translate-y-[120%] min-w-[180px]"
             style={{ left: tooltip.x, top: tooltip.y }}
           >
             <div className="text-sm font-bold text-gray-800 mb-1">{tooltip.text}</div>
@@ -110,7 +125,7 @@ export default function ChoroplethMap({ data, indicatorKey, indicatorLabel }: Ch
 
               return (
                 <path
-                  key={feature.id || i}
+                  key={`path-${feature.id || i}`}
                   d={pathGenerator(feature) || ''}
                   fill={isHovered ? '#078FA5' : fill}
                   stroke="#FFFFFF"
@@ -139,6 +154,56 @@ export default function ChoroplethMap({ data, indicatorKey, indicatorLabel }: Ch
                     setTooltip(null);
                   }}
                 />
+              );
+            })}
+
+            {/* Labels */}
+            {showLabels && (jatimGeo as any).features.map((feature: any, i: number) => {
+              const kabName = getKabupatenName(feature.properties, feature.id);
+              const centroid = pathGenerator.centroid(feature);
+              if (!centroid || isNaN(centroid[0]) || isNaN(centroid[1])) return null;
+
+              let [x, y] = centroid;
+              
+              // Handle overlapping labels in Jatim
+              if (kabName === 'Kota Mojokerto') { y -= 6; }
+              else if (kabName === 'Mojokerto') { y += 6; }
+              else if (kabName === 'Kota Pasuruan') { y -= 6; }
+              else if (kabName === 'Pasuruan') { y += 6; }
+              else if (kabName === 'Kota Probolinggo') { y -= 6; }
+              else if (kabName === 'Probolinggo') { y += 6; }
+              else if (kabName === 'Kota Blitar') { y -= 6; }
+              else if (kabName === 'Blitar') { y += 6; }
+              else if (kabName === 'Kota Kediri') { y -= 6; }
+              else if (kabName === 'Kediri') { y += 6; }
+              else if (kabName === 'Kota Malang') { y -= 6; }
+              else if (kabName === 'Malang') { y += 6; }
+              else if (kabName === 'Kota Madiun') { y -= 6; }
+              else if (kabName === 'Madiun') { y += 6; }
+              else if (kabName === 'Kota Surabaya') { y -= 5; x -= 2; }
+              else if (kabName === 'Sidoarjo') { y += 5; }
+              else if (kabName === 'Kota Batu') { y -= 2; x -= 4; }
+
+              const labelText = kabName.replace('Kota ', 'K. ');
+
+              return (
+                <text
+                  key={`label-${feature.id || i}`}
+                  x={x}
+                  y={y}
+                  textAnchor="middle"
+                  alignmentBaseline="central"
+                  fontSize="8.5"
+                  fontWeight="700"
+                  fill="#1f2937"
+                  stroke="#ffffff"
+                  strokeWidth="3"
+                  paintOrder="stroke"
+                  strokeLinejoin="round"
+                  style={{ pointerEvents: 'none', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+                >
+                  {labelText}
+                </text>
               );
             })}
           </svg>
