@@ -16,9 +16,10 @@ import PenyakitTidakMenular from './pages/PenyakitTidakMenular'
 import KesehatanLingkungan from './pages/KesehatanLingkungan'
 import AdminLogin from './pages/AdminLogin'
 import AdminDashboard from './pages/AdminDashboard'
+import AnalisisStatistik from './pages/AnalisisStatistik'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { FilterProvider, useFilter } from './contexts/FilterContext'
-import { Home, LayoutDashboard, Building2, Users, Receipt, Baby, Stethoscope, Droplets, ChevronDown, ChevronRight, ChevronLeft, Settings } from 'lucide-react'
+import { Home, LayoutDashboard, Building2, Users, Receipt, Baby, Stethoscope, Droplets, ChevronDown, ChevronRight, ChevronLeft, Settings, PieChart } from 'lucide-react'
 
 type PageId =
   | 'beranda'
@@ -29,6 +30,7 @@ type PageId =
   | 'ibu' | 'anak' | 'usia_produktif'
   | 'penyakit_menular' | 'pd3i' | 'tular_vektor' | 'ptm'
   | 'lingkungan'
+  | 'analisis_statistik'
   | 'admin'
 
 interface NavItem {
@@ -36,6 +38,7 @@ interface NavItem {
   label: string
   icon: React.ElementType
   children?: { id: PageId; label: string }[]
+  requireAdmin?: boolean
 }
 
 const NAV: NavItem[] = [
@@ -69,6 +72,7 @@ const NAV: NavItem[] = [
     ],
   },
   { id: 'lingkungan', label: 'Kesehatan Lingkungan', icon: Droplets },
+  { id: 'analisis_statistik', label: 'Analisis Statistik', icon: PieChart, requireAdmin: true },
   { id: 'admin', label: 'Admin Dashboard', icon: Settings },
 ]
 
@@ -88,6 +92,7 @@ const SECTION_LABELS: Partial<Record<PageId, string>> = {
   tular_vektor: 'Penyakit Tular Vektor & Zoonotik',
   ptm: 'Penyakit Tidak Menular',
   lingkungan: 'Kesehatan Lingkungan',
+  analisis_statistik: 'Analisis Statistik',
   admin: 'Admin Dashboard',
 }
 
@@ -113,6 +118,7 @@ const PAGE_TO_NAV_GROUP: Record<PageId, PageId> = {
   ibu: 'ibu', anak: 'ibu', usia_produktif: 'ibu',
   penyakit_menular: 'penyakit_menular', pd3i: 'penyakit_menular', tular_vektor: 'penyakit_menular', ptm: 'penyakit_menular',
   lingkungan: 'lingkungan',
+  analisis_statistik: 'analisis_statistik',
   admin: 'admin'
 }
 
@@ -143,8 +149,8 @@ function MainApp() {
   const { year, setYear, availableYears } = useFilter()
 
   // --- Admin Routing Logic ---
-  if (page === 'admin' && !(isAuthenticated && isAdmin)) {
-    return <AdminLogin onLogin={() => setPage('admin')} onBack={() => setPage('beranda')} />
+  if ((page === 'admin' || page === 'analisis_statistik') && !(isAuthenticated && isAdmin)) {
+    return <AdminLogin onLogin={() => setPage(page)} onBack={() => setPage('beranda')} />
   }
 
   return (
@@ -173,7 +179,7 @@ function MainApp() {
 
         {/* Nav */}
         <nav className="flex-1 overflow-y-auto py-3 px-2 space-y-0.5">
-          {NAV.map(item => {
+          {NAV.filter(item => !item.requireAdmin || (isAuthenticated && isAdmin)).map(item => {
             const isGroupActive = activeGroup === item.id
             const isExpanded = expanded.has(item.id)
             return (
@@ -301,6 +307,7 @@ function MainApp() {
           {page === 'tular_vektor' && <TularVektor />}
           {page === 'ptm' && <PenyakitTidakMenular />}
           {page === 'lingkungan' && <KesehatanLingkungan />}
+          {page === 'analisis_statistik' && isAuthenticated && isAdmin && <AnalisisStatistik />}
           {page === 'admin' && isAuthenticated && isAdmin && (
             <AdminDashboard onLogout={() => {
               logout()
