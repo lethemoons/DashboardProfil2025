@@ -20,7 +20,7 @@ type RawDataRow = {
 // This allows all dashboard pages to use clean key names while
 // the raw CSV/DB stores verbose or ambiguous metric names.
 // ============================================================
-const TABLE_METRIC_ALIASES: Record<string, string> = {
+export const TABLE_METRIC_ALIASES: Record<string, string> = {
   // === TABLE 6: GDR / NDR ===
   '6_gross_death_rate_l_+_p':   'gdr',
   '6_net_death_rate_l_+_p':     'ndr',

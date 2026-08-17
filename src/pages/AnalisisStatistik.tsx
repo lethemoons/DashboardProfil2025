@@ -3,7 +3,7 @@ import {
   ScatterChart, Scatter, XAxis, YAxis, Tooltip, ResponsiveContainer,
   CartesianGrid
 } from 'recharts'
-import { useDashboardData } from '../hooks/useDashboardData'
+import { useDashboardData, TABLE_METRIC_ALIASES } from '../hooks/useDashboardData'
 import { pearsonR } from '../utils/stats'
 import { generateCorrelationInsight } from '../utils/insightGenerator'
 import CrosstabSection, { VariableOption } from '../components/CrosstabSection'
@@ -11,6 +11,17 @@ import InsightBox from '../components/InsightBox'
 
 const IGNORED_KEYS = new Set([
   'id', 'no', 'tableNo', 'kabupaten', 'name', 'createdAt', 'updatedAt', 'tahun', 'metric', 'value', 'table_no'
+])
+
+const EXTRA_ALLOWED_KEYS = [
+  'kepadatan_penduduk_per_km2_desa_', 'jumlah_penduduk_desa_', 'jumlah_desa_', 'jumlah_rumah_tangga_desa_', 'luas_wilayah_km2',
+  'jumlah_posyandu_siklus_hidup_aktif', 'jumlah_posyandu_siklus_hidup_tidak_aktif', 'jumlah_posyandu_siklus_hidup', 'posyandu_lansia',
+  'rs_umum', 'rs_khusus', 'puskesmas_rawat_inap', 'puskesmas_non_rawat_inap', 'puskesmas_pembantu', 'klinik_pratama', 'klinik_utama', 'panti_sehat', 'griya_sehat', 'apotek', 'toko_obat', 'industri_obat_tradisional', 'usaha_kecil_mikro_obat_tradisional', 'toko_alkes', 'industri_kosmetika', 'pedagang_besar_farmasi', 'industri_farmasi', 'distributor_alat_kesehatan', 'produksi_alat_kesehatan', 'produksi_pkrt', 'tempat_praktik_mandiri_dokter', 'tempat_praktik_mandiri_dokter_gigi', 'tempat_praktik_mandiri_dokter_spesialis', 'tempat_praktik_mandiri_bidan', 'tempat_praktik_mandiri_perawat', 'unit_pengelola_darah', 'tahun_2025_ketersediaan_obat_esensial_dan_vaksin_irl', 'jumlah_kf1', 'jumlah_kf_lengkap', 'kf1_pct', 'kf_lengkap_pct', 'jumlah_nifas_vit_a', 'nifas_vit_a_pct', 'jumlah_ibu_bersalin_nifas', 'laboratorium_kesehatan'
+]
+
+const ALLOWED_KEYS = new Set([
+  ...Object.values(TABLE_METRIC_ALIASES),
+  ...EXTRA_ALLOWED_KEYS
 ])
 
 function formatKeyToLabel(key: string): string {
@@ -48,7 +59,7 @@ export default function AnalisisStatistik() {
 
     data.forEach(row => {
       Object.keys(row).forEach(k => {
-        if (!IGNORED_KEYS.has(k) && typeof row[k] !== 'function') {
+        if (!IGNORED_KEYS.has(k) && typeof row[k] !== 'function' && ALLOWED_KEYS.has(k)) {
           keySet.add(k)
         }
       })
