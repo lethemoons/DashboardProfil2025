@@ -8,6 +8,7 @@ import {
 } from 'recharts'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { evaluateTarget, TARGETS } from '../utils/targets'
+import { TargetRefLabel } from '../components/TargetRefLabel'
 import { descStats, pearsonR } from '../utils/stats'
 import { generateCorrelationInsight, generateDynamicBarInsight } from '../utils/insightGenerator'
 import FilterBar from '../components/FilterBar'
@@ -252,9 +253,9 @@ export default function KesehatanIbu() {
             <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={80} interval={0} />
             <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
             <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-            <Bar dataKey="bersalin" name="Saat Bersalin" stackId="a" fill="#078FA5" ><LabelList dataKey="bersalin" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
-            <Bar dataKey="hamil" name="Saat Hamil" stackId="a" fill="#9EAF24" ><LabelList dataKey="hamil" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
-            <Bar dataKey="nifas" name="Saat Nifas" stackId="a" fill="#0F8F8B" radius={[0, 4, 4, 0]} ><LabelList dataKey="nifas" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+            <Bar dataKey="bersalin" name="Saat Bersalin" stackId="a" fill="#078FA5" ><LabelList dataKey="bersalin" position="center" style={{ fontSize: 10, fill: '#ffffff', fontWeight: 700, paintOrder: 'stroke' }} stroke="#078FA5" strokeWidth={2} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+            <Bar dataKey="hamil" name="Saat Hamil" stackId="a" fill="#9EAF24" ><LabelList dataKey="hamil" position="center" style={{ fontSize: 10, fill: '#ffffff', fontWeight: 700, paintOrder: 'stroke' }} stroke="#9EAF24" strokeWidth={2} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+            <Bar dataKey="nifas" name="Saat Nifas" stackId="a" fill="#0F8F8B" radius={[0, 4, 4, 0]} ><LabelList dataKey="nifas" position="center" style={{ fontSize: 10, fill: '#ffffff', fontWeight: 700, paintOrder: 'stroke' }} stroke="#0F8F8B" strokeWidth={2} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
           </BarChart>
         </ResponsiveContainer>
         <InsightBox insights={[`Grafik di atas menunjukkan sebaran kasus kematian ibu di setiap wilayah. Hal ini menjadi peringatan akan pentingnya pemantauan kondisi ibu secara terus-menerus mulai dari masa kehamilan, saat proses melahirkan, hingga masa nifas.`]} />
@@ -279,10 +280,28 @@ export default function KesehatanIbu() {
         </div>
         <ResponsiveContainer width="100%" height={chartFilter === 'all' ? 800 : (chartFilter === '20' ? 500 : 350)}>
           <BarChart data={chartData} layout="vertical" margin={{ left: 95, right: 80 }}>
-            <XAxis type="number" tick={{ fontSize: 11 }} domain={[0, 100]} />
+            <XAxis type="number" tick={{ fontSize: 11 }} domain={[0, (dataMax: number) => {
+              const tgt = TARGETS[indic] || (indic === 'persalinan_fasyankes_pct' ? TARGETS['pf_pct'] : null);
+              return tgt ? Math.max(dataMax, tgt.target_value * 1.1) : 100;
+            }]} />
             <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} interval={0} />
             <Tooltip content={<CustomTooltip />} />
-
+            {(TARGETS[indic] || (indic === 'persalinan_fasyankes_pct' ? TARGETS['pf_pct'] : null)) && (() => {
+              const tgt = TARGETS[indic] || (indic === 'persalinan_fasyankes_pct' ? TARGETS['pf_pct'] : null);
+              const maxVal = Number((chartData[0] as any)?.[indic]) || 0;
+              return (
+                <ReferenceLine 
+                  x={tgt.target_value} 
+                  stroke={tgt.target_direction === '>=' || tgt.target_direction === '>' ? '#0F8F8B' : '#ef4444'}
+                  strokeDasharray="3 3"
+                  strokeWidth={2}
+                  label={<TargetRefLabel
+                    value={`${['<=', '<'].includes(tgt.target_direction) ? 'Batas Maks' : 'Target Min'}: ${tgt.target_value}${tgt.isPercentage ? '%' : ''}`}
+                    side={maxVal > tgt.target_value ? 'left' : 'right'}
+                  />}
+                />
+              );
+            })()}
             <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]} fill="#0F8F8B" ><LabelList dataKey={indic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
           </BarChart>
         </ResponsiveContainer>

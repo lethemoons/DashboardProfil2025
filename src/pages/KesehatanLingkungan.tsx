@@ -6,6 +6,7 @@ import {
   CartesianGrid, Legend, Cell, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ReferenceLine
 , LabelList } from 'recharts'
 import { evaluateTarget, TARGETS } from '../utils/targets'
+import { TargetRefLabel } from '../components/TargetRefLabel'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
 import { generateCorrelationInsight, generateDynamicBarInsight } from '../utils/insightGenerator'
@@ -117,7 +118,10 @@ export default function KesehatanLingkungan() {
           <div style={{ minWidth: keslingFilter === 'all' ? 800 : '100%', height: keslingFilter === 'all' ? 800 : (keslingFilter === '20' ? 600 : 400) }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} layout="vertical" margin={{ left: 95, right: 80 }}>
-                <XAxis type="number" tick={{ fontSize: 11 }} domain={indic.endsWith('_pct') ? [0, 100] : ['auto', 'auto']} />
+                <XAxis type="number" tick={{ fontSize: 11 }} domain={[0, (dataMax: number) => {
+                  const tgt = TARGETS[indic] || (indic === 'air_minum_memenuhi_syarat_pct' ? TARGETS['sam_memenuhi_syarat_pct'] : null);
+                  return tgt ? Math.max(dataMax, tgt.target_value * 1.1) : indic.endsWith('_pct') ? 100 : 'auto';
+                }]} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} interval={0} />
                 <Tooltip 
                   formatter={(v: any) => [
@@ -134,13 +138,7 @@ export default function KesehatanLingkungan() {
                       stroke={tgt.target_direction === '>=' || tgt.target_direction === '>' ? '#0F8F8B' : '#ef4444'}
                       strokeDasharray="3 3"
                       strokeWidth={2}
-                      label={{
-                        position: 'insideTopRight',
-                        value: `${['<=', '<'].includes(tgt.target_direction) ? 'Batas Maksimum' : 'Target Minimum'}: ${tgt.target_value}${tgt.isPercentage ? '%' : ''}`,
-                        fill: '#4B5563',
-                        fontSize: 11,
-                        fontWeight: 600
-                      }}
+                      label={<TargetRefLabel value={`${['<=', '<'].includes(tgt.target_direction) ? 'Batas Maks' : 'Target Min'}: ${tgt.target_value}${tgt.isPercentage ? '%' : ''}`} />}
                     />
                   )
                 })()}

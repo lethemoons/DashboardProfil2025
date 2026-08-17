@@ -1,8 +1,10 @@
 import { useState, useMemo } from 'react'
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  CartesianGrid, Legend, Cell, ScatterChart, Scatter
+  CartesianGrid, Legend, Cell, ScatterChart, Scatter, ReferenceLine
 , LabelList } from 'recharts'
+import { TARGETS } from '../utils/targets'
+import { TargetRefLabel } from '../components/TargetRefLabel'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
 import FilterBar from '../components/FilterBar'
@@ -115,9 +117,28 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
             </div>
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={menularChart} layout="vertical" margin={{ left: 95, right: 80 }}>
-                <XAxis type="number" tick={{ fontSize: 11 }} />
+                <XAxis type="number" domain={[0, (dataMax: number) => {
+                  const tgt = TARGETS[menularIndic] || (menularIndic === 'tbc_sukses_pct' ? TARGETS['tbc_tsr_pct'] : menularIndic === 'arv_pct' ? TARGETS['odhiv_arv_pct'] : null);
+                  return tgt ? Math.max(dataMax, tgt.target_value * 1.1) : 'auto';
+                }]} tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
                 <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
+                {(TARGETS[menularIndic] || (menularIndic === 'tbc_sukses_pct' ? TARGETS['tbc_tsr_pct'] : menularIndic === 'arv_pct' ? TARGETS['odhiv_arv_pct'] : null)) && (() => {
+                  const tgt = TARGETS[menularIndic] || (menularIndic === 'tbc_sukses_pct' ? TARGETS['tbc_tsr_pct'] : menularIndic === 'arv_pct' ? TARGETS['odhiv_arv_pct'] : null);
+                      const maxVal = Number((menularChart[0] as any)?.[menularIndic] ?? (menularChart[0] as any)?.value) || 0;
+                      return (
+                    <ReferenceLine 
+                      x={tgt.target_value} 
+                      stroke={tgt.target_direction === '>=' || tgt.target_direction === '>' ? '#0F8F8B' : '#ef4444'}
+                      strokeDasharray="3 3"
+                      strokeWidth={2}
+                      label={<TargetRefLabel
+                        value={`${['<=', '<'].includes(tgt.target_direction) ? 'Batas Maks' : 'Target Min'}: ${tgt.target_value}${tgt.isPercentage ? '%' : ''}`}
+                        side={maxVal > tgt.target_value ? 'left' : 'right'}
+                      />}
+                    />
+                  )
+                })()}
                 <Bar dataKey={menularIndic} radius={[0, 6, 6, 0]}>
                   {menularChart.map((_, i) => <Cell key={i} fill={i === 0 ? '#ef4444' : i < 5 ? '#fca5a5' : '#fee2e2'} />)}
                 <LabelList dataKey="value" position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
@@ -216,9 +237,21 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
             </div>
             <ResponsiveContainer width="100%" height={260}>
               <BarChart data={[...pd3iData].sort((a, b) => (b[vektorIndic] as number) - (a[vektorIndic] as number)).slice(0, 15)} layout="vertical" margin={{ left: 95, right: 80 }}>
-                <XAxis type="number" tick={{ fontSize: 11 }} />
+                <XAxis type="number" domain={[0, (dataMax: number) => TARGETS[vektorIndic] ? Math.max(dataMax, TARGETS[vektorIndic].target_value * 1.1) : 'auto']} tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
                 <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
+                {TARGETS[vektorIndic] && (
+                  <ReferenceLine 
+                    x={TARGETS[vektorIndic].target_value} 
+                    stroke={TARGETS[vektorIndic].target_direction === '>=' || TARGETS[vektorIndic].target_direction === '>' ? '#0F8F8B' : '#ef4444'}
+                    strokeDasharray="3 3"
+                    strokeWidth={2}
+                      label={<TargetRefLabel
+                        value={`${['<=', '<'].includes(TARGETS[vektorIndic].target_direction) ? 'Batas Maks' : 'Target Min'}: ${TARGETS[vektorIndic].target_value}${TARGETS[vektorIndic].isPercentage ? '%' : ''}`}
+                        side={(Number([...pd3iData].sort((a,b) => (b[vektorIndic] as number) - (a[vektorIndic] as number))[0]?.[vektorIndic]) || 0) > TARGETS[vektorIndic].target_value ? 'left' : 'right'}
+                      />}
+                  />
+                )}
                 <Bar dataKey={vektorIndic} radius={[0, 6, 6, 0]} fill="#ef4444" ><LabelList dataKey={vektorIndic} position="top" style={{ fontSize: 9, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
               </BarChart>
             </ResponsiveContainer>
@@ -254,9 +287,21 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
             </div>
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={ptmChart} layout="vertical" margin={{ left: 95, right: 80 }}>
-                <XAxis type="number" tick={{ fontSize: 11 }} />
+                <XAxis type="number" domain={[0, (dataMax: number) => TARGETS[ptmIndic] ? Math.max(dataMax, TARGETS[ptmIndic].target_value * 1.1) : 'auto']} tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
                 <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
+                {TARGETS[ptmIndic] && (
+                  <ReferenceLine 
+                    x={TARGETS[ptmIndic].target_value} 
+                    stroke={TARGETS[ptmIndic].target_direction === '>=' || TARGETS[ptmIndic].target_direction === '>' ? '#0F8F8B' : '#ef4444'}
+                    strokeDasharray="3 3"
+                    strokeWidth={2}
+                      label={<TargetRefLabel
+                        value={`${['<=', '<'].includes(TARGETS[ptmIndic].target_direction) ? 'Batas Maks' : 'Target Min'}: ${TARGETS[ptmIndic].target_value}${TARGETS[ptmIndic].isPercentage ? '%' : ''}`}
+                        side={(Number((ptmChart[0] as any)?.[ptmIndic] ?? (ptmChart[0] as any)?.value) || 0) > TARGETS[ptmIndic].target_value ? 'left' : 'right'}
+                      />}
+                  />
+                )}
                 <Bar dataKey={ptmIndic} radius={[0, 6, 6, 0]}>
                   {ptmChart.map((_, i) => <Cell key={i} fill={i === 0 ? '#8b5cf6' : '#c4b5fd'} />)}
                 <LabelList dataKey="value" position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>

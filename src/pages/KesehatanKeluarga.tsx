@@ -1,8 +1,10 @@
 import { useState, useMemo } from 'react'
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  CartesianGrid, Legend, ScatterChart, Scatter, Cell
+  CartesianGrid, Legend, ScatterChart, Scatter, Cell, ReferenceLine
 , LabelList } from 'recharts'
+import { TARGETS } from '../utils/targets'
+import { TargetRefLabel } from '../components/TargetRefLabel'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
 import FilterBar from '../components/FilterBar'
@@ -110,9 +112,21 @@ export default function KesehatanKeluarga() {
             </div>
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={ibuChartData} layout="vertical" margin={{ left: 95, right: 80 }}>
-                <XAxis type="number" tick={{ fontSize: 11 }} domain={[0, 100]} />
+                <XAxis type="number" tick={{ fontSize: 11 }} domain={[0, (dataMax: number) => TARGETS[ibuIndic] ? Math.max(dataMax, TARGETS[ibuIndic].target_value * 1.1) : 100]} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
                 <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
+                {TARGETS[ibuIndic] && (
+                  <ReferenceLine 
+                    x={TARGETS[ibuIndic].target_value} 
+                    stroke={TARGETS[ibuIndic].target_direction === '>=' || TARGETS[ibuIndic].target_direction === '>' ? '#0F8F8B' : '#ef4444'}
+                    strokeDasharray="3 3"
+                    strokeWidth={2}
+                      label={<TargetRefLabel
+                        value={`${['<=', '<'].includes(TARGETS[ibuIndic].target_direction) ? 'Batas Maks' : 'Target Min'}: ${TARGETS[ibuIndic].target_value}${TARGETS[ibuIndic].isPercentage ? '%' : ''}`}
+                        side={(Number((ibuChartData[0] as any)?.[ibuIndic] ?? (ibuChartData[0] as any)?.value) || 0) > TARGETS[ibuIndic].target_value ? 'left' : 'right'}
+                      />}
+                   />
+                )}
                 <Bar dataKey={ibuIndic} radius={[0, 6, 6, 0]}>
                   {ibuChartData.map((_, i) => <Cell key={i} fill={i === 0 ? '#0F8F8B' : '#93c5c3'} />)}
                 <LabelList dataKey="value" position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
@@ -170,9 +184,21 @@ export default function KesehatanKeluarga() {
             </div>
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={anakChartData} layout="vertical" margin={{ left: 95, right: 80 }}>
-                <XAxis type="number" tick={{ fontSize: 11 }} />
+                <XAxis type="number" tick={{ fontSize: 11 }} domain={[0, (dataMax: number) => TARGETS[anakIndic] ? Math.max(dataMax, TARGETS[anakIndic].target_value * 1.1) : 'auto']} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
                 <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
+                {TARGETS[anakIndic] && (
+                  <ReferenceLine 
+                    x={TARGETS[anakIndic].target_value} 
+                    stroke={TARGETS[anakIndic].target_direction === '>=' || TARGETS[anakIndic].target_direction === '>' ? '#0F8F8B' : '#ef4444'}
+                    strokeDasharray="3 3"
+                    strokeWidth={2}
+                      label={<TargetRefLabel
+                        value={`${['<=', '<'].includes(TARGETS[anakIndic].target_direction) ? 'Batas Maks' : 'Target Min'}: ${TARGETS[anakIndic].target_value}${TARGETS[anakIndic].isPercentage ? '%' : ''}`}
+                        side={(Number((anakChartData[0] as any)?.[anakIndic] ?? (anakChartData[0] as any)?.value) || 0) > TARGETS[anakIndic].target_value ? 'left' : 'right'}
+                      />}
+                  />
+                )}
                 <Bar dataKey={anakIndic} radius={[0, 6, 6, 0]}>
                   {anakChartData.map((_, i) => <Cell key={i} fill={i === 0 ? '#f97316' : '#fcd9b0'} />)}
                 <LabelList dataKey="value" position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>

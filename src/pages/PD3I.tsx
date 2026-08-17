@@ -6,6 +6,7 @@ import {
   CartesianGrid, Cell, Legend, ReferenceLine
 , LabelList } from 'recharts'
 import { evaluateTarget, TARGETS } from '../utils/targets'
+import { TargetRefLabel } from '../components/TargetRefLabel'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
 import FilterBar from '../components/FilterBar'
@@ -114,7 +115,7 @@ export default function PD3I() {
               <div style={{ minWidth: pd3iFilter === 'all' ? 800 : '100%', height: pd3iFilter === 'all' ? 800 : (pd3iFilter === '20' ? 600 : 400) }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={pd3iChart} layout="vertical" margin={{ left: 95, right: 80 }}>
-                    <XAxis type="number" tick={{ fontSize: 11 }} />
+                    <XAxis type="number" domain={[0, (dataMax: number) => TARGETS[pd3iIndic] ? Math.max(dataMax, TARGETS[pd3iIndic].target_value * 1.1) : 'auto']} tick={{ fontSize: 11 }} />
                     <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
                     <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
                     {TARGETS[pd3iIndic] && (
@@ -123,13 +124,7 @@ export default function PD3I() {
                         stroke={TARGETS[pd3iIndic].target_direction === '>=' || TARGETS[pd3iIndic].target_direction === '>' ? '#0F8F8B' : '#ef4444'}
                         strokeDasharray="3 3"
                         strokeWidth={2}
-                        label={{
-                          position: 'insideTopRight',
-                          value: `${['<=', '<'].includes(TARGETS[pd3iIndic].target_direction) ? 'Batas Maksimum' : 'Target Minimum'}: ${TARGETS[pd3iIndic].target_value}${TARGETS[pd3iIndic].isPercentage ? '%' : ''}`,
-                          fill: '#4B5563',
-                          fontSize: 11,
-                          fontWeight: 600
-                        }}
+                        label={<TargetRefLabel value={`${['<=', '<'].includes(TARGETS[pd3iIndic].target_direction) ? 'Batas Maks' : 'Target Min'}: ${TARGETS[pd3iIndic].target_value}${TARGETS[pd3iIndic].isPercentage ? '%' : ''}`} />}
                       />
                     )}
                     <Bar dataKey={pd3iIndic} name={pd3iLabel} fill="#0F8F8B" radius={[0, 6, 6, 0]} ><LabelList dataKey={pd3iIndic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>

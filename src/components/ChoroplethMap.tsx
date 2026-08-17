@@ -26,7 +26,7 @@ export default function ChoroplethMap({ data, indicatorKey, indicatorLabel }: Ch
   const [showLabels, setShowLabels] = useState(false);
 
   // Compute map data and color scale
-  const { mapData, min, max, avg, highKab, lowKab, countAbove } = useMemo(() => {
+  const { mapData, min, max, avg, highKab, lowKab, countAbove, count } = useMemo(() => {
     let min = Infinity;
     let max = -Infinity;
     let sum = 0;

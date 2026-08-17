@@ -3,8 +3,10 @@ import ChoroplethMap from '../components/ChoroplethMap';
 import RiskClusteringMap from '../components/RiskClusteringMap';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  CartesianGrid, Legend, Cell
+  CartesianGrid, Legend, Cell, ReferenceLine
 , LabelList } from 'recharts'
+import { TARGETS } from '../utils/targets'
+import { TargetRefLabel } from '../components/TargetRefLabel'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
 import { generateDynamicBarInsight } from '../utils/insightGenerator'
@@ -42,6 +44,9 @@ export default function UsiaProduktifLansia() {
   const sortedData = [...data].sort((a, b) => (b[indic] as number) - (a[indic] as number))
   const chartData = chartFilter === 'all' ? sortedData : sortedData.slice(0, Number(chartFilter))
   
+  const targetConfig = TARGETS[indic]
+  const targetVal = targetConfig?.target_value
+
   const stats = descStats(data.map(d => d[indic] as number))
   const indicLabel = OPTIONS.find(o => o.key === indic)?.label ?? indic
 
@@ -126,9 +131,18 @@ export default function UsiaProduktifLansia() {
         </div>
         <ResponsiveContainer width="100%" height={280}>
           <BarChart data={chartData} layout="vertical" margin={{ left: 95, right: 80 }}>
-            <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={v => v >= 1e6 ? (v / 1e6).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' juta' : v?.toLocaleString('id-ID')} />
+            <XAxis type="number" domain={[0, (dataMax: number) => targetVal !== undefined ? Math.max(dataMax, targetVal * 1.1) : 'auto']} tick={{ fontSize: 11 }} tickFormatter={v => v >= 1e6 ? (v / 1e6).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' juta' : v?.toLocaleString('id-ID')} />
             <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
             <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID')} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
+            {targetConfig && (
+              <ReferenceLine 
+                x={targetConfig.target_value} 
+                stroke={targetConfig.target_direction === '>=' || targetConfig.target_direction === '>' ? '#0F8F8B' : '#ef4444'}
+                strokeDasharray="3 3"
+                strokeWidth={2}
+                label={<TargetRefLabel value={`${['<=', '<'].includes(targetConfig.target_direction) ? 'Batas Maks' : 'Target Min'}: ${targetConfig.target_value}${targetConfig.isPercentage ? '%' : ''}`} />}
+              />
+            )}
             <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]} fill="#0F8F8B" ><LabelList dataKey={indic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
           </BarChart>
         </ResponsiveContainer>

@@ -105,6 +105,14 @@ export const TARGETS: Record<string, TargetConfig> = {
   desa_pammrt_pct: { indicator_name: 'Pilar 3 STBM - PAMMRT', indicator_key: 'desa_pammrt_pct', target_value: 75, target_unit: '%', target_direction: '>', isPercentage: true },
   desa_psrt_pct: { indicator_name: 'Pilar 4 STBM - PSRT', indicator_key: 'desa_psrt_pct', target_value: 75, target_unit: '%', target_direction: '>', isPercentage: true },
   desa_paldrt_pct: { indicator_name: 'Pilar 5 STBM - PALDRT', indicator_key: 'desa_paldrt_pct', target_value: 30, target_unit: '%', target_direction: '>', isPercentage: true },
+
+  // === ALIASES FOR UI COMPONENTS ===
+  persalinan_fasyankes_pct: { indicator_name: 'Pertolongan persalinan oleh nakes', indicator_key: 'persalinan_fasyankes_pct', target_value: 95, target_unit: '%', target_direction: '>=', isPercentage: true },
+  gizi_kurang_pct: { indicator_name: 'Prevalensi balita underweight', indicator_key: 'gizi_kurang_pct', target_value: 15, target_unit: '%', target_direction: '<=', isPercentage: true },
+  gizi_buruk_pct: { indicator_name: 'Prevalensi balita wasting', indicator_key: 'gizi_buruk_pct', target_value: 8, target_unit: '%', target_direction: '<=', isPercentage: true },
+  imunisasi_dasar_lengkap_pct: { indicator_name: 'Imunisasi dasar lengkap', indicator_key: 'imunisasi_dasar_lengkap_pct', target_value: 95, target_unit: '%', target_direction: '>=', isPercentage: true },
+  imunisasi_campak_pct: { indicator_name: 'Imunisasi MR1 bayi', indicator_key: 'imunisasi_campak_pct', target_value: 85, target_unit: '%', target_direction: '>=', isPercentage: true },
+  vitamin_a_pct: { indicator_name: 'Vitamin A bayi usia 6–11 bln', indicator_key: 'vitamin_a_pct', target_value: 91, target_unit: '%', target_direction: '>=', isPercentage: true },
 };
 
 export function evaluateTarget(actualValue: number, indicatorKey: string): TargetEvaluation | null {

@@ -6,6 +6,7 @@ import {
   CartesianGrid, Cell, Legend, ReferenceLine
 , LabelList } from 'recharts'
 import { evaluateTarget, TARGETS } from '../utils/targets'
+import { TargetRefLabel } from '../components/TargetRefLabel'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats } from '../utils/stats'
 import KPICard from '../components/KPICard'
@@ -154,7 +155,7 @@ export default function PenyakitTidakMenular() {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={ptmChart} layout="vertical" margin={{ left: 110, right: 80 }}>
                 <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f3f4f6" />
-                <XAxis type="number" tick={{ fontSize: 11 }} />
+                <XAxis type="number" domain={[0, (dataMax: number) => TARGETS[ptmIndic] ? Math.max(dataMax, TARGETS[ptmIndic].target_value * 1.1) : 'auto']} tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 10 }} width={100} interval={0} />
                 <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12, border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} cursor={{ fill: '#f9fafb' }} />
                 {TARGETS[ptmIndic] && (
@@ -163,13 +164,7 @@ export default function PenyakitTidakMenular() {
                     stroke={TARGETS[ptmIndic].target_direction === '>=' || TARGETS[ptmIndic].target_direction === '>' ? '#0F8F8B' : '#ef4444'}
                     strokeDasharray="3 3"
                     strokeWidth={2}
-                    label={{
-                      position: 'insideTopRight',
-                      value: `${['<=', '<'].includes(TARGETS[ptmIndic].target_direction) ? 'Batas Maksimum' : 'Target Minimum'}: ${TARGETS[ptmIndic].target_value}${TARGETS[ptmIndic].isPercentage ? '%' : ''}`,
-                      fill: '#4B5563',
-                      fontSize: 11,
-                      fontWeight: 600
-                    }}
+                    label={<TargetRefLabel value={`${['<=', '<'].includes(TARGETS[ptmIndic].target_direction) ? 'Batas Maks' : 'Target Min'}: ${TARGETS[ptmIndic].target_value}${TARGETS[ptmIndic].isPercentage ? '%' : ''}`} />}
                   />
                 )}
                 <Bar dataKey={ptmIndic} name={ptmLabel} fill="#0F8F8B" radius={[0, 4, 4, 0]} ><LabelList dataKey={ptmIndic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>

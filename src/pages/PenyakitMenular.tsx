@@ -6,6 +6,7 @@ import {
   CartesianGrid, Legend, ScatterChart, Scatter, ReferenceLine
 , LabelList } from 'recharts'
 import { evaluateTarget, TARGETS } from '../utils/targets'
+import { TargetRefLabel } from '../components/TargetRefLabel'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
 import { generateCorrelationInsight, generateDynamicBarInsight } from '../utils/insightGenerator'
@@ -353,7 +354,10 @@ export default function PenyakitMenular() {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} layout="vertical" margin={{ left: 110, right: 80 }}>
                 <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f3f4f6" />
-                <XAxis type="number" tick={{ fontSize: 11 }} />
+                <XAxis type="number" domain={[0, (dataMax: number) => {
+                  const tgt = TARGETS[indic] || (indic === 'tbc_sukses_pct' ? TARGETS['tbc_tsr_pct'] : indic === 'arv_pct' ? TARGETS['odhiv_arv_pct'] : null);
+                  return tgt ? Math.max(dataMax, tgt.target_value * 1.1) : 'auto';
+                }]} tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 10 }} width={100} interval={0} />
                 <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12, border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} cursor={{ fill: '#f9fafb' }} />
                 {(TARGETS[indic] || (indic === 'tbc_sukses_pct' ? TARGETS['tbc_tsr_pct'] : indic === 'arv_pct' ? TARGETS['odhiv_arv_pct'] : null)) && (() => {
@@ -364,13 +368,7 @@ export default function PenyakitMenular() {
                       stroke={tgt.target_direction === '>=' || tgt.target_direction === '>' ? '#0F8F8B' : '#ef4444'}
                       strokeDasharray="3 3"
                       strokeWidth={2}
-                      label={{
-                        position: 'insideTopRight',
-                        value: `${['<=', '<'].includes(tgt.target_direction) ? 'Batas Maksimum' : 'Target Minimum'}: ${tgt.target_value}${tgt.isPercentage ? '%' : ''}`,
-                        fill: '#4B5563',
-                        fontSize: 11,
-                        fontWeight: 600
-                      }}
+                      label={<TargetRefLabel value={`${['<=', '<'].includes(tgt.target_direction) ? 'Batas Maks' : 'Target Min'}: ${tgt.target_value}${tgt.isPercentage ? '%' : ''}`} />}
                     />
                   )
                 })()}

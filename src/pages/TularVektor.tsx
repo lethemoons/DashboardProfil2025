@@ -6,6 +6,7 @@ import {
   CartesianGrid, Cell, Legend, ScatterChart, Scatter, ComposedChart, Line, ReferenceLine
 , LabelList } from 'recharts'
 import { evaluateTarget, TARGETS } from '../utils/targets'
+import { TargetRefLabel } from '../components/TargetRefLabel'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { descStats, pearsonR } from '../utils/stats'
 import { generateCorrelationInsight, generateDynamicBarInsight } from '../utils/insightGenerator'
@@ -191,7 +192,7 @@ export default function TularVektor() {
           <div style={{ minWidth: vektorFilter === 'all' ? 800 : '100%', height: vektorFilter === 'all' ? 800 : (vektorFilter === '20' ? 600 : 400) }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} layout="vertical" margin={{ left: 95, right: 80 }}>
-                <XAxis type="number" tick={{ fontSize: 11 }} />
+                <XAxis type="number" domain={[0, (dataMax: number) => TARGETS[indic] ? Math.max(dataMax, TARGETS[indic].target_value * 1.1) : 'auto']} tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} interval={0} />
                 <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
                 {TARGETS[indic] && (
@@ -200,13 +201,10 @@ export default function TularVektor() {
                     stroke={TARGETS[indic].target_direction === '>=' || TARGETS[indic].target_direction === '>' ? '#0F8F8B' : '#ef4444'}
                     strokeDasharray="3 3"
                     strokeWidth={2}
-                    label={{
-                      position: 'insideTopRight',
-                      value: `${['<=', '<'].includes(TARGETS[indic].target_direction) ? 'Batas Maksimum' : 'Target Minimum'}: ${TARGETS[indic].target_value}${TARGETS[indic].isPercentage ? '%' : ''}`,
-                      fill: '#4B5563',
-                      fontSize: 11,
-                      fontWeight: 600
-                    }}
+                    label={<TargetRefLabel
+                      value={`${['<=', '<'].includes(TARGETS[indic].target_direction) ? 'Batas Maks' : 'Target Min'}: ${TARGETS[indic].target_value}${TARGETS[indic].isPercentage ? '%' : ''}`}
+                      side={(Number((chartData[0] as any)?.[indic]) || 0) > TARGETS[indic].target_value ? 'left' : 'right'}
+                    />}
                   />
                 )}
                 <Bar dataKey={indic} name={indicLabel} fill="#0F8F8B" radius={[0, 6, 6, 0]} ><LabelList dataKey={indic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
