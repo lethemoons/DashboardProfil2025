@@ -141,7 +141,7 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
                 })()}
                 <Bar dataKey={menularIndic} radius={[0, 6, 6, 0]}>
                   {menularChart.map((_, i) => <Cell key={i} fill={i === 0 ? '#ef4444' : i < 5 ? '#fca5a5' : '#fee2e2'} />)}
-                <LabelList dataKey="value" position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+                <LabelList dataKey="value" position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : (String(indic).includes('_pct') || (typeof indicLabel === 'string' && indicLabel.includes('(%)')) ? `${Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%` : Math.round(Number(v)).toLocaleString('id-ID'))} /></Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -252,7 +252,7 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
                       />}
                   />
                 )}
-                <Bar dataKey={vektorIndic} radius={[0, 6, 6, 0]} fill="#ef4444" ><LabelList dataKey={vektorIndic} position="top" style={{ fontSize: 9, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+                <Bar dataKey={vektorIndic} radius={[0, 6, 6, 0]} fill="#ef4444" ><LabelList dataKey={vektorIndic} position="top" style={{ fontSize: 9, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : (String(vektorIndic).includes('_pct') || (typeof vektorLabel === 'string' && vektorLabel.includes('(%)')) ? `${Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%` : Math.round(Number(v)).toLocaleString('id-ID'))} /></Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -304,7 +304,7 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
                 )}
                 <Bar dataKey={ptmIndic} radius={[0, 6, 6, 0]}>
                   {ptmChart.map((_, i) => <Cell key={i} fill={i === 0 ? '#8b5cf6' : '#c4b5fd'} />)}
-                <LabelList dataKey="value" position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+                <LabelList dataKey="value" position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : (String(indic).includes('_pct') || (typeof indicLabel === 'string' && indicLabel.includes('(%)')) ? `${Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%` : Math.round(Number(v)).toLocaleString('id-ID'))} /></Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>

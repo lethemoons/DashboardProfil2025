@@ -270,7 +270,7 @@ export default function CrosstabSection({
     const highestCol = colCategories.reduce((maxJ, _, j) => colTotals[j] > colTotals[maxJ] ? j : maxJ, 0)
 
     list.push(
-      `Dari total **${totalCount} wilayah/entitas** yang dianalisis, mayoritas baris (${rowName}) berada pada kategori **${rowCategories[highestRow]?.shortLabel ?? rowCategories[highestRow]?.label}** (${rowTotals[highestRow]} wilayah / ${((rowTotals[highestRow] / totalCount) * 100).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%), sedangkan kolom (${colName}) didominasi kategori **${colCategories[highestCol]?.shortLabel ?? colCategories[highestCol]?.label}** (${colTotals[highestCol]} wilayah / ${((colTotals[highestCol] / totalCount) * 100).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%).`
+      `Sebagian besar dari **${totalCount} kabupaten/kota** memiliki capaian **${rowName}** yang tergolong **${rowCategories[highestRow]?.shortLabel ?? rowCategories[highestRow]?.label}** (sebanyak ${rowTotals[highestRow]} wilayah atau ${((rowTotals[highestRow] / totalCount) * 100).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%). Sementara itu, untuk **${colName}** paling banyak berada di tingkat **${colCategories[highestCol]?.shortLabel ?? colCategories[highestCol]?.label}** (sebanyak ${colTotals[highestCol]} wilayah atau ${((colTotals[highestCol] / totalCount) * 100).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%).`
     )
 
     // 2. Highest frequency combination
@@ -278,11 +278,9 @@ export default function CrosstabSection({
       const rLabel = rowCategories[maxCell.rIdx]?.label
       const cLabel = colCategories[maxCell.cIdx]?.label
       const pctOfTotal = ((maxVal / totalCount) * 100).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
-      const rTotal = rowTotals[maxCell.rIdx]
-      const pctOfRow = rTotal > 0 ? ((maxVal / rTotal) * 100).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : '0'
-
+      
       list.push(
-        `**Kombinasi Tertinggi:** Kategori **${rLabel}** bertemu dengan **${cLabel}** memiliki frekuensi terbanyak, yaitu **${maxVal} wilayah** (${pctOfTotal}% dari total, atau ${pctOfRow}% dari kategori barisnya).`
+        `**Pola Paling Umum:** Situasi yang paling sering dijumpai adalah wilayah dengan **${rowName}** yang **${rLabel}** juga diiringi dengan **${colName}** yang **${cLabel}**. Kondisi ini terjadi di **${maxVal} kabupaten/kota** (${pctOfTotal}% dari total keseluruhan).`
       )
     }
 
@@ -293,22 +291,19 @@ export default function CrosstabSection({
       const pctMin = ((minVal / totalCount) * 100).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
 
       list.push(
-        `**Kombinasi Terendah:** Pasangan **${rMinLabel}** dan **${cMinLabel}** memiliki frekuensi paling sedikit (**${minVal} wilayah** / ${pctMin}%).`
+        `**Pola Paling Jarang:** Sebaliknya, sangat jarang ditemukan wilayah yang tingkat **${rowName}**-nya **${rMinLabel}** sekaligus **${colName}**-nya **${cMinLabel}**. Kejadian seperti ini hanya ada pada **${minVal} kabupaten/kota** (${pctMin}%).`
       )
     }
 
     // 4. Statistical significance verdict
     if (chiSquareResult && chiSquareResult.df > 0) {
-      const pFormatted = chiSquareResult.pValue < 0.001 ? '< 0.001' : `= ${chiSquareResult.pValue.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}`
-      const chiFormatted = chiSquareResult.chiSquare.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-
       if (chiSquareResult.isSignificant) {
         list.push(
-          `**Kesimpulan Uji Independensi (Chi-Square):** Terdapat hubungan/asosiasi yang **signifikan secara statistik** antara **${rowName}** dan **${colName}** (χ² = ${chiFormatted}, df = ${chiSquareResult.df}, p ${pFormatted} < 0,05).`
+          `**Kesimpulan Hubungan:** Secara keseluruhan, terlihat ada **keterkaitan yang kuat dan nyata** antara pencapaian **${rowName}** dengan **${colName}**. Artinya, tinggi rendahnya salah satu indikator tersebut sangat mungkin sejalan atau memengaruhi indikator lainnya.`
         )
       } else {
         list.push(
-          `**Kesimpulan Uji Independensi (Chi-Square):** **Tidak terdapat hubungan yang signifikan secara statistik** antara **${rowName}** dan **${colName}** (χ² = ${chiFormatted}, df = ${chiSquareResult.df}, p ${pFormatted} ≥ 0,05). Kedua variabel cenderung saling independen.`
+          `**Kesimpulan Hubungan:** Secara keseluruhan, **tidak terlihat adanya keterkaitan yang jelas** antara **${rowName}** dengan **${colName}**. Kedua pencapaian ini tampak berdiri sendiri dan tidak menunjukkan pola saling memengaruhi secara langsung.`
         )
       }
     }

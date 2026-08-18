@@ -71,9 +71,15 @@ const CustomCompareTooltip = ({ active, payload, label, data }: any) => {
             <span className="font-semibold">{p2.value?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}% ({Number(p2.payload[`${p2.dataKey}_val`] || 0).toLocaleString('id-ID')})</span>
           </div>
         </div>
-        <div className="mt-3 pt-2 border-t border-gray-100 flex justify-between items-center">
-          <span className="text-gray-500">Selisih (absolut):</span>
-          <span className="font-bold">{diff.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%</span>
+        <div className="mt-3 pt-2 border-t border-gray-100 flex flex-col gap-1">
+          <div className="flex justify-between items-center">
+            <span className="text-gray-500">Selisih (absolut):</span>
+            <span className="font-bold">{diff.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-gray-500">Skor:</span>
+            <span className={`font-bold ${score === 1 ? 'text-[#0F8F8B]' : 'text-red-500'}`}>{score}</span>
+          </div>
         </div>
 
       </div>
@@ -185,7 +191,7 @@ export default function KesehatanAnak() {
 
   const compareLabel = COMPARE_OPTIONS.find(o => o.key === compareIndic)?.label ?? 'Indikator';
   const compareInsights = [
-    `Grafik perbandingan ini menyandingkan ${compareLabel}. Selisih persentase yang jauh antara keduanya (lebih dari 10%) mengindikasikan adanya kendala di lapangan (misalnya anak yang sudah menerima layanan A gagal mendapatkan layanan B). Semakin kecil selisih antar indikator ini, semakin konsisten masyarakat dalam mengikuti pedoman kesehatan anak secara tuntas.`
+    `Grafik perbandingan ini menyandingkan ${compareLabel}. Selisih persentase yang jauh antara keduanya (lebih dari 10%) mengindikasikan adanya kendala di lapangan (misalnya anak yang sudah menerima layanan A gagal mendapatkan layanan B). Semakin kecil selisih antar indikator ini, semakin konsisten masyarakat dalam mengikuti pedoman kesehatan anak secara tuntas.\n\n* Apabila selisih perbedaannya absolut berada pada rentang -10% hingga 10%, wilayah tersebut diberi skor 1. Sebaliknya, wilayah diberi skor 0. Akumulasi skor yang tinggi (mendekati nilai maksimal 10 untuk keseluruhan indikator) mencerminkan kualitas pelaporan data yang semakin akurat dan integrasi layanan kesehatan yang optimal.`
   ]
 
   if (loading) return <div className="p-8 text-center text-gray-500">Loading data...</div>
@@ -308,7 +314,7 @@ export default function KesehatanAnak() {
                 />}
               />
             )}
-            <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]} fill="#0F8F8B" ><LabelList dataKey={indic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+            <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]} fill="#0F8F8B" ><LabelList dataKey={indic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : (String(indic).includes('_pct') || (typeof indicLabel === 'string' && indicLabel.includes('(%)')) ? `${Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%` : Math.round(Number(v)).toLocaleString('id-ID'))} /></Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>

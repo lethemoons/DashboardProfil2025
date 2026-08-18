@@ -207,7 +207,7 @@ export default function TularVektor() {
                     />}
                   />
                 )}
-                <Bar dataKey={indic} name={indicLabel} fill="#0F8F8B" radius={[0, 6, 6, 0]} ><LabelList dataKey={indic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+                <Bar dataKey={indic} name={indicLabel} fill="#0F8F8B" radius={[0, 6, 6, 0]} ><LabelList dataKey={indic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : (String(indic).includes('_pct') || (typeof indicLabel === 'string' && indicLabel.includes('(%)')) ? `${Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%` : Math.round(Number(v)).toLocaleString('id-ID'))} /></Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -239,7 +239,7 @@ export default function TularVektor() {
                 <XAxis type="number" tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} interval={0} />
                 <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
-                <Bar dataKey={malariaIndic} name={malariaLabel} fill="#0F8F8B" radius={[0, 6, 6, 0]} ><LabelList dataKey={malariaIndic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+                <Bar dataKey={malariaIndic} name={malariaLabel} fill="#0F8F8B" radius={[0, 6, 6, 0]} ><LabelList dataKey={malariaIndic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : (String(malariaIndic).includes('_pct') || (typeof malariaLabel === 'string' && malariaLabel.includes('(%)')) ? `${Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%` : Math.round(Number(v)).toLocaleString('id-ID'))} /></Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>

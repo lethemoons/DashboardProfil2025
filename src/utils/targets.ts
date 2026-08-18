@@ -113,6 +113,9 @@ export const TARGETS: Record<string, TargetConfig> = {
   imunisasi_dasar_lengkap_pct: { indicator_name: 'Imunisasi dasar lengkap', indicator_key: 'imunisasi_dasar_lengkap_pct', target_value: 95, target_unit: '%', target_direction: '>=', isPercentage: true },
   imunisasi_campak_pct: { indicator_name: 'Imunisasi MR1 bayi', indicator_key: 'imunisasi_campak_pct', target_value: 85, target_unit: '%', target_direction: '>=', isPercentage: true },
   vitamin_a_pct: { indicator_name: 'Vitamin A bayi usia 6–11 bln', indicator_key: 'vitamin_a_pct', target_value: 91, target_unit: '%', target_direction: '>=', isPercentage: true },
+  imunisasi_dpt_pct: { indicator_name: 'Imunisasi DPT-HB-Hib', indicator_key: 'imunisasi_dpt_pct', target_value: 77, target_unit: '%', target_direction: '>=', isPercentage: true },
+  kn1_pct: { indicator_name: 'Kunjungan Neonatus KN1', indicator_key: 'kn1_pct', target_value: 100, target_unit: '%', target_direction: '=', isPercentage: true },
+  k1_pct: { indicator_name: 'Cakupan K1', indicator_key: 'k1_pct', target_value: 100, target_unit: '%', target_direction: '=', isPercentage: true },
 };
 
 export function evaluateTarget(actualValue: number, indicatorKey: string): TargetEvaluation | null {

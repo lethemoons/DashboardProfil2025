@@ -167,7 +167,7 @@ export default function PenyakitTidakMenular() {
                     label={<TargetRefLabel value={`${['<=', '<'].includes(TARGETS[ptmIndic].target_direction) ? 'Batas Maks' : 'Target Min'}: ${TARGETS[ptmIndic].target_value}${TARGETS[ptmIndic].isPercentage ? '%' : ''}`} />}
                   />
                 )}
-                <Bar dataKey={ptmIndic} name={ptmLabel} fill="#0F8F8B" radius={[0, 4, 4, 0]} ><LabelList dataKey={ptmIndic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+                <Bar dataKey={ptmIndic} name={ptmLabel} fill="#0F8F8B" radius={[0, 4, 4, 0]} ><LabelList dataKey={ptmIndic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : (String(ptmIndic).includes('_pct') || (typeof ptmLabel === 'string' && ptmLabel.includes('(%)')) ? `${Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%` : Math.round(Number(v)).toLocaleString('id-ID'))} /></Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>

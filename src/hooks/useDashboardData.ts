@@ -52,8 +52,6 @@ export const TABLE_METRIC_ALIASES: Record<string, string> = {
   '29_jumlah_peserta_kb_aktif_metode_modern_jumlah': 'kb_aktif_jumlah',
   '29_jumlah_peserta_kb_aktif_metode_modern':        'kb_aktif_pct',
 
-  // === TABLE 32: Ibu Hamil KEK ===
-  '32_kurang_energi_kronis_kek':    'bumil_kek_pct',
 
   // === TABLE 35: Kematian Neonatal / Bayi / Balita ===
   '35_jumlah_total_150':            'kematian_neonatal',

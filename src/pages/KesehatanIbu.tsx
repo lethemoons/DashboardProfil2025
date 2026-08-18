@@ -62,8 +62,6 @@ const CustomPairTooltip = ({ active, payload, label }: any) => {
     const p2 = payload[1];
 
     const isPct = p1.name.includes('%') || p1.dataKey.includes('pct');
-    const fmt = (v: number) => isPct ? v.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%' : Math.round(v).toLocaleString('id-ID');
-
     const diff = Math.abs(p1.value - p2.value);
 
     const getCount = (key: string, data: any) => {
@@ -74,8 +72,30 @@ const CustomPairTooltip = ({ active, payload, label }: any) => {
       return null;
     }
 
-    const c1 = isPct ? getCount(p1.dataKey, p1.payload) : null;
-    const c2 = isPct ? getCount(p2.dataKey, p2.payload) : null;
+    const c1 = isPct ? getCount(p1.dataKey, p1.payload) : p1.value;
+    const c2 = isPct ? getCount(p2.dataKey, p2.payload) : p2.value;
+
+    let pct1 = '';
+    let pct2 = '';
+    let selisihDiffStr = '';
+    let score = 0;
+
+    if (isPct) {
+      pct1 = p1.value.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%';
+      pct2 = p2.value.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%';
+      selisihDiffStr = diff.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%';
+      score = diff <= 10 ? 1 : 0;
+    } else {
+      const base = Math.max(p1.value, p2.value) || 1;
+      const p1Pct = (p1.value / base) * 100;
+      const p2Pct = (p2.value / base) * 100;
+      pct1 = p1Pct.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%';
+      pct2 = p2Pct.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%';
+      
+      const diffPct = (diff / base) * 100;
+      selisihDiffStr = `${Math.round(diff).toLocaleString('id-ID')} (${diffPct.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%)`;
+      score = diffPct <= 10 ? 1 : 0;
+    }
 
     return (
       <div className="bg-white border border-gray-100 rounded-xl shadow-lg p-3 text-xs">
@@ -86,19 +106,25 @@ const CustomPairTooltip = ({ active, payload, label }: any) => {
               <div className="w-2 h-2 rounded-full" style={{ background: p1.fill }}></div>
               <span className="text-gray-600">{p1.name}:</span>
             </div>
-            <span className="font-semibold">{fmt(p1.value)}{c1 ? ` (${Number(c1).toLocaleString('id-ID')})` : ''}</span>
+            <span className="font-semibold">{pct1}{c1 !== null ? ` (${Number(c1).toLocaleString('id-ID')})` : ''}</span>
           </div>
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full" style={{ background: p2.fill }}></div>
               <span className="text-gray-600">{p2.name}:</span>
             </div>
-            <span className="font-semibold">{fmt(p2.value)}{c2 ? ` (${Number(c2).toLocaleString('id-ID')})` : ''}</span>
+            <span className="font-semibold">{pct2}{c2 !== null ? ` (${Number(c2).toLocaleString('id-ID')})` : ''}</span>
           </div>
         </div>
-        <div className="mt-3 pt-2 border-t border-gray-100 flex justify-between items-center">
-          <span className="text-gray-500">Selisih (absolut):</span>
-          <span className="font-bold">{fmt(diff)}</span>
+        <div className="mt-3 pt-2 border-t border-gray-100 flex flex-col gap-1">
+          <div className="flex justify-between items-center">
+            <span className="text-gray-500">Selisih (absolut):</span>
+            <span className="font-bold">{selisihDiffStr}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-gray-500">Skor:</span>
+            <span className={`font-bold ${score === 1 ? 'text-[#0F8F8B]' : 'text-red-500'}`}>{score}</span>
+          </div>
         </div>
       </div>
     );
@@ -154,7 +180,7 @@ export default function KesehatanIbu() {
   const avgK6 = data.length ? data.reduce((s, d) => s + (d.k6_pct as number), 0) / data.length : 0
   const avgFasyankes = data.length ? data.reduce((s, d) => s + (d.persalinan_fasyankes_pct as number), 0) / data.length : 0
   const avgKB = data.length ? data.reduce((s, d) => s + (d.kb_aktif_pct as number), 0) / data.length : 0
-  const avgKEK = data.length ? data.reduce((s, d) => s + (d.bumil_kek_pct as number), 0) / data.length : 0
+
 
   const sortedData = [...data].sort((a, b) => (b[indic] as number) - (a[indic] as number))
   const chartData = chartFilter === 'all' ? sortedData : sortedData.slice(0, Number(chartFilter))
@@ -302,7 +328,7 @@ export default function KesehatanIbu() {
                 />
               );
             })()}
-            <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]} fill="#0F8F8B" ><LabelList dataKey={indic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+            <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]} fill="#0F8F8B" ><LabelList dataKey={indic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : (String(indic).includes('_pct') || (typeof indicLabel === 'string' && indicLabel.includes('(%)')) ? `${Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%` : Math.round(Number(v)).toLocaleString('id-ID'))} /></Bar>
           </BarChart>
         </ResponsiveContainer>
         <InsightBox insights={[generateDynamicBarInsight(chartData, indic, indicLabel, "Pencapaian layanan ibu hamil dan bersalin bervariasi di setiap kabupaten/kota.")]} />
@@ -429,6 +455,14 @@ export default function KesehatanIbu() {
           </div>
           <InsightBox insights={[`Pemeriksaan lengkap paska melahirkan (KF) sepatutnya dibarengi dengan pemberian Vitamin A untuk kesehatan dan kekebalan tubuh sang ibu. Keselarasan kedua data ini mencerminkan apakah standar penanganan pasien benar-benar berjalan satu paket.\n\n* Apabila selisih perbedaannya absolut berada pada rentang -10% hingga 10%, wilayah tersebut diberi skor 1.`]} />
         </div>
+
+        {/* Interpretasi Skor Total */}
+        <div className="mt-8 bg-teal-50 border border-teal-100 rounded-xl p-5 shadow-sm">
+          <h4 className="font-semibold text-teal-800 mb-2">Interpretasi Total Skor Keselarasan</h4>
+          <p className="text-teal-700 text-sm leading-relaxed">
+            Secara keseluruhan, akumulasi skor dari berbagai pasangan indikator (dengan nilai maksimal 10) berfungsi sebagai tolok ukur kualitas dan konsistensi data. <strong>Semakin tinggi skor total (mendekati 10)</strong>, semakin selaras, akurat, dan terintegrasi pencatatan pelaporan program kesehatan di wilayah tersebut. Sebaliknya, skor yang rendah menunjukkan adanya kesenjangan (gap) data yang perlu dievaluasi kembali, baik dari sisi pelaksanaan layanan di lapangan maupun sistem pelaporannya.
+          </p>
+        </div>
       </div>
 
 
@@ -457,7 +491,7 @@ export default function KesehatanIbu() {
         { key: 'k1_pct', label: 'K1 (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
         { key: 'k6_pct', label: 'K6 (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
         { key: 'persalinan_fasyankes_pct', label: 'Persalinan Fasyankes (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
-        { key: 'bumil_kek_pct', label: 'Bumil KEK (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
+
         { key: 'kb_aktif_pct', label: 'KB Aktif (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
         { key: 'kematian_ibu_hamil', label: 'Mati Hamil' },
         { key: 'kematian_ibu_bersalin', label: 'Mati Bersalin' },

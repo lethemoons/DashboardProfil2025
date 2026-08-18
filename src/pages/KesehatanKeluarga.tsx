@@ -20,7 +20,7 @@ const IBU_OPTIONS = [
   { key: 'k6_pct', label: 'Cakupan K6 (%)' },
   { key: 'persalinan_fasyankes_pct', label: 'Persalinan di Fasyankes (%)' },
   { key: 'fe_tablet_pct', label: 'Tablet FE (%)' },
-  { key: 'bumil_kek_pct', label: 'Bumil KEK (%)' },
+
   { key: 'kb_aktif_pct', label: 'KB Aktif (%)' },
 ]
 
@@ -100,7 +100,7 @@ export default function KesehatanKeluarga() {
             <KPICard title="Kematian Ibu" value={totKematianIbu} sub="Total (hamil+bersalin+nifas)" icon="💔" color="#ef4444" />
             <KPICard title="Cakupan K1" value={avgK1.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} sub="Rata-rata" icon="🤰" color="#0F8F8B" />
             <KPICard title="KB Aktif" value={(ibuData.reduce((s, d) => s + (d.kb_aktif_pct as number), 0) / Math.max(ibuData.length, 1)).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} sub="Rata-rata" icon="🔵" color="#078FA5" />
-            <KPICard title="Bumil KEK" value={(ibuData.reduce((s, d) => s + (d.bumil_kek_pct as number), 0) / Math.max(ibuData.length, 1)).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} sub="Rata-rata" icon="⚠️" color="#f97316" />
+
           </div>
           <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
             <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
@@ -129,7 +129,7 @@ export default function KesehatanKeluarga() {
                 )}
                 <Bar dataKey={ibuIndic} radius={[0, 6, 6, 0]}>
                   {ibuChartData.map((_, i) => <Cell key={i} fill={i === 0 ? '#0F8F8B' : '#93c5c3'} />)}
-                <LabelList dataKey="value" position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+                <LabelList dataKey="value" position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : (String(indic).includes('_pct') || (typeof indicLabel === 'string' && indicLabel.includes('(%)')) ? `${Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%` : Math.round(Number(v)).toLocaleString('id-ID'))} /></Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -160,7 +160,7 @@ export default function KesehatanKeluarga() {
             { key: 'k1_pct', label: 'K1 (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
             { key: 'k6_pct', label: 'K6 (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
             { key: 'persalinan_fasyankes_pct', label: 'Persalinan Fasyankes (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
-            { key: 'bumil_kek_pct', label: 'Bumil KEK (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
+
             { key: 'kb_aktif_pct', label: 'KB Aktif (%)', format: v => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
           ]} />
         </>
@@ -201,7 +201,7 @@ export default function KesehatanKeluarga() {
                 )}
                 <Bar dataKey={anakIndic} radius={[0, 6, 6, 0]}>
                   {anakChartData.map((_, i) => <Cell key={i} fill={i === 0 ? '#f97316' : '#fcd9b0'} />)}
-                <LabelList dataKey="value" position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+                <LabelList dataKey="value" position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : (String(indic).includes('_pct') || (typeof indicLabel === 'string' && indicLabel.includes('(%)')) ? `${Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%` : Math.round(Number(v)).toLocaleString('id-ID'))} /></Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>

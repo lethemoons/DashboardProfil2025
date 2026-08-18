@@ -127,7 +127,7 @@ export default function PD3I() {
                         label={<TargetRefLabel value={`${['<=', '<'].includes(TARGETS[pd3iIndic].target_direction) ? 'Batas Maks' : 'Target Min'}: ${TARGETS[pd3iIndic].target_value}${TARGETS[pd3iIndic].isPercentage ? '%' : ''}`} />}
                       />
                     )}
-                    <Bar dataKey={pd3iIndic} name={pd3iLabel} fill="#0F8F8B" radius={[0, 6, 6, 0]} ><LabelList dataKey={pd3iIndic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+                    <Bar dataKey={pd3iIndic} name={pd3iLabel} fill="#0F8F8B" radius={[0, 6, 6, 0]} ><LabelList dataKey={pd3iIndic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : (String(pd3iIndic).includes('_pct') || (typeof pd3iLabel === 'string' && pd3iLabel.includes('(%)')) ? `${Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%` : Math.round(Number(v)).toLocaleString('id-ID'))} /></Bar>
                   </BarChart>
                 </ResponsiveContainer>
               </div>

@@ -76,8 +76,9 @@ export default function RankChart({ data, indicators, defaultIndicator, title = 
   }, [processedData]);
 
   const formatValue = (v: number) => {
-    return activeIndicator.isPercentage 
-      ? `${v.toLocaleString('id-ID', { maximumFractionDigits: 2 })}%`
+    const isPct = activeIndicator.isPercentage || activeIndicator.label.includes('(%)') || activeIndicator.key.includes('_pct');
+    return isPct 
+      ? `${v.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%`
       : Math.round(v).toLocaleString('id-ID');
   };
 
