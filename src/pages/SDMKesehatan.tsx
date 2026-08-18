@@ -99,7 +99,7 @@ export default function SDMKesehatan() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <KPICard title="Total SDM Kesehatan" value={totalSDM.toLocaleString('id-ID')} icon="👥" color="#0F8F8B" />
-        <KPICard title="Jenis SDM Terbanyak" value={topSdmType.name.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} sub={`${topSdmType.value.toLocaleString('id-ID')} orang`} icon="🏅" color="#078FA5" />
+        <KPICard title="Jenis SDM Terbanyak" value={`${topSdmType.value.toLocaleString('id-ID')} orang`} sub={topSdmType.name.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()).replace(/Jumlah\s+/i, '')} icon="🏅" color="#078FA5" />
         <KPICard title="Kabupaten SDM Terbanyak" value={topSdmKab.name.replace('Kota ', '')} sub={`${topSdmKab.value.toLocaleString('id-ID')} SDM`} icon="🏥" color="#9EAF24" />
       </div>
 
