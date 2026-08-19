@@ -20,7 +20,7 @@ export default function KPICard({ title, value, sub, icon, trend, trendVal, colo
   const trendIcon = trend === 'up' ? '↑' : trend === 'down' ? '↓' : '→'
 
   return (
-    <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col justify-between h-full min-h-[140px] gap-3">
+    <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col justify-between h-full gap-3">
       <div className="flex flex-col gap-1">
         <div className="flex items-start justify-between mb-2">
           <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">{title}</span>
