@@ -104,7 +104,7 @@ export default function Beranda({ onNavigate }: BerandaProps) {
         halaman: Math.round(7 * easeProgress),
         modul: Math.round(6 * easeProgress),
         indikator: Math.round(100 * easeProgress),
-        barisData: Math.round(47913 * easeProgress),
+        barisData: Math.round(46059 * easeProgress),
       })
 
       if (currentStep >= steps) {

@@ -319,7 +319,7 @@ function MainApp() {
         {page !== 'beranda' && (
           <footer className="bg-white border-t border-gray-100 px-6 py-2 flex items-center justify-between text-xs text-gray-400 shrink-0">
             <span>Dinas Kesehatan Provinsi Jawa Timur · Data Profil Kesehatan {year}</span>
-            <span>47.913 baris data · 76 tabel</span>
+            <span>46.059 baris data &middot; 76 tabel</span>
           </footer>
         )}
       </div>
