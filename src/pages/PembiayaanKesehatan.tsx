@@ -95,7 +95,7 @@ export default function PembiayaanKesehatan() {
             🛡️
           </div>
           <h3 className="font-semibold text-gray-800 text-lg mb-1" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
-            Cakupan Kepesertaan Aktif JKN
+            Cakupan Kepersetaan Aktif JKN
           </h3>
           <div className="text-4xl font-bold text-[#0F8F8B] mb-2">33.186.873</div>
           <div className="text-sm font-medium px-3 py-1 bg-teal-50 text-teal-700 rounded-full">
