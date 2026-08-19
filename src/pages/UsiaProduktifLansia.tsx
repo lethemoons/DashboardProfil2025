@@ -131,7 +131,7 @@ export default function UsiaProduktifLansia() {
         </div>
         <ResponsiveContainer width="100%" height={280}>
           <BarChart data={chartData} layout="vertical" margin={{ left: 95, right: 80 }}>
-            <XAxis type="number" domain={[0, (dataMax: number) => targetVal !== undefined ? Math.max(dataMax, targetVal * 1.1) : 'auto']} tick={{ fontSize: 11 }} tickFormatter={v => v >= 1e6 ? (v / 1e6).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' juta' : v?.toLocaleString('id-ID')} />
+            <XAxis type="number" domain={[0, (dataMax: number) => targetVal !== undefined ? Math.max(dataMax, targetVal * 1.1) : dataMax]} tick={{ fontSize: 11 }} tickFormatter={v => v >= 1e6 ? (v / 1e6).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' juta' : v?.toLocaleString('id-ID')} />
             <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
             <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID')} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
             {targetConfig && (
@@ -143,7 +143,24 @@ export default function UsiaProduktifLansia() {
                 label={<TargetRefLabel value={`${['<=', '<'].includes(targetConfig.target_direction) ? 'Batas Maks' : 'Target Min'}: ${targetConfig.target_value}${targetConfig.isPercentage ? '%' : ''}`} />}
               />
             )}
-            <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]} fill="#0F8F8B" ><LabelList dataKey={indic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : (String(indic).includes('_pct') || (typeof indicLabel === 'string' && indicLabel.includes('(%)')) ? `${Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%` : Math.round(Number(v)).toLocaleString('id-ID'))} /></Bar>
+            <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]} >
+
+                {chartData.map((entry: any, index: number) => {
+                  const val = entry[indic] as number;
+                  let color = "#0F8F8B";
+                  const tgt = targetConfig;
+                  if (tgt && typeof val === 'number') {
+                    if (tgt.target_direction === '>=' && val < tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '<=' && val > tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '>' && val <= tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '<' && val >= tgt.target_value) color = "#9EAF24";
+                      else if (tgt.target_direction === '=' && val !== tgt.target_value) color = "#9EAF24";
+                  }
+                  return <Cell key={`cell-${index}`} fill={color} />;
+                })}
+
+                
+              </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -168,8 +185,42 @@ export default function UsiaProduktifLansia() {
             <YAxis tick={{ fontSize: 11 }} tickFormatter={v => (v / 1e3).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + 'rb'} />
             <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID')} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
             <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-            <Bar dataKey="laki" name="Laki-laki" fill="#0F8F8B" radius={[3, 3, 0, 0]} ><LabelList dataKey="laki" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
-            <Bar dataKey="perempuan" name="Perempuan" fill="#9EAF24" radius={[3, 3, 0, 0]} ><LabelList dataKey="perempuan" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+            <Bar dataKey="laki" name="Laki-laki" radius={[3, 3, 0, 0]} >
+
+                {genderData.map((entry: any, index: number) => {
+                  const val = entry['laki'] as number;
+                  let color = "#0F8F8B";
+                  const tgt = targetConfig;
+                  if (tgt && typeof val === 'number') {
+                    if (tgt.target_direction === '>=' && val < tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '<=' && val > tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '>' && val <= tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '<' && val >= tgt.target_value) color = "#9EAF24";
+                      else if (tgt.target_direction === '=' && val !== tgt.target_value) color = "#9EAF24";
+                  }
+                  return <Cell key={`cell-${index}`} fill={color} />;
+                })}
+
+                
+              </Bar>
+            <Bar dataKey="perempuan" name="Perempuan" radius={[3, 3, 0, 0]} >
+
+                {genderData.map((entry: any, index: number) => {
+                  const val = entry['perempuan'] as number;
+                  let color = "#0F8F8B";
+                  const tgt = targetConfig;
+                  if (tgt && typeof val === 'number') {
+                    if (tgt.target_direction === '>=' && val < tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '<=' && val > tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '>' && val <= tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '<' && val >= tgt.target_value) color = "#9EAF24";
+                      else if (tgt.target_direction === '=' && val !== tgt.target_value) color = "#9EAF24";
+                  }
+                  return <Cell key={`cell-${index}`} fill={color} />;
+                })}
+
+                
+              </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>

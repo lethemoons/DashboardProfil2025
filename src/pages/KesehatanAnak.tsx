@@ -314,7 +314,24 @@ export default function KesehatanAnak() {
                 />}
               />
             )}
-            <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]} fill="#0F8F8B" ><LabelList dataKey={indic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : (String(indic).includes('_pct') || (typeof indicLabel === 'string' && indicLabel.includes('(%)')) ? `${Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%` : Math.round(Number(v)).toLocaleString('id-ID'))} /></Bar>
+            <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]} >
+
+                {chartData.map((entry: any, index: number) => {
+                  const val = entry[indic] as number;
+                  let color = "#0F8F8B";
+                  const tgt = TARGETS[indic];
+                  if (tgt && typeof val === 'number') {
+                    if (tgt.target_direction === '>=' && val < tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '<=' && val > tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '>' && val <= tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '<' && val >= tgt.target_value) color = "#9EAF24";
+                      else if (tgt.target_direction === '=' && val !== tgt.target_value) color = "#9EAF24";
+                  }
+                  return <Cell key={`cell-${index}`} fill={color} />;
+                })}
+
+                
+              </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>

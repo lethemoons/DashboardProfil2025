@@ -119,7 +119,7 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
               <BarChart data={menularChart} layout="vertical" margin={{ left: 95, right: 80 }}>
                 <XAxis type="number" domain={[0, (dataMax: number) => {
                   const tgt = TARGETS[menularIndic] || (menularIndic === 'tbc_sukses_pct' ? TARGETS['tbc_tsr_pct'] : menularIndic === 'arv_pct' ? TARGETS['odhiv_arv_pct'] : null);
-                  return tgt ? Math.max(dataMax, tgt.target_value * 1.1) : 'auto';
+                  return tgt ? Math.max(dataMax, tgt.target_value * 1.1) : dataMax;
                 }]} tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
                 <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
@@ -140,8 +140,20 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
                   )
                 })()}
                 <Bar dataKey={menularIndic} radius={[0, 6, 6, 0]}>
-                  {menularChart.map((_, i) => <Cell key={i} fill={i === 0 ? '#ef4444' : i < 5 ? '#fca5a5' : '#fee2e2'} />)}
-                <LabelList dataKey="value" position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : (String(indic).includes('_pct') || (typeof indicLabel === 'string' && indicLabel.includes('(%)')) ? `${Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%` : Math.round(Number(v)).toLocaleString('id-ID'))} /></Bar>
+                  {menularChart.map((entry: any, i) => {
+                    let fillColor = i === 0 ? '#ef4444' : i < 5 ? '#fca5a5' : '#fee2e2';
+                    const val = entry[menularIndic] as number;
+                    const tgt = TARGETS[menularIndic] || (menularIndic === 'tbc_sukses_pct' ? TARGETS['tbc_tsr_pct'] : menularIndic === 'arv_pct' ? TARGETS['odhiv_arv_pct'] : null);
+                    if (tgt && typeof val === 'number') {
+                      if (tgt.target_direction === '>=' && val < tgt.target_value) fillColor = "#9EAF24";
+                      else if (tgt.target_direction === '<=' && val > tgt.target_value) fillColor = "#9EAF24";
+                      else if (tgt.target_direction === '>' && val <= tgt.target_value) fillColor = "#9EAF24";
+                      else if (tgt.target_direction === '<' && val >= tgt.target_value) fillColor = "#9EAF24";
+                      else if (tgt.target_direction === '=' && val !== tgt.target_value) fillColor = "#9EAF24";
+                    }
+                    return <Cell key={i} fill={fillColor} />;
+                  })}
+                <LabelList dataKey="value" position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : ((String(menularIndic).includes('_pct') || (typeof menularLabel !== 'undefined' && String(menularLabel).includes('(%)'))) ? `${Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%` : Math.round(Number(v)).toLocaleString('id-ID'))} /></Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -237,7 +249,7 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
             </div>
             <ResponsiveContainer width="100%" height={260}>
               <BarChart data={[...pd3iData].sort((a, b) => (b[vektorIndic] as number) - (a[vektorIndic] as number)).slice(0, 15)} layout="vertical" margin={{ left: 95, right: 80 }}>
-                <XAxis type="number" domain={[0, (dataMax: number) => TARGETS[vektorIndic] ? Math.max(dataMax, TARGETS[vektorIndic].target_value * 1.1) : 'auto']} tick={{ fontSize: 11 }} />
+                <XAxis type="number" domain={[0, (dataMax: number) => TARGETS[vektorIndic] ? Math.max(dataMax, TARGETS[vektorIndic].target_value * 1.1) : dataMax]} tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
                 <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
                 {TARGETS[vektorIndic] && (
@@ -252,7 +264,22 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
                       />}
                   />
                 )}
-                <Bar dataKey={vektorIndic} radius={[0, 6, 6, 0]} fill="#ef4444" ><LabelList dataKey={vektorIndic} position="top" style={{ fontSize: 9, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : (String(vektorIndic).includes('_pct') || (typeof vektorLabel === 'string' && vektorLabel.includes('(%)')) ? `${Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%` : Math.round(Number(v)).toLocaleString('id-ID'))} /></Bar>
+                <Bar dataKey={vektorIndic} radius={[0, 6, 6, 0]}>
+                  {[...pd3iData].sort((a, b) => (b[vektorIndic] as number) - (a[vektorIndic] as number)).slice(0, 15).map((entry: any, i) => {
+                    let fillColor = "#ef4444";
+                    const val = entry[vektorIndic] as number;
+                    const tgt = TARGETS[vektorIndic];
+                    if (tgt && typeof val === 'number') {
+                      if (tgt.target_direction === '>=' && val < tgt.target_value) fillColor = "#9EAF24";
+                      else if (tgt.target_direction === '<=' && val > tgt.target_value) fillColor = "#9EAF24";
+                      else if (tgt.target_direction === '>' && val <= tgt.target_value) fillColor = "#9EAF24";
+                      else if (tgt.target_direction === '<' && val >= tgt.target_value) fillColor = "#9EAF24";
+                      else if (tgt.target_direction === '=' && val !== tgt.target_value) fillColor = "#9EAF24";
+                    }
+                    return <Cell key={i} fill={fillColor} />;
+                  })}
+                  <LabelList dataKey={vektorIndic} position="top" style={{ fontSize: 9, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : ((String(vektorIndic).includes('_pct') || (typeof vektorLabel !== 'undefined' && String(vektorLabel).includes('(%)'))) ? `${Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%` : Math.round(Number(v)).toLocaleString('id-ID'))} />
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -287,7 +314,7 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
             </div>
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={ptmChart} layout="vertical" margin={{ left: 95, right: 80 }}>
-                <XAxis type="number" domain={[0, (dataMax: number) => TARGETS[ptmIndic] ? Math.max(dataMax, TARGETS[ptmIndic].target_value * 1.1) : 'auto']} tick={{ fontSize: 11 }} />
+                <XAxis type="number" domain={[0, (dataMax: number) => TARGETS[ptmIndic] ? Math.max(dataMax, TARGETS[ptmIndic].target_value * 1.1) : dataMax]} tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
                 <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
                 {TARGETS[ptmIndic] && (
@@ -303,8 +330,20 @@ export default function PengendalianPenyakit({ sub = '6.1' }: { sub?: string }) 
                   />
                 )}
                 <Bar dataKey={ptmIndic} radius={[0, 6, 6, 0]}>
-                  {ptmChart.map((_, i) => <Cell key={i} fill={i === 0 ? '#8b5cf6' : '#c4b5fd'} />)}
-                <LabelList dataKey="value" position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : (String(indic).includes('_pct') || (typeof indicLabel === 'string' && indicLabel.includes('(%)')) ? `${Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%` : Math.round(Number(v)).toLocaleString('id-ID'))} /></Bar>
+                  {ptmChart.map((entry: any, i) => {
+                    let fillColor = i === 0 ? '#8b5cf6' : '#c4b5fd';
+                    const val = entry[ptmIndic] as number;
+                    const tgt = TARGETS[ptmIndic];
+                    if (tgt && typeof val === 'number') {
+                      if (tgt.target_direction === '>=' && val < tgt.target_value) fillColor = "#9EAF24";
+                      else if (tgt.target_direction === '<=' && val > tgt.target_value) fillColor = "#9EAF24";
+                      else if (tgt.target_direction === '>' && val <= tgt.target_value) fillColor = "#9EAF24";
+                      else if (tgt.target_direction === '<' && val >= tgt.target_value) fillColor = "#9EAF24";
+                      else if (tgt.target_direction === '=' && val !== tgt.target_value) fillColor = "#9EAF24";
+                    }
+                    return <Cell key={i} fill={fillColor} />;
+                  })}
+                <LabelList dataKey="value" position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : ((String(menularIndic).includes('_pct') || (typeof menularLabel !== 'undefined' && String(menularLabel).includes('(%)'))) ? `${Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%` : Math.round(Number(v)).toLocaleString('id-ID'))} /></Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>

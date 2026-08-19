@@ -216,8 +216,15 @@ export default function RankChart({ data, indicators, defaultIndicator, title = 
               >
                 {displayedData.map((entry, index) => {
                   let fillColor = '#0F8F8B';
+                  
+                  // Check target
+                  const tgtEval = evaluateTarget(entry.value, activeIndicator.key);
+                  if (tgtEval && tgtEval.status === 'belum_tercapai') {
+                    fillColor = '#9EAF24';
+                  }
+
                   if (hoveredIndex === index) {
-                    fillColor = '#078FA5'; // Hover color
+                    fillColor = fillColor === '#9EAF24' ? '#8B9A20' : '#078FA5'; // Hover color (slightly darker)
                   }
                   
                   return (

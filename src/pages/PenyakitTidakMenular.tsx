@@ -125,8 +125,42 @@ export default function PenyakitTidakMenular() {
                 <YAxis tick={{ fontSize: 11 }} tickFormatter={v => (v / 1e3).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + 'rb'} />
                 <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID')} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
                 <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-                <Bar dataKey="laki" name="Hipertensi Laki-laki" fill="#078FA5" radius={[3, 3, 0, 0]} ><LabelList dataKey="laki" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
-                <Bar dataKey="perempuan" name="Hipertensi Perempuan" fill="#9EAF24" radius={[3, 3, 0, 0]} ><LabelList dataKey="perempuan" position="insideTop" style={{ fontSize: 9, fill: 'white', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : Number(v).toLocaleString('id-ID')} /></Bar>
+                <Bar dataKey="laki" name="Hipertensi Laki-laki" radius={[3, 3, 0, 0]} >
+
+                {hipertensiGender.map((entry: any, index: number) => {
+                  const val = entry['laki'] as number;
+                  let color = "#0F8F8B";
+                  const tgt = TARGETS['laki'];
+                  if (tgt && typeof val === 'number') {
+                    if (tgt.target_direction === '>=' && val < tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '<=' && val > tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '>' && val <= tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '<' && val >= tgt.target_value) color = "#9EAF24";
+                      else if (tgt.target_direction === '=' && val !== tgt.target_value) color = "#9EAF24";
+                  }
+                  return <Cell key={`cell-${index}`} fill={color} />;
+                })}
+
+                
+              </Bar>
+                <Bar dataKey="perempuan" name="Hipertensi Perempuan" radius={[3, 3, 0, 0]} >
+
+                {hipertensiGender.map((entry: any, index: number) => {
+                  const val = entry['perempuan'] as number;
+                  let color = "#0F8F8B";
+                  const tgt = TARGETS['perempuan'];
+                  if (tgt && typeof val === 'number') {
+                    if (tgt.target_direction === '>=' && val < tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '<=' && val > tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '>' && val <= tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '<' && val >= tgt.target_value) color = "#9EAF24";
+                      else if (tgt.target_direction === '=' && val !== tgt.target_value) color = "#9EAF24";
+                  }
+                  return <Cell key={`cell-${index}`} fill={color} />;
+                })}
+
+                
+              </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -155,7 +189,7 @@ export default function PenyakitTidakMenular() {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={ptmChart} layout="vertical" margin={{ left: 110, right: 80 }}>
                 <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f3f4f6" />
-                <XAxis type="number" domain={[0, (dataMax: number) => TARGETS[ptmIndic] ? Math.max(dataMax, TARGETS[ptmIndic].target_value * 1.1) : 'auto']} tick={{ fontSize: 11 }} />
+                <XAxis type="number" domain={[0, (dataMax: number) => TARGETS[ptmIndic] ? Math.max(dataMax, TARGETS[ptmIndic].target_value * 1.1) : dataMax]} tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 10 }} width={100} interval={0} />
                 <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12, border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} cursor={{ fill: '#f9fafb' }} />
                 {TARGETS[ptmIndic] && (
@@ -167,7 +201,24 @@ export default function PenyakitTidakMenular() {
                     label={<TargetRefLabel value={`${['<=', '<'].includes(TARGETS[ptmIndic].target_direction) ? 'Batas Maks' : 'Target Min'}: ${TARGETS[ptmIndic].target_value}${TARGETS[ptmIndic].isPercentage ? '%' : ''}`} />}
                   />
                 )}
-                <Bar dataKey={ptmIndic} name={ptmLabel} fill="#0F8F8B" radius={[0, 4, 4, 0]} ><LabelList dataKey={ptmIndic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : (String(ptmIndic).includes('_pct') || (typeof ptmLabel === 'string' && ptmLabel.includes('(%)')) ? `${Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%` : Math.round(Number(v)).toLocaleString('id-ID'))} /></Bar>
+                <Bar dataKey={ptmIndic} name={ptmLabel} radius={[0, 4, 4, 0]} >
+
+                {ptmChart.map((entry: any, index: number) => {
+                  const val = entry[ptmIndic] as number;
+                  let color = "#0F8F8B";
+                  const tgt = TARGETS[ptmIndic];
+                  if (tgt && typeof val === 'number') {
+                    if (tgt.target_direction === '>=' && val < tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '<=' && val > tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '>' && val <= tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '<' && val >= tgt.target_value) color = "#9EAF24";
+                      else if (tgt.target_direction === '=' && val !== tgt.target_value) color = "#9EAF24";
+                  }
+                  return <Cell key={`cell-${index}`} fill={color} />;
+                })}
+
+                
+              </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>

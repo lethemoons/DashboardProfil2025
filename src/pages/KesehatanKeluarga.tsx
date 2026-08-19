@@ -128,8 +128,20 @@ export default function KesehatanKeluarga() {
                    />
                 )}
                 <Bar dataKey={ibuIndic} radius={[0, 6, 6, 0]}>
-                  {ibuChartData.map((_, i) => <Cell key={i} fill={i === 0 ? '#0F8F8B' : '#93c5c3'} />)}
-                <LabelList dataKey="value" position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : (String(indic).includes('_pct') || (typeof indicLabel === 'string' && indicLabel.includes('(%)')) ? `${Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%` : Math.round(Number(v)).toLocaleString('id-ID'))} /></Bar>
+                  {ibuChartData.map((entry: any, i) => {
+                    let fillColor = i === 0 ? '#0F8F8B' : '#93c5c3';
+                    const val = entry[ibuIndic] as number;
+                    const tgt = TARGETS[ibuIndic];
+                    if (tgt && typeof val === 'number') {
+                      if (tgt.target_direction === '>=' && val < tgt.target_value) fillColor = "#9EAF24";
+                      else if (tgt.target_direction === '<=' && val > tgt.target_value) fillColor = "#9EAF24";
+                      else if (tgt.target_direction === '>' && val <= tgt.target_value) fillColor = "#9EAF24";
+                      else if (tgt.target_direction === '<' && val >= tgt.target_value) fillColor = "#9EAF24";
+                      else if (tgt.target_direction === '=' && val !== tgt.target_value) fillColor = "#9EAF24";
+                    }
+                    return <Cell key={i} fill={fillColor} />;
+                  })}
+                <LabelList dataKey="value" position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : ((String(ibuIndic).includes('_pct') || (typeof ibuLabel !== 'undefined' && String(ibuLabel).includes('(%)'))) ? `${Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%` : Math.round(Number(v)).toLocaleString('id-ID'))} /></Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -184,7 +196,7 @@ export default function KesehatanKeluarga() {
             </div>
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={anakChartData} layout="vertical" margin={{ left: 95, right: 80 }}>
-                <XAxis type="number" tick={{ fontSize: 11 }} domain={[0, (dataMax: number) => TARGETS[anakIndic] ? Math.max(dataMax, TARGETS[anakIndic].target_value * 1.1) : 'auto']} />
+                <XAxis type="number" tick={{ fontSize: 11 }} domain={[0, (dataMax: number) => TARGETS[anakIndic] ? Math.max(dataMax, TARGETS[anakIndic].target_value * 1.1) : dataMax]} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
                 <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
                 {TARGETS[anakIndic] && (
@@ -200,8 +212,20 @@ export default function KesehatanKeluarga() {
                   />
                 )}
                 <Bar dataKey={anakIndic} radius={[0, 6, 6, 0]}>
-                  {anakChartData.map((_, i) => <Cell key={i} fill={i === 0 ? '#f97316' : '#fcd9b0'} />)}
-                <LabelList dataKey="value" position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : (String(indic).includes('_pct') || (typeof indicLabel === 'string' && indicLabel.includes('(%)')) ? `${Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%` : Math.round(Number(v)).toLocaleString('id-ID'))} /></Bar>
+                  {anakChartData.map((entry: any, i) => {
+                    let fillColor = i === 0 ? '#f97316' : '#fcd9b0';
+                    const val = entry[anakIndic] as number;
+                    const tgt = TARGETS[anakIndic];
+                    if (tgt && typeof val === 'number') {
+                      if (tgt.target_direction === '>=' && val < tgt.target_value) fillColor = "#9EAF24";
+                      else if (tgt.target_direction === '<=' && val > tgt.target_value) fillColor = "#9EAF24";
+                      else if (tgt.target_direction === '>' && val <= tgt.target_value) fillColor = "#9EAF24";
+                      else if (tgt.target_direction === '<' && val >= tgt.target_value) fillColor = "#9EAF24";
+                      else if (tgt.target_direction === '=' && val !== tgt.target_value) fillColor = "#9EAF24";
+                    }
+                    return <Cell key={i} fill={fillColor} />;
+                  })}
+                <LabelList dataKey="value" position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : ((String(ibuIndic).includes('_pct') || (typeof ibuLabel !== 'undefined' && String(ibuLabel).includes('(%)'))) ? `${Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%` : Math.round(Number(v)).toLocaleString('id-ID'))} /></Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>

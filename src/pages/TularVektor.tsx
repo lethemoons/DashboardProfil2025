@@ -192,7 +192,7 @@ export default function TularVektor() {
           <div style={{ minWidth: vektorFilter === 'all' ? 800 : '100%', height: vektorFilter === 'all' ? 800 : (vektorFilter === '20' ? 600 : 400) }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} layout="vertical" margin={{ left: 95, right: 80 }}>
-                <XAxis type="number" domain={[0, (dataMax: number) => TARGETS[indic] ? Math.max(dataMax, TARGETS[indic].target_value * 1.1) : 'auto']} tick={{ fontSize: 11 }} />
+                <XAxis type="number" domain={[0, (dataMax: number) => TARGETS[indic] ? Math.max(dataMax, TARGETS[indic].target_value * 1.1) : dataMax]} tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} interval={0} />
                 <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
                 {TARGETS[indic] && (
@@ -207,7 +207,24 @@ export default function TularVektor() {
                     />}
                   />
                 )}
-                <Bar dataKey={indic} name={indicLabel} fill="#0F8F8B" radius={[0, 6, 6, 0]} ><LabelList dataKey={indic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : (String(indic).includes('_pct') || (typeof indicLabel === 'string' && indicLabel.includes('(%)')) ? `${Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%` : Math.round(Number(v)).toLocaleString('id-ID'))} /></Bar>
+                <Bar dataKey={indic} name={indicLabel} radius={[0, 6, 6, 0]} >
+
+                {chartData.map((entry: any, index: number) => {
+                  const val = entry[indic] as number;
+                  let color = "#0F8F8B";
+                  const tgt = TARGETS[indic];
+                  if (tgt && typeof val === 'number') {
+                    if (tgt.target_direction === '>=' && val < tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '<=' && val > tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '>' && val <= tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '<' && val >= tgt.target_value) color = "#9EAF24";
+                      else if (tgt.target_direction === '=' && val !== tgt.target_value) color = "#9EAF24";
+                  }
+                  return <Cell key={`cell-${index}`} fill={color} />;
+                })}
+
+                
+              </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -239,7 +256,24 @@ export default function TularVektor() {
                 <XAxis type="number" tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} interval={0} />
                 <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
-                <Bar dataKey={malariaIndic} name={malariaLabel} fill="#0F8F8B" radius={[0, 6, 6, 0]} ><LabelList dataKey={malariaIndic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : (String(malariaIndic).includes('_pct') || (typeof malariaLabel === 'string' && malariaLabel.includes('(%)')) ? `${Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%` : Math.round(Number(v)).toLocaleString('id-ID'))} /></Bar>
+                <Bar dataKey={malariaIndic} name={malariaLabel} radius={[0, 6, 6, 0]} >
+
+                {malariaChartData.map((entry: any, index: number) => {
+                  const val = entry[malariaIndic] as number;
+                  let color = "#0F8F8B";
+                  const tgt = TARGETS[malariaIndic];
+                  if (tgt && typeof val === 'number') {
+                    if (tgt.target_direction === '>=' && val < tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '<=' && val > tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '>' && val <= tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '<' && val >= tgt.target_value) color = "#9EAF24";
+                      else if (tgt.target_direction === '=' && val !== tgt.target_value) color = "#9EAF24";
+                  }
+                  return <Cell key={`cell-${index}`} fill={color} />;
+                })}
+
+                
+              </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>

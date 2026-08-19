@@ -120,7 +120,7 @@ export default function KesehatanLingkungan() {
               <BarChart data={chartData} layout="vertical" margin={{ left: 95, right: 80 }}>
                 <XAxis type="number" tick={{ fontSize: 11 }} domain={[0, (dataMax: number) => {
                   const tgt = TARGETS[indic] || (indic === 'air_minum_memenuhi_syarat_pct' ? TARGETS['sam_memenuhi_syarat_pct'] : null);
-                  return tgt ? Math.max(dataMax, tgt.target_value * 1.1) : indic.endsWith('_pct') ? 100 : 'auto';
+                  return tgt ? Math.max(dataMax, tgt.target_value * 1.1) : indic.endsWith('_pct') ? 100 : dataMax;
                 }]} />
                 <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} interval={0} />
                 <Tooltip 
@@ -142,7 +142,24 @@ export default function KesehatanLingkungan() {
                     />
                   )
                 })()}
-                <Bar dataKey={indic} fill="#0F8F8B" radius={[0, 6, 6, 0]} ><LabelList dataKey={indic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : (String(indic).includes('_pct') || (typeof indicLabel === 'string' && indicLabel.includes('(%)')) ? `${Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%` : Math.round(Number(v)).toLocaleString('id-ID'))} /></Bar>
+                <Bar dataKey={indic} radius={[0, 6, 6, 0]} >
+
+                {chartData.map((entry: any, index: number) => {
+                  const val = entry[indic] as number;
+                  let color = "#0F8F8B";
+                  const tgt = TARGETS[indic];
+                  if (tgt && typeof val === 'number') {
+                    if (tgt.target_direction === '>=' && val < tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '<=' && val > tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '>' && val <= tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '<' && val >= tgt.target_value) color = "#9EAF24";
+                      else if (tgt.target_direction === '=' && val !== tgt.target_value) color = "#9EAF24";
+                  }
+                  return <Cell key={`cell-${index}`} fill={color} />;
+                })}
+
+                
+              </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>

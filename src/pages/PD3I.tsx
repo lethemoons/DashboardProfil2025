@@ -115,7 +115,7 @@ export default function PD3I() {
               <div style={{ minWidth: pd3iFilter === 'all' ? 800 : '100%', height: pd3iFilter === 'all' ? 800 : (pd3iFilter === '20' ? 600 : 400) }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={pd3iChart} layout="vertical" margin={{ left: 95, right: 80 }}>
-                    <XAxis type="number" domain={[0, (dataMax: number) => TARGETS[pd3iIndic] ? Math.max(dataMax, TARGETS[pd3iIndic].target_value * 1.1) : 'auto']} tick={{ fontSize: 11 }} />
+                    <XAxis type="number" domain={[0, (dataMax: number) => TARGETS[pd3iIndic] ? Math.max(dataMax, TARGETS[pd3iIndic].target_value * 1.1) : dataMax]} tick={{ fontSize: 11 }} />
                     <YAxis type="category" dataKey="kabupaten" tick={{ fontSize: 11 }} width={93} />
                     <Tooltip contentStyle={{ borderRadius: 12, fontSize: 12 }} />
                     {TARGETS[pd3iIndic] && (
@@ -127,7 +127,24 @@ export default function PD3I() {
                         label={<TargetRefLabel value={`${['<=', '<'].includes(TARGETS[pd3iIndic].target_direction) ? 'Batas Maks' : 'Target Min'}: ${TARGETS[pd3iIndic].target_value}${TARGETS[pd3iIndic].isPercentage ? '%' : ''}`} />}
                       />
                     )}
-                    <Bar dataKey={pd3iIndic} name={pd3iLabel} fill="#0F8F8B" radius={[0, 6, 6, 0]} ><LabelList dataKey={pd3iIndic} position="right" style={{ fontSize: 10, fill: '#374151', fontWeight: 600 }} formatter={(v: any) => !v && v !== 0 ? '' : (String(pd3iIndic).includes('_pct') || (typeof pd3iLabel === 'string' && pd3iLabel.includes('(%)')) ? `${Number(v).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%` : Math.round(Number(v)).toLocaleString('id-ID'))} /></Bar>
+                    <Bar dataKey={pd3iIndic} name={pd3iLabel} radius={[0, 6, 6, 0]} >
+
+                {pd3iChart.map((entry: any, index: number) => {
+                  const val = entry[pd3iIndic] as number;
+                  let color = "#0F8F8B";
+                  const tgt = TARGETS[pd3iIndic];
+                  if (tgt && typeof val === 'number') {
+                    if (tgt.target_direction === '>=' && val < tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '<=' && val > tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '>' && val <= tgt.target_value) color = "#9EAF24";
+                    else if (tgt.target_direction === '<' && val >= tgt.target_value) color = "#9EAF24";
+                      else if (tgt.target_direction === '=' && val !== tgt.target_value) color = "#9EAF24";
+                  }
+                  return <Cell key={`cell-${index}`} fill={color} />;
+                })}
+
+                
+              </Bar>
                   </BarChart>
                 </ResponsiveContainer>
               </div>
