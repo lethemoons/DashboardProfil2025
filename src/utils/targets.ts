@@ -40,7 +40,7 @@ export const TARGETS: Record<string, TargetConfig> = {
 
   // === Kesehatan Ibu ===
   aki_angka: { indicator_name: 'Angka Kematian Ibu (AKI)', indicator_key: 'aki_angka', target_value: 100, target_unit: 'per 100.000 KH', target_direction: '<' },
-  k6_pct: { indicator_name: 'Pelayanan kesehatan ibu hamil/K6', indicator_key: 'k6_pct', target_value: 100, target_unit: '%', target_direction: '=', isPercentage: true },
+  k6_pct: { indicator_name: 'Pelayanan kesehatan ibu hamil/K6', indicator_key: 'k6_pct', target_value: 100, target_unit: '%', target_direction: '>=', isPercentage: true },
   pf_pct: { indicator_name: 'Pertolongan persalinan oleh nakes', indicator_key: 'pf_pct', target_value: 95, target_unit: '%', target_direction: '>=', isPercentage: true },
   kn_lengkap_pct: { indicator_name: 'Kunjungan Neonatal Lengkap', indicator_key: 'kn_lengkap_pct', target_value: 91, target_unit: '%', target_direction: '>=', isPercentage: true },
 
@@ -53,10 +53,10 @@ export const TARGETS: Record<string, TargetConfig> = {
   balita_ditimbang_pct: { indicator_name: 'Balita ditimbang/D-S', indicator_key: 'balita_ditimbang_pct', target_value: 80, target_unit: '%', target_direction: '>=', isPercentage: true },
   vit_a_bayi_pct: { indicator_name: 'Vitamin A bayi usia 6–11 bln', indicator_key: 'vit_a_bayi_pct', target_value: 91, target_unit: '%', target_direction: '>=', isPercentage: true },
   ttd_remaja_putri_pct: { indicator_name: 'Konsumsi TTD remaja putri', indicator_key: 'ttd_remaja_putri_pct', target_value: 65, target_unit: '%', target_direction: '>=', isPercentage: true },
-  pkg_sd_pct: { indicator_name: 'PKG siswa SD/MI', indicator_key: 'pkg_sd_pct', target_value: 100, target_unit: '%', target_direction: '=', isPercentage: true },
-  pkg_smp_pct: { indicator_name: 'PKG siswa SMP/MTs', indicator_key: 'pkg_smp_pct', target_value: 100, target_unit: '%', target_direction: '=', isPercentage: true },
-  pkg_sma_pct: { indicator_name: 'PKG siswa SMA/MA', indicator_key: 'pkg_sma_pct', target_value: 100, target_unit: '%', target_direction: '=', isPercentage: true },
-  pkg_dasar_pct: { indicator_name: 'PKG usia pendidikan dasar', indicator_key: 'pkg_dasar_pct', target_value: 100, target_unit: '%', target_direction: '=', isPercentage: true },
+  pkg_sd_pct: { indicator_name: 'PKG siswa SD/MI', indicator_key: 'pkg_sd_pct', target_value: 100, target_unit: '%', target_direction: '>=', isPercentage: true },
+  pkg_smp_pct: { indicator_name: 'PKG siswa SMP/MTs', indicator_key: 'pkg_smp_pct', target_value: 100, target_unit: '%', target_direction: '>=', isPercentage: true },
+  pkg_sma_pct: { indicator_name: 'PKG siswa SMA/MA', indicator_key: 'pkg_sma_pct', target_value: 100, target_unit: '%', target_direction: '>=', isPercentage: true },
+  pkg_dasar_pct: { indicator_name: 'PKG usia pendidikan dasar', indicator_key: 'pkg_dasar_pct', target_value: 100, target_unit: '%', target_direction: '>=', isPercentage: true },
 
   // === Imunisasi ===
   idl_pct: { indicator_name: 'Imunisasi dasar lengkap', indicator_key: 'idl_pct', target_value: 95, target_unit: '%', target_direction: '>=', isPercentage: true },
@@ -114,8 +114,8 @@ export const TARGETS: Record<string, TargetConfig> = {
   imunisasi_campak_pct: { indicator_name: 'Imunisasi MR1 bayi', indicator_key: 'imunisasi_campak_pct', target_value: 85, target_unit: '%', target_direction: '>=', isPercentage: true },
   vitamin_a_pct: { indicator_name: 'Vitamin A bayi usia 6–11 bln', indicator_key: 'vitamin_a_pct', target_value: 91, target_unit: '%', target_direction: '>=', isPercentage: true },
   imunisasi_dpt_pct: { indicator_name: 'Imunisasi DPT-HB-Hib', indicator_key: 'imunisasi_dpt_pct', target_value: 77, target_unit: '%', target_direction: '>=', isPercentage: true },
-  kn1_pct: { indicator_name: 'Kunjungan Neonatus KN1', indicator_key: 'kn1_pct', target_value: 100, target_unit: '%', target_direction: '=', isPercentage: true },
-  k1_pct: { indicator_name: 'Cakupan K1', indicator_key: 'k1_pct', target_value: 100, target_unit: '%', target_direction: '=', isPercentage: true },
+  kn1_pct: { indicator_name: 'Kunjungan Neonatus KN1', indicator_key: 'kn1_pct', target_value: 100, target_unit: '%', target_direction: '>=', isPercentage: true },
+  k1_pct: { indicator_name: 'Cakupan K1', indicator_key: 'k1_pct', target_value: 100, target_unit: '%', target_direction: '>=', isPercentage: true },
 };
 
 export function evaluateTarget(actualValue: number, indicatorKey: string): TargetEvaluation | null {
