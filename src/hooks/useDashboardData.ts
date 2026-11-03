@@ -212,7 +212,11 @@ export function useDashboardData() {
       try {
         if (!dbPromise4[year]) {
           dbPromise4[year] = api.get('/data', { params: { year } }).then(res => {
-            const rawData: RawDataRow[] = res.data
+            // Dukung format compact dari Vercel API ({k, m, r}) maupun array biasa
+            const body = res.data
+            const rawData: RawDataRow[] = Array.isArray(body)
+              ? body
+              : (body.r as any[]).map(([ki, t, mi, v]) => ({ kabupaten: body.k[ki], tableNo: t, metric: body.m[mi], value: v } as RawDataRow))
             const grouped: Record<string, KabRow> = {}
             
             KABUPATEN_LIST.forEach(k => {
