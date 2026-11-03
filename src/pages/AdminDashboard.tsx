@@ -2,6 +2,7 @@ import { useState, useRef } from 'react'
 import { useAdminData } from '../hooks/useDashboardData'
 import api from '../services/api'
 import { useFilter } from '../contexts/FilterContext'
+import { parseExcelFile } from '../utils/parseExcel'
 
 export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const { year, refreshYears } = useFilter()
@@ -10,6 +11,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [search, setSearch] = useState('')
   const [isUploading, setIsUploading] = useState(false)
   const [uploadingExcel, setUploadingExcel] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState('')
   const [importYear, setImportYear] = useState(new Date().getFullYear())
   const [showUploadForm, setShowUploadForm] = useState(false)
   const [editingId, setEditingId] = useState<number | null>(null)
@@ -90,12 +92,25 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     formData.append('year', importYear.toString())
     
     try {
-      const endpoint = file.name.endsWith('.xlsx') ? '/admin/import-excel' : '/admin/import';
-      const timeoutMs = file.name.endsWith('.xlsx') ? 120000 : 30000;
-      await api.post(endpoint, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-        timeout: timeoutMs,
-      })
+      if (isExcel) {
+        // Parse Excel di browser, lalu kirim per-chunk agar aman dari batas ukuran Vercel
+        const rows = await parseExcelFile(file)
+        if (!rows.length) throw new Error('Tidak ada baris data yang ditemukan di file Excel')
+        const CHUNK = 5000
+        for (let i = 0; i < rows.length; i += CHUNK) {
+          setUploadProgress(`${Math.min(i + CHUNK, rows.length)}/${rows.length}`)
+          await api.post('/admin/import-rows', {
+            year: importYear,
+            reset: i === 0,
+            rows: rows.slice(i, i + CHUNK).map(r => [r.table_no, r.no, r.kabupaten, r.metric, r.value]),
+          }, { timeout: 60000 })
+        }
+      } else {
+        await api.post('/admin/import', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+          timeout: 30000,
+        })
+      }
       alert('Import successful')
       refetch()
     } catch (err: any) {
@@ -104,6 +119,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     } finally {
       setIsUploading(false)
       setUploadingExcel(false)
+      setUploadProgress('')
       if (fileInput.current) fileInput.current.value = ''
       await refreshYears()
       setShowUploadForm(false)
@@ -144,7 +160,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
               title={`Akan menimpa (overwrite) data tahun ${importYear}`}
             >
               {isUploading 
-                ? (uploadingExcel ? 'Memproses Excel... (30-60 detik)' : 'Mengunggah...')
+                ? (uploadingExcel ? (uploadProgress ? `Mengunggah ${uploadProgress}...` : 'Membaca Excel...') : 'Mengunggah...')
                 : 'Pilih & Unggah File'}
             </button>
             <button 
