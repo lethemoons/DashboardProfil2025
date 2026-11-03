@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { setCorsHeaders, requireAdmin } from '../_lib/auth'
+import { setCorsHeaders, requireAdmin } from '../_lib/auth.js'
 
 export const config = { api: { bodyParser: false } }
 

@@ -2,8 +2,8 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import formidable from 'formidable'
 import fs from 'fs'
 import { parse } from 'csv-parse/sync'
-import { prisma } from '../_lib/prisma'
-import { setCorsHeaders, requireAdmin } from '../_lib/auth'
+import { prisma } from '../_lib/prisma.js'
+import { setCorsHeaders, requireAdmin } from '../_lib/auth.js'
 
 export const config = { api: { bodyParser: false }, maxDuration: 60 }
 

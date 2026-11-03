@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { prisma } from './_lib/prisma'
-import { setCorsHeaders } from './_lib/auth'
+import { prisma } from './_lib/prisma.js'
+import { setCorsHeaders } from './_lib/auth.js'
 
 /**
  * GET /api/data?year=2025
