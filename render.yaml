@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: dashboard-profil-backend
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: DATABASE_URL
+        sync: false   # Isi manual di Render dashboard
+      - key: DIRECT_URL
+        sync: false   # Isi manual di Render dashboard
+      - key: JWT_SECRET
+        sync: false   # Isi manual di Render dashboard
+      - key: NODE_ENV
+        value: production

@@ -40,6 +40,10 @@ database/*.sqlite
 database/*.sqlite3
 database/*-journal
 
+# Migrasi data (file besar + berisi data sensitif)
+backend/export_data.json
+backend/.env
+
 # Jika file csv adalah hasil generate dan berubah terus, uncomment ini:
 # *.csv
 
