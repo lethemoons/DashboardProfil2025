@@ -47,5 +47,3 @@ backend/.env
 # Jika file csv adalah hasil generate dan berubah terus, uncomment ini:
 # *.csv
 
-# Hanya menggunakan pnpm (package-lock.json diabaikan)
-package-lock.json
