@@ -321,7 +321,7 @@ export default function PenyakitMenular() {
                 <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} domain={[0, 100]} unit="%" />
                 <Tooltip content={<TBCTooltip />} cursor={{ fill: '#f9fafb' }} />
                 <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-                <Bar yAxisId="left" dataKey="kasus" name="Jumlah Kasus" radius={[3, 3, 0, 0]} minPointSize={3} >
+                <Bar fill="#0F8F8B" yAxisId="left" dataKey="kasus" name="Jumlah Kasus" radius={[3, 3, 0, 0]} minPointSize={3} >
 
                 {tbcChartData.map((entry: any, index: number) => {
                   const val = entry['kasus'] as number;
@@ -339,11 +339,11 @@ export default function PenyakitMenular() {
 
                 
               </Bar>
-                <Bar yAxisId="right" dataKey="sukses_pct" name="Sukses Pengobatan (%)" radius={[3, 3, 0, 0]} minPointSize={3} >
+                <Bar fill="#F59E0B" yAxisId="right" dataKey="sukses_pct" name="Sukses Pengobatan (%)" radius={[3, 3, 0, 0]} minPointSize={3} >
 
                 {tbcChartData.map((entry: any, index: number) => {
                   const val = entry['sukses_pct'] as number;
-                  let color = "#0F8F8B";
+                  let color = "#F59E0B";
                   const tgt = TARGETS['tbc_tsr_pct'];
                   if (tgt && typeof val === 'number') {
                     if (tgt.target_direction === '>=' && val < tgt.target_value) color = "#9EAF24";
@@ -357,11 +357,11 @@ export default function PenyakitMenular() {
 
                 
               </Bar>
-                <Bar yAxisId="right" dataKey="pengobatan_lengkap" name="Pengobatan Lengkap (%)" radius={[3, 3, 0, 0]} minPointSize={3} >
+                <Bar fill="#8B5CF6" yAxisId="right" dataKey="pengobatan_lengkap" name="Pengobatan Lengkap (%)" radius={[3, 3, 0, 0]} minPointSize={3} >
 
                 {tbcChartData.map((entry: any, index: number) => {
                   const val = entry['pengobatan_lengkap'] as number;
-                  let color = "#0F8F8B";
+                  let color = "#8B5CF6";
                   const tgt = null;
                   if (tgt && typeof val === 'number') {
                     if (tgt.target_direction === '>=' && val < tgt.target_value) color = "#9EAF24";
@@ -469,7 +469,7 @@ export default function PenyakitMenular() {
                 <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} domain={[0, 100]} unit="%" />
                 <Tooltip content={<ODHIVTooltip />} cursor={{ fill: '#f9fafb' }} />
                 <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-                <Bar yAxisId="left" dataKey="baru" name="ODHIV Baru Ditemukan" radius={[3, 3, 0, 0]} minPointSize={3} >
+                <Bar fill="#0F8F8B" yAxisId="left" dataKey="baru" name="ODHIV Baru Ditemukan" radius={[3, 3, 0, 0]} minPointSize={3} >
 
                 {odhivChartData.map((entry: any, index: number) => {
                   const val = entry['baru'] as number;
@@ -487,11 +487,11 @@ export default function PenyakitMenular() {
 
                 
               </Bar>
-                <Bar yAxisId="left" dataKey="arv" name="Mendapat Pengobatan ARV" radius={[3, 3, 0, 0]} minPointSize={3} >
+                <Bar fill="#F59E0B" yAxisId="left" dataKey="arv" name="Mendapat Pengobatan ARV" radius={[3, 3, 0, 0]} minPointSize={3} >
 
                 {odhivChartData.map((entry: any, index: number) => {
                   const val = entry['arv'] as number;
-                  let color = "#0F8F8B";
+                  let color = "#F59E0B";
                   const tgt = TARGETS['arv'];
                   if (tgt && typeof val === 'number') {
                     if (tgt.target_direction === '>=' && val < tgt.target_value) color = "#9EAF24";
@@ -505,11 +505,11 @@ export default function PenyakitMenular() {
 
                 
               </Bar>
-                <Bar yAxisId="right" dataKey="arv_pct" name="Persentase ARV (%)" radius={[3, 3, 0, 0]} minPointSize={3} >
+                <Bar fill="#8B5CF6" yAxisId="right" dataKey="arv_pct" name="Persentase ARV (%)" radius={[3, 3, 0, 0]} minPointSize={3} >
 
                 {odhivChartData.map((entry: any, index: number) => {
                   const val = entry['arv_pct'] as number;
-                  let color = "#0F8F8B";
+                  let color = "#8B5CF6";
                   const tgt = TARGETS['arv_pct'];
                   if (tgt && typeof val === 'number') {
                     if (tgt.target_direction === '>=' && val < tgt.target_value) color = "#9EAF24";
@@ -557,7 +557,7 @@ export default function PenyakitMenular() {
                 <YAxis tick={{ fontSize: 11 }} />
                 <Tooltip content={<DiareTooltip />} cursor={{ fill: '#f9fafb' }} />
                 <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-                <Bar dataKey="dilayani" name="Dilayani" radius={[3, 3, 0, 0]} minPointSize={3} >
+                <Bar fill="#0F8F8B" dataKey="dilayani" name="Dilayani" radius={[3, 3, 0, 0]} minPointSize={3} >
 
                 {diareChartData.map((entry: any, index: number) => {
                   const val = entry['dilayani'] as number;
@@ -575,11 +575,11 @@ export default function PenyakitMenular() {
 
                 
               </Bar>
-                <Bar dataKey="oralit" name="Mendapat Oralit" radius={[3, 3, 0, 0]} minPointSize={3} >
+                <Bar fill="#F59E0B" dataKey="oralit" name="Mendapat Oralit" radius={[3, 3, 0, 0]} minPointSize={3} >
 
                 {diareChartData.map((entry: any, index: number) => {
                   const val = entry['oralit'] as number;
-                  let color = "#0F8F8B";
+                  let color = "#F59E0B";
                   const tgt = TARGETS['oralit'];
                   if (tgt && typeof val === 'number') {
                     if (tgt.target_direction === '>=' && val < tgt.target_value) color = "#9EAF24";
@@ -593,11 +593,11 @@ export default function PenyakitMenular() {
 
                 
               </Bar>
-                {isBalita && <Bar dataKey="zinc" name="Mendapat Zinc" radius={[3, 3, 0, 0]} minPointSize={3} >
+                {isBalita && <Bar fill="#8B5CF6" dataKey="zinc" name="Mendapat Zinc" radius={[3, 3, 0, 0]} minPointSize={3} >
 
                 {diareChartData.map((entry: any, index: number) => {
                   const val = entry['zinc'] as number;
-                  let color = "#0F8F8B";
+                  let color = "#8B5CF6";
                   const tgt = TARGETS['zinc'];
                   if (tgt && typeof val === 'number') {
                     if (tgt.target_direction === '>=' && val < tgt.target_value) color = "#9EAF24";

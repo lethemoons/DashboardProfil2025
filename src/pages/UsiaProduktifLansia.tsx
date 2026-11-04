@@ -185,7 +185,7 @@ export default function UsiaProduktifLansia() {
             <YAxis tick={{ fontSize: 11 }} tickFormatter={v => (v / 1e3).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + 'rb'} />
             <Tooltip formatter={(v: any) => v?.toLocaleString('id-ID')} contentStyle={{ borderRadius: 12, fontSize: 12 }} />
             <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-            <Bar dataKey="laki" name="Laki-laki" radius={[3, 3, 0, 0]} >
+            <Bar fill="#0F8F8B" dataKey="laki" name="Laki-laki" radius={[3, 3, 0, 0]} >
 
                 {genderData.map((entry: any, index: number) => {
                   const val = entry['laki'] as number;
@@ -203,11 +203,11 @@ export default function UsiaProduktifLansia() {
 
                 
               </Bar>
-            <Bar dataKey="perempuan" name="Perempuan" radius={[3, 3, 0, 0]} >
+            <Bar fill="#F59E0B" dataKey="perempuan" name="Perempuan" radius={[3, 3, 0, 0]} >
 
                 {genderData.map((entry: any, index: number) => {
                   const val = entry['perempuan'] as number;
-                  let color = "#0F8F8B";
+                  let color = "#F59E0B";
                   const tgt = targetConfig;
                   if (tgt && typeof val === 'number') {
                     if (tgt.target_direction === '>=' && val < tgt.target_value) color = "#9EAF24";
