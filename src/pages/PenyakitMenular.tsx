@@ -320,61 +320,10 @@ export default function PenyakitMenular() {
                 <YAxis yAxisId="left" tick={{ fontSize: 11 }} />
                 <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} domain={[0, 100]} unit="%" />
                 <Tooltip content={<TBCTooltip />} cursor={{ fill: '#f9fafb' }} />
-                <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-                <Bar fill="#0F8F8B" yAxisId="left" dataKey="kasus" name="Jumlah Kasus" radius={[3, 3, 0, 0]} minPointSize={3} >
-
-                {tbcChartData.map((entry: any, index: number) => {
-                  const val = entry['kasus'] as number;
-                  let color = "#0F8F8B";
-                  const tgt = TARGETS['kasus'];
-                  if (tgt && typeof val === 'number') {
-                    if (tgt.target_direction === '>=' && val < tgt.target_value) color = "#9EAF24";
-                    else if (tgt.target_direction === '<=' && val > tgt.target_value) color = "#9EAF24";
-                    else if (tgt.target_direction === '>' && val <= tgt.target_value) color = "#9EAF24";
-                    else if (tgt.target_direction === '<' && val >= tgt.target_value) color = "#9EAF24";
-                      else if (tgt.target_direction === '=' && val !== tgt.target_value) color = "#9EAF24";
-                  }
-                  return <Cell key={`cell-${index}`} fill={color} />;
-                })}
-
-                
-              </Bar>
-                <Bar fill="#F59E0B" yAxisId="right" dataKey="sukses_pct" name="Sukses Pengobatan (%)" radius={[3, 3, 0, 0]} minPointSize={3} >
-
-                {tbcChartData.map((entry: any, index: number) => {
-                  const val = entry['sukses_pct'] as number;
-                  let color = "#F59E0B";
-                  const tgt = TARGETS['tbc_tsr_pct'];
-                  if (tgt && typeof val === 'number') {
-                    if (tgt.target_direction === '>=' && val < tgt.target_value) color = "#9EAF24";
-                    else if (tgt.target_direction === '<=' && val > tgt.target_value) color = "#9EAF24";
-                    else if (tgt.target_direction === '>' && val <= tgt.target_value) color = "#9EAF24";
-                    else if (tgt.target_direction === '<' && val >= tgt.target_value) color = "#9EAF24";
-                      else if (tgt.target_direction === '=' && val !== tgt.target_value) color = "#9EAF24";
-                  }
-                  return <Cell key={`cell-${index}`} fill={color} />;
-                })}
-
-                
-              </Bar>
-                <Bar fill="#8B5CF6" yAxisId="right" dataKey="pengobatan_lengkap" name="Pengobatan Lengkap (%)" radius={[3, 3, 0, 0]} minPointSize={3} >
-
-                {tbcChartData.map((entry: any, index: number) => {
-                  const val = entry['pengobatan_lengkap'] as number;
-                  let color = "#8B5CF6";
-                  const tgt = null;
-                  if (tgt && typeof val === 'number') {
-                    if (tgt.target_direction === '>=' && val < tgt.target_value) color = "#9EAF24";
-                    else if (tgt.target_direction === '<=' && val > tgt.target_value) color = "#9EAF24";
-                    else if (tgt.target_direction === '>' && val <= tgt.target_value) color = "#9EAF24";
-                    else if (tgt.target_direction === '<' && val >= tgt.target_value) color = "#9EAF24";
-                      else if (tgt.target_direction === '=' && val !== tgt.target_value) color = "#9EAF24";
-                  }
-                  return <Cell key={`cell-${index}`} fill={color} />;
-                })}
-
-                
-              </Bar>
+                <Legend itemSorter={null} verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
+                <Bar fill="#0F8F8B" yAxisId="left" dataKey="kasus" name="Jumlah Kasus" radius={[3, 3, 0, 0]} minPointSize={3} />
+                <Bar fill="#F59E0B" yAxisId="right" dataKey="sukses_pct" name="Sukses Pengobatan (%)" radius={[3, 3, 0, 0]} minPointSize={3} />
+                <Bar fill="#8B5CF6" yAxisId="right" dataKey="pengobatan_lengkap" name="Pengobatan Lengkap (%)" radius={[3, 3, 0, 0]} minPointSize={3} />
               </BarChart>
             </ResponsiveContainer>
           </div>
